@@ -20,7 +20,9 @@ public class Cookbook extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        String[] items = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+        String[] items = {"Pancakes", "Pizza", "Burger", "Spaghetti", "Peanut Butter and Jelly",
+                          "Pancakes", "Pizza", "Burger", "Spaghetti", "Peanut Butter and Jelly",
+                          "Pancakes", "Pizza", "Burger", "Spaghetti", "Peanut Butter and Jelly"};
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),
                         R.layout.row_layout,
