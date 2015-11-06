@@ -18,7 +18,11 @@
         android:background="@null"
         android:layout_gravity="end|bottom"
         android:baselineAligned="false"
-        />
+        android:nestedScrollingEnabled="false"
+        android:clickable="true"
+        android:contextClickable="false"
+        android:contentDescription="Add to Cupboard"
+        android:id="@+id/addTo" />
 
 
 </FrameLayout>
