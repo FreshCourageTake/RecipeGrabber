@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:fillViewport="false">
+
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" android:fitsSystemWindows="true"
-    tools:context="com.android.andrewgarver.recipegrabber.AddToCupboard">
+    tools:context="com.android.andrewgarver.recipegrabber.AddToCupboard"
+    android:nestedScrollingEnabled="false">
 
     <android.support.design.widget.AppBarLayout android:layout_height="wrap_content"
         android:layout_width="match_parent" android:theme="@style/AppTheme.AppBarOverlay"
@@ -16,15 +24,74 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.design.widget.FloatingActionButton android:id="@+id/fab"
-        android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:src="@android:drawable/ic_dialog_email"
-        android:layout_marginLeft="@dimen/fab_margin"
-        android:layout_marginRight="@dimen/fab_margin"
-        android:layout_marginTop="49dp"
-        android:layout_marginEnd="35dp"
+    <EditText
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/recipeName"
+        android:gravity="center"
         android:layout_below="@+id/view"
-        android:layout_alignParentEnd="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="61dp"
+        android:hint="Recipe Name" />
+
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:id="@+id/recipePic"
+        android:src="@drawable/burger"
+        android:layout_below="@+id/recipeName"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="17dp"
+        android:clickable="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/quantity"
+        android:layout_below="@+id/recipePic"
+        android:layout_alignStart="@+id/recipeName"
+        android:hint="3"
+        android:layout_toStartOf="@+id/recipePic" />
+
+    <Spinner
+        android:entries="@array/metrics"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:id="@+id/metricSpinner"
+        android:layout_below="@+id/recipePic"
+        android:layout_alignStart="@+id/recipePic"
+        android:spinnerMode="dropdown" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:entries="@array/ingredients"
+        android:id="@+id/ingredientSpinner"
+        android:layout_alignTop="@+id/metricSpinner"
+        android:layout_toEndOf="@+id/metricSpinner"
+        android:spinnerMode="dropdown" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@android:drawable/ic_input_add"
+        android:id="@+id/imageButton"
+        android:layout_below="@+id/metricSpinner"
+        android:layout_alignStart="@+id/quantity" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:id="@+id/editText"
+        android:layout_below="@+id/imageButton"
+        android:layout_alignStart="@+id/metricSpinner"
+        android:hint="1. Melt butter in microwave safe dish\n2. Mix butter and sugar in..."/>
+
 
 </RelativeLayout>
+</ScrollView>
