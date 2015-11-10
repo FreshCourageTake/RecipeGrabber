@@ -1,97 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:fillViewport="false">
 
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:fitsSystemWindows="true"
-    tools:context="com.android.andrewgarver.recipegrabber.AddToCupboard"
-    android:nestedScrollingEnabled="false">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:nestedScrollingEnabled="false"
+    tools:context="com.android.andrewgarver.recipegrabber.AddToCupboard">
 
-    <android.support.design.widget.AppBarLayout android:layout_height="wrap_content"
-        android:layout_width="match_parent" android:theme="@style/AppTheme.AppBarOverlay"
-        android:id="@+id/view">
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
 
-        <android.support.v7.widget.Toolbar android:id="@+id/toolbar"
-            android:layout_width="match_parent" android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary" app:popupTheme="@style/AppTheme.PopupOverlay" />
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
 
-    <EditText
-        android:layout_width="300dp"
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/recipeName"
-        android:gravity="center"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
         android:layout_below="@+id/view"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="61dp"
-        android:hint="Recipe Name" />
+        android:fillViewport="false"
+        android:orientation="vertical">
 
-    <ImageView
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:id="@+id/recipePic"
-        android:src="@drawable/burger"
-        android:layout_below="@+id/recipeName"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="17dp"
-        android:clickable="true" />
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            android:nestedScrollingEnabled="false"
+            tools:context="com.android.andrewgarver.recipegrabber.AddToCupboard">
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:gravity="center"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="10"
-        android:id="@+id/quantity"
-        android:layout_below="@+id/recipePic"
-        android:layout_alignStart="@+id/recipeName"
-        android:hint="3"
-        android:layout_toStartOf="@+id/recipePic" />
+            <EditText
+                android:id="@+id/recipeName"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="61dp"
+                android:gravity="center"
+                android:hint="Recipe Name" />
 
-    <Spinner
-        android:entries="@array/metrics"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:id="@+id/metricSpinner"
-        android:layout_below="@+id/recipePic"
-        android:layout_alignStart="@+id/recipePic"
-        android:spinnerMode="dropdown" />
+            <ImageView
+                android:id="@+id/recipePic"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_below="@+id/recipeName"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="17dp"
+                android:clickable="true"
+                android:src="@drawable/burger" />
 
-    <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:entries="@array/ingredients"
-        android:id="@+id/ingredientSpinner"
-        android:layout_alignTop="@+id/metricSpinner"
-        android:layout_toEndOf="@+id/metricSpinner"
-        android:spinnerMode="dropdown" />
+            <EditText
+                android:id="@+id/quantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/recipeName"
+                android:layout_below="@+id/recipePic"
+                android:layout_toStartOf="@+id/recipePic"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="3"
+                android:inputType="number" />
 
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@android:drawable/ic_input_add"
-        android:id="@+id/imageButton"
-        android:layout_below="@+id/metricSpinner"
-        android:layout_alignStart="@+id/quantity" />
+            <Spinner
+                android:id="@+id/metricSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_alignStart="@+id/recipePic"
+                android:layout_below="@+id/recipePic"
+                android:entries="@array/metrics"
+                android:spinnerMode="dropdown" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textMultiLine"
-        android:ems="10"
-        android:id="@+id/editText"
-        android:layout_below="@+id/imageButton"
-        android:layout_alignStart="@+id/metricSpinner"
-        android:hint="1. Melt butter in microwave safe dish\n2. Mix butter and sugar in..."/>
+            <Spinner
+                android:id="@+id/ingredientSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_alignTop="@+id/metricSpinner"
+                android:layout_toEndOf="@+id/metricSpinner"
+                android:entries="@array/ingredients"
+                android:spinnerMode="dropdown" />
 
+            <ImageButton
+                android:id="@+id/imageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/quantity"
+                android:layout_below="@+id/metricSpinner"
+                android:src="@android:drawable/ic_input_add" />
 
+            <EditText
+                android:id="@+id/editText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/metricSpinner"
+                android:layout_below="@+id/imageButton"
+                android:ems="10"
+                android:hint="1. Melt butter in microwave safe dish\n2. Mix butter and sugar in..."
+                android:inputType="textMultiLine" />
+        </RelativeLayout>
+    </ScrollView>
 </RelativeLayout>
-</ScrollView>
