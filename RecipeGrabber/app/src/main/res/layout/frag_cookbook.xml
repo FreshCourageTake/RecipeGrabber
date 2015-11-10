@@ -9,7 +9,7 @@
         android:layout_height="fill_parent"
         android:layout_gravity="fill"
         android:id="@+id/listView"
-        android:background="#f9e48f" />
+        android:background="#ffffff" />
 
     <ImageButton
         android:layout_width="wrap_content"
