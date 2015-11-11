@@ -12,19 +12,111 @@
 
         <android.support.v7.widget.Toolbar android:id="@+id/toolbar"
             android:layout_width="match_parent" android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary" app:popupTheme="@style/AppTheme.PopupOverlay" />
+            android:background="?attr/colorPrimaryDark" app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.design.widget.FloatingActionButton android:id="@+id/fab"
-        android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:src="@android:drawable/ic_dialog_email"
-        android:layout_marginLeft="@dimen/fab_margin"
-        android:layout_marginRight="@dimen/fab_margin"
-        android:layout_marginTop="49dp"
-        android:layout_marginEnd="35dp"
+    <EditText
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/ingQuant"
+        android:singleLine="true"
+        android:lines="1"
+        android:layout_marginTop="30dp"
+        android:editable="true"
+        android:textAppearance="?android:attr/textAppearanceListItemSmall"
+        android:layout_marginStart="40dp"
         android:layout_below="@+id/view"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentStart="true" />
+
+    <Spinner
+        android:id="@+id/ingUnit"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@+id/ingQuant"
+        android:layout_below="@+id/unitText"
+        android:entries="@array/metrics"
+        android:spinnerMode="dropdown" />
+
+    <EditText
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:ems="10"
+        android:id="@+id/ingName"
+        android:singleLine="true"
+        android:lines="1"
+        android:layout_alignTop="@+id/ingQuant"
+        android:layout_toEndOf="@+id/ingUnit"
+        android:layout_marginStart="15dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Quantity"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:id="@+id/quanText"
+        android:layout_alignBaseline="@+id/nameText"
+        android:layout_alignBottom="@+id/nameText"
+        android:layout_alignStart="@+id/ingQuant" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="45dp"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Units"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:id="@+id/unitText"
+        android:layout_alignTop="@+id/quanText"
+        android:layout_toRightOf="@+id/quanText"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Ingredient Name"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:id="@+id/nameText"
+        android:layout_above="@+id/ingName"
+        android:layout_alignStart="@+id/ingName" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add to Cupboard!"
+        android:id="@+id/addIng"
+        android:layout_marginBottom="30dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:shadowColor="#a2000000"
+        android:singleLine="false" />
+
+    <ImageButton
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:id="@+id/addMore"
+        android:contentDescription="Add More Ingredients"
+        android:src="@drawable/add"
+        android:background="@null"
+        android:layout_gravity="end|bottom"
+        android:baselineAligned="false"
+        android:nestedScrollingEnabled="false"
+        android:clickable="true"
+        android:contextClickable="false"
+        android:cropToPadding="false"
+        android:layout_marginTop="19dp"
+        android:layout_below="@+id/ingName"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="13dp" />
 
 </RelativeLayout>
