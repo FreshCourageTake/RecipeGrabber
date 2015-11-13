@@ -1,16 +1,18 @@
 package com.android.andrewgarver.recipegrabber;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 public class AddToCupboard extends AppCompatActivity {
-
-    int addMoreLoc = 5;
-    int btnMar = 19;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,26 +21,24 @@ public class AddToCupboard extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        init();
-    }
-
-    public void init() {
-        final RelativeLayout addTCLayout = (RelativeLayout)findViewById(R.id.addTClayout);
+        //this must be final since it is accessed from an inner class
         final ImageButton add = (ImageButton) findViewById(R.id.addMore);
 
+        //need to add the listener to add an extra row of input fields
         add.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                InputField theField = new InputField(v.getContext());
-                RelativeLayout.LayoutParams myParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-                myParams.addRule(RelativeLayout.BELOW, addTCLayout.getChildAt(addMoreLoc).getId());
-                addTCLayout.addView(theField, myParams);
-                addMoreLoc += 3;
 
-                btnMar += 100;
-                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)add.getLayoutParams();
-                params.setMargins(0, btnMar, 0, 0); //substitute parameters for left, top, right, bottom
-                add.setLayoutParams(params);
+            //When they click the + button, they will get another row for input.
+            public void onClick(View view) {
+
+                //We use the context of the button, since it is on the activity we are using
+                LayoutInflater vi = (LayoutInflater) add.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View v = vi.inflate(R.layout.input_field, null); //This is the layout of the new row
+
+                //if we need to change the id we would do it h
+
+                //There is an (at first) empty container LinearLayout that we insert these into
+                ((ViewGroup) findViewById(R.id.container)).addView(v);
             }
         });
     }
