@@ -8,15 +8,14 @@
         android:clickable="true"
         android:focusable="true">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+
 
         <RelativeLayout
             android:id="@+id/menuLayout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.5"
+
             android:clickable="true"
             android:focusable="true"
             android:background="#FFCC">
@@ -24,11 +23,11 @@
             <GridView
                 android:id="@+id/calendar"
                 android:numColumns="7"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content">
             </GridView>
         </RelativeLayout>
-    </ScrollView>
+
 
     <ListView
         android:id="@+id/menuListView"
