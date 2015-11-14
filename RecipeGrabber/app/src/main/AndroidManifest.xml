@@ -30,7 +30,7 @@
         </activity>
         <activity
             android:name=".AddToShoppingList"
-            android:label="Add a Recipe"
+            android:label="Add To Shopping List"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
     </application>
