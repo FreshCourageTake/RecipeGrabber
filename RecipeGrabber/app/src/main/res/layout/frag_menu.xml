@@ -1,7 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#FFCC">
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/lineLayout"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="true">
 
-</RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/menuLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="#FFCC">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/calendarRV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:numColumns="7">
+    
+            </android.support.v7.widget.RecyclerView>
+        </RelativeLayout>
+
+    <ListView
+        android:id="@+id/menuListView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
+        android:layout_gravity="center_horizontal|center"
+        android:clickable="true"
+        android:focusable="true">
+    </ListView>
+
+</LinearLayout>
