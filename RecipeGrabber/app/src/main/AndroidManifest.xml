@@ -33,6 +33,11 @@
             android:label="Add To Shopping List"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
+        <activity
+            android:name=".DisplayRecipe"
+            android:label="Lets Make It"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>
