@@ -57,33 +57,34 @@ public class Menu extends Fragment {
                 startActivity(new Intent(getActivity(), DisplayRecipe.class));
             }
         });
-                // add the day to the calender
-                recyclerView = (RecyclerView) view.findViewById(R.id.calendarRV);
-                dayAdapter = new DayAdapter(getActivity(), getDay(num_month_days));
-                recyclerView.setAdapter(dayAdapter);
-                recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 7));
 
-                gCalender = new GregorianCalendar(Locale.US);
+        // add the day to the calender
+        recyclerView = (RecyclerView) view.findViewById(R.id.calendarRV);
+        dayAdapter = new DayAdapter(getActivity(), getDay(num_month_days));
+        recyclerView.setAdapter(dayAdapter);
+        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 7));
+
+        gCalender = new GregorianCalendar(Locale.US);
 
                 //gCalender.getFirstDayOfWeek();
 
-                return view;
-            }
+        return view;
+    }
 
-            public static List<CalDay> getDay(int num_month_days) {
-                List<CalDay> numDays = new ArrayList<>();
+    public static List<CalDay> getDay(int num_month_days) {
+        List<CalDay> numDays = new ArrayList<>();
 
-                String[] days = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14",
-                        "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28",
-                        "29", "30", "31"};
-                for (int i = 0; i < days.length; i++) {
+        String[] days = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14",
+                "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28",
+                "29", "30", "31"};
+        for (int i = 0; i < days.length; i++) {
 
-                    // add the number of days to each month
-                    CalDay current = new CalDay();
-                    current.day_of_month = days[i];
-                    numDays.add(current);
-                }
-
-                return numDays;
-            }
+            // add the number of days to each month
+            CalDay current = new CalDay();
+            current.day_of_month = days[i];
+            numDays.add(current);
         }
+
+        return numDays;
+    }
+}
