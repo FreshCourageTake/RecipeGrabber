@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +33,7 @@ public class Menu extends Fragment {
     private RecyclerView recyclerView;
     private DayAdapter dayAdapter;
 
-    int num_month_days = 31;
+    int num_month_days = 27;
 
     @Nullable
     @Override
@@ -74,15 +75,26 @@ public class Menu extends Fragment {
     public static List<CalDay> getDay(int num_month_days) {
         List<CalDay> numDays = new ArrayList<>();
 
+        Log.i("menu", "The number of days in the month are " + num_month_days);
+
+        // ensure that the proper number of days is displayed.
+        if (num_month_days > 31 || num_month_days < 28) {
+            Log.e("menu", "No month has days " + num_month_days + ". Change num_month_days.");
+        }
+
+        // list of day number to be displayed
         String[] days = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14",
                 "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28",
                 "29", "30", "31"};
+
+        // add each day the list of Calender Days
         for (int i = 0; i < days.length; i++) {
 
             // add the number of days to each month
             CalDay current = new CalDay();
             current.day_of_month = days[i];
             numDays.add(current);
+            Log.i("menu", "day " + days[i]);
         }
 
         return numDays;
