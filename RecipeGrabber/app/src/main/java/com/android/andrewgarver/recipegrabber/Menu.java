@@ -23,9 +23,7 @@ import java.util.Locale;
  * Created by Andrew Garver on 11/2/2015.
  */
 public class Menu extends Fragment {
-
-
-
+    private static final String TAG = Menu.class.getSimpleName();
     private ListView listView;
     private GregorianCalendar gCalender;
 
@@ -33,7 +31,7 @@ public class Menu extends Fragment {
     private RecyclerView recyclerView;
     private DayAdapter dayAdapter;
 
-    int num_month_days = 27;
+    private int num_month_days = 31;
 
     @Nullable
     @Override
@@ -75,14 +73,13 @@ public class Menu extends Fragment {
     public static List<CalDay> getDay(int num_month_days) {
         List<CalDay> numDays = new ArrayList<>();
 
-        Log.i("menu", "The number of days in the month are " + num_month_days);
+        //log the number of days
+        Log.i(TAG, "The number of days in the month are " + num_month_days);
 
-        // ensure that the proper number of days is displayed.
-        if (num_month_days > 31 || num_month_days < 28) {
-            Log.e("menu", "No month has days " + num_month_days + ". Change num_month_days.");
-        }
+        //error log ensures that the number of days is valid
+        if (num_month_days > 31 || num_month_days < 28)
+            Log.e(TAG, num_month_days + " is not a valid number of days for any month. Change num_month_days.");
 
-        // list of day number to be displayed
         String[] days = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14",
                 "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28",
                 "29", "30", "31"};
