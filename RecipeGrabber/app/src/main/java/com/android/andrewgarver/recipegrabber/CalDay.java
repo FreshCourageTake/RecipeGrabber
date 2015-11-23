@@ -9,6 +9,6 @@ public class CalDay {
 
     String day_of_month;
 
-    private boolean hasItem = true;
+    private boolean hasItem = false;
 
 }
