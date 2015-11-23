@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,13 +12,14 @@ import android.widget.ImageButton;
 
 
 public class AddToCupboard extends AppCompatActivity {
-
+    private static final String TAG = AddToCupboard.class.getSimpleName();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_to_cupboard);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        Log.i(TAG, "Started Add To Cupboard");
 
         //this must be final since it is accessed from an inner class
         final ImageButton add = (ImageButton) findViewById(R.id.addMore);
