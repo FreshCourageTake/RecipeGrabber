@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
+import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -31,7 +31,8 @@ public class Menu extends Fragment {
     private RecyclerView recyclerView;
     private DayAdapter dayAdapter;
 
-    private int num_month_days = 31;
+    private TextView monthTextView;
+    private int num_month_days = 27;
 
     @Nullable
     @Override
@@ -41,10 +42,18 @@ public class Menu extends Fragment {
                 "Pancakes", "Pizza", "Burger", "Spaghetti", "Peanut Butter and Jelly",
                 "Pancakes", "Pizza", "Burger", "Spaghetti", "Peanut Butter and Jelly"};
 
+
+        String[] months = {"January", "February", "March", "April", "May", "June", "July",
+                "August", "September", "October", "November", "December"};
+
         View view = inflater.inflate(R.layout.frag_menu, container, false);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity().getApplicationContext(),
                 R.layout.row_layout,
                 items);
+
+        monthTextView = (TextView)view.findViewById(R.id.monthTV);
+        Log.i(TAG,"The Month is " + months[10]);
+        monthTextView.setText(months[10]);
 
         listView = (ListView) view.findViewById(R.id.menuListView);
         listView.setAdapter(adapter);
@@ -80,15 +89,19 @@ public class Menu extends Fragment {
         if (num_month_days > 31 || num_month_days < 28)
             Log.e(TAG, num_month_days + " is not a valid number of days for any month. Change num_month_days.");
 
+        // list of day number to be displayed
         String[] days = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14",
                 "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28",
                 "29", "30", "31"};
+
+        // add each day the list of Calender Days
         for (int i = 0; i < days.length; i++) {
 
             // add the number of days to each month
             CalDay current = new CalDay();
             current.day_of_month = days[i];
             numDays.add(current);
+            Log.i(TAG, "day " + days[i]);
         }
 
         return numDays;
