@@ -36,10 +36,11 @@ public class Cookbook extends Fragment {
         CustomList adapter = new CustomList(getActivity(), items, imageId);
         list = (ListView) view.findViewById(R.id.listView);
         list.setAdapter(adapter);
+
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getActivity(), "Congrats, You clicked something", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getActivity(), DisplayRecipe.class));
             }
         });
 

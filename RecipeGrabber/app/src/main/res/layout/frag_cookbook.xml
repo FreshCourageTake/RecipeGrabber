@@ -5,10 +5,12 @@
     android:background="#ffffff">
 
     <ListView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:layout_gravity="fill"
         android:id="@+id/listView"
+        android:clickable="true"
+        android:focusable="true"
         android:background="#ffffff" />
 
     <ImageButton
