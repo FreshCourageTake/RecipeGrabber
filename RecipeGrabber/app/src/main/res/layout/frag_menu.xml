@@ -8,29 +8,58 @@
         android:clickable="true"
         android:focusable="true">
 
-        <RelativeLayout
-            android:id="@+id/menuLayout"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.5"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="#FFCC">
+    <FrameLayout
+        android:id="@+id/titleRL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/calendarRV"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:numColumns="7">
-    
-            </android.support.v7.widget.RecyclerView>
-        </RelativeLayout>
+        <ImageView
+            android:id="@+id/cal_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/calander_title"
+            android:layout_gravity="center_horizontal"
+            android:layout_centerHorizontal="true"
+            android:adjustViewBounds="true"
+            android:elevation="1dp"/>
+
+        <TextView
+            android:id="@+id/monthTV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textColor="#ffffff"
+            android:textSize="20dp"
+            android:textStyle="bold|italic"
+            android:typeface="serif"
+            android:textAlignment="center"
+            android:adjustViewBounds="true"
+            android:text="January" />
+
+    </FrameLayout>
+
+    <RelativeLayout
+        android:id="@+id/menuLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.4"
+        android:clickable="true"
+        android:focusable="true">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/calendarRV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:numColumns="7">
+        </android.support.v7.widget.RecyclerView>
+
+    </RelativeLayout>
 
     <ListView
         android:id="@+id/menuListView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.5"
+        android:layout_weight="0.4"
         android:layout_gravity="center_horizontal|center"
         android:clickable="true"
         android:focusable="true">
