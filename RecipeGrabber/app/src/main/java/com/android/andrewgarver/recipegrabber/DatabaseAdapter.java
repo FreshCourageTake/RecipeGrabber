@@ -21,6 +21,12 @@ public class DatabaseAdapter {
     public DatabaseAdapter(Context context) {
         helper = new DatabaseHelper(context);
     }
+
+    /**
+     * Created by Andrew Garver on 11/19/2015.
+     *
+     * Add Ingredient
+     */
     public long addIngredient(String quant, String metric, String name) {
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -31,6 +37,42 @@ public class DatabaseAdapter {
         return id;
     }
 
+    /**
+     * Created by Andrew Garver on 11/19/2015.
+     *
+     * Add Recipe Name and Instructions
+     */
+    public long addRecipeInfo(String recName, String instructions) {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        ContentValues recContentValues = new ContentValues();
+
+        recContentValues.put(DatabaseHelper.NAME, recName);
+//        contentValues.put(DatabaseHelper.PIC, pic); TODO: Worry about the picture functionality later as stretch goal
+        recContentValues.put(DatabaseHelper.INSTRUCTIONS, instructions);
+        long id = db.insert(DatabaseHelper.TABLE_RECIPES, null, recContentValues);
+        return id;
+    }
+
+    /**
+     * Created by Andrew Garver on 11/19/2015.
+     *
+     * Add Ingredients that are part of a recipe
+     */
+    public long addRecipeIngredients(String ingredients, long recipeId) { // long here might give probs because it's int in table
+        SQLiteDatabase db = helper.getWritableDatabase();
+        ContentValues ingContentValues = new ContentValues();
+
+        ingContentValues.put(DatabaseHelper.INGREDIENTS, ingredients);
+        ingContentValues.put(DatabaseHelper.RECIPE_ID, recipeId);
+        long id = db.insert(DatabaseHelper.TABLE_RECIPEINGREDIENTS, null, ingContentValues);
+        return id;
+    }
+
+    /**
+     * Created by Andrew Garver on 11/19/2015.
+     *
+     * Get all the ingredients in the cupboard
+     */
     public ArrayList<String> getAllIngredients() {
         SQLiteDatabase db = helper.getWritableDatabase();
         String[] columns = {helper.PRIMARY_KEY, helper.QUANTITY, helper.METRIC, helper.NAME};
@@ -47,20 +89,42 @@ public class DatabaseAdapter {
         return items;
     }
 
+    /**
+     * Created by Andrew Garver on 11/19/2015.
+     *
+     * Get all the recipes in the cookbook
+     */
+    public ArrayList<String> getAllRecipes() {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        String[] columns = {helper.PRIMARY_KEY, helper.NAME, helper.INSTRUCTIONS};
+        Cursor cursor = db.query(helper.TABLE_RECIPES, columns, null, null, null, null, null);
+        ArrayList<String> items = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            int cid = cursor.getInt(0);
+            String name = cursor.getString(1);
+            String instructions = cursor.getString(2);
+            items.add(name);
+        }
+        return items;
+    }
+
     static class DatabaseHelper extends SQLiteOpenHelper {
 
         // Database global constants
         public static final String DATABASE_NAME = "recipe_grabber";
         public static final String TABLE_RECIPES = "recipes";
+        public static final String TABLE_RECIPEINGREDIENTS = "recipeIngredients";
         public static final String TABLE_INGREDIENTS = "ingredients";
-        public static final String TABLE_RECING = "recing";
         public static final String PRIMARY_KEY = "ID";
         public static final String NAME = "NAME";
         public static final String PIC = "PIC";
         public static final String INSTRUCTIONS = "INSTRUCTIONS";
         public static final String QUANTITY = "QUANTITY";
         public static final String METRIC = "METRIC";
-        public static final int DATABASE_VERSION = 31;
+        public static final String INGREDIENTS = "INGREDIENTS";
+        public static final String RECIPE_ID = "RECIPE_ID";
+
+        public static final int DATABASE_VERSION = 35;
 
         DatabaseHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -71,17 +135,16 @@ public class DatabaseAdapter {
                 Log.i("thing", "Inside onCreate");
                 db.execSQL("CREATE TABLE recipes (ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         "NAME VARCHAR(255), " +
-                        "PIC VARCHAR(255), " +
+//                        "PIC VARCHAR(255), " + TODO: stretch goal
                         "INSTRUCTIONS VARCHAR(255));");
                 db.execSQL("CREATE TABLE ingredients (ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         "NAME VARCHAR(255), " +
                         "QUANTITY INTEGER, " +
                         "METRIC VARCHAR(255));");
-                db.execSQL("CREATE TABLE recing (ID INTEGER PRIMARY KEY AUTOINCREMENT," +
-                        "RECIPE_ID INTEGER," +
-                        "INGREDIENT_ID INTEGER," +
-                        "FOREIGN KEY(RECIPE_ID) REFERENCES recipes(ID)," +
-                        "FOREIGN KEY(INGREDIENT_ID) REFERENCES ingredients(ID));");
+                db.execSQL("CREATE TABLE recipeIngredients (ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        "INGREDIENTS VARCHAR(255), " +
+                        "RECIPE_ID INTEGER, " +
+                        "FOREIGN KEY(RECIPE_ID) REFERENCES recipes(ID));");
                 Log.i("thing", "Table creation successful");
             } catch(SQLException e) {
                 Log.e("thing", "Failure to create database", e);
@@ -92,7 +155,7 @@ public class DatabaseAdapter {
             try {
                 db.execSQL("DROP TABLE IF EXISTS recipes");
                 db.execSQL("DROP TABLE IF EXISTS ingredients");
-                db.execSQL("DROP TABLE IF EXISTS recing");
+                db.execSQL("DROP TABLE IF EXISTS recipeIngredients");
                 onCreate(db);
             } catch (SQLException e) {
                 e.printStackTrace();

@@ -6,14 +6,14 @@ import android.widget.TextView;
 
 public class DisplayRecipe extends AppCompatActivity {
 
-    TextView textView;
+//    TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.display_recipe);
 
-        textView = (TextView)findViewById(R.id.displayTV);
+//        textView = (TextView)findViewById(R.id.displayTV);
 
     }
 }

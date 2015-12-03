@@ -204,7 +204,8 @@
                 android:id="@+id/addRecipe"
                 android:singleLine="false"
                 android:layout_below="@+id/editText"
-                android:layout_centerHorizontal="true" />
+                android:layout_centerHorizontal="true"
+                android:clickable="true" />
         </RelativeLayout>
     </ScrollView>
 </RelativeLayout>

@@ -8,9 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 /**
  * Created by Andrew Garver on 11/2/2015.
@@ -18,22 +21,29 @@ import android.widget.Toast;
 public class Cookbook extends Fragment {
 
     ListView list;
-    String[] items = {"Pancakes", "Pizza", "Burger", "Spaghetti", "Peanut Butter and Jelly",
-            "Pancakes", "Pizza", "Burger", "Spaghetti", "Peanut Butter and Jelly",
-            "Pancakes", "Pizza", "Burger", "Spaghetti", "Peanut Butter and Jelly"};
+    DatabaseAdapter dbHelper;
 
-    Integer[] imageId = { R.drawable.burger, R.drawable.burger, R.drawable.burger, R.drawable.burger,
-            R.drawable.burger, R.drawable.burger, R.drawable.burger, R.drawable.burger,
-            R.drawable.burger, R.drawable.burger, R.drawable.burger, R.drawable.burger,
-            R.drawable.burger, R.drawable.burger, R.drawable.burger };
+//    String[] items = {"Pancakes", "Pizza", "Burger", "Spaghetti", "Peanut Butter and Jelly",
+//            "Pancakes", "Pizza", "Burger", "Spaghetti", "Peanut Butter and Jelly",
+//            "Pancakes", "Pizza", "Burger", "Spaghetti", "Peanut Butter and Jelly"};
+
+//    Integer[] imageId = { R.drawable.burger, R.drawable.burger, R.drawable.burger, R.drawable.burger,
+//            R.drawable.burger, R.drawable.burger, R.drawable.burger, R.drawable.burger,
+//            R.drawable.burger, R.drawable.burger, R.drawable.burger, R.drawable.burger,
+//            R.drawable.burger, R.drawable.burger, R.drawable.burger };
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.frag_cookbook, container, false);
+        dbHelper = new DatabaseAdapter(getActivity());
+        ArrayList<String> items = dbHelper.getAllRecipes();
 
-        CustomList adapter = new CustomList(getActivity(), items, imageId);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),
+                R.layout.row_layout,
+                items);
+//        CustomList adapter = new CustomList(getActivity(), items, imageId);
         list = (ListView) view.findViewById(R.id.listView);
         list.setAdapter(adapter);
 
