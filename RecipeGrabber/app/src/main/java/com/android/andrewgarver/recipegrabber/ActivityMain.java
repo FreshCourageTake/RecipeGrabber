@@ -2,8 +2,6 @@ package com.android.andrewgarver.recipegrabber;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.support.design.widget.TabLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -42,7 +40,8 @@ public class ActivityMain extends AppCompatActivity {
     /**
      * The SQLiteOpenHelper object that will facilitate database queries
      */
-    DatabaseHelper dbHelper;
+    DatabaseAdapter dbHelper;
+    public static SQLiteDatabase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,10 +61,10 @@ public class ActivityMain extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
-
         Log.i("Main", "here");
-        dbHelper = new DatabaseHelper(this);
-        SQLiteDatabase database = dbHelper.getWritableDatabase();
+        dbHelper = new DatabaseAdapter(this);
+        database = dbHelper.helper.getWritableDatabase();
+        Log.i("Main", "after getWriteableDatabase");
     }
 
 

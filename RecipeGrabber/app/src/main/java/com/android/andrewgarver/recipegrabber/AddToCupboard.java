@@ -1,20 +1,26 @@
 package com.android.andrewgarver.recipegrabber;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import android.widget.Spinner;
 
 public class AddToCupboard extends AppCompatActivity {
     private static final String TAG = AddToCupboard.class.getSimpleName();
+    DatabaseAdapter dbHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,8 +29,11 @@ public class AddToCupboard extends AppCompatActivity {
         setSupportActionBar(toolbar);
         Log.i(TAG, "Started Add To Cupboard");
 
+        dbHelper = new DatabaseAdapter(this);
+
         //this must be final since it is accessed from an inner class
         final ImageButton add = (ImageButton) findViewById(R.id.addMore);
+        final Button addIng = (Button) findViewById(R.id.addIng);
 
         //need to add the listener to add an extra row of input fields
         add.setOnClickListener(new View.OnClickListener() {
@@ -41,6 +50,25 @@ public class AddToCupboard extends AppCompatActivity {
 
                 //There is an (at first) empty container LinearLayout that we insert these into
                 ((ViewGroup) findViewById(R.id.container)).addView(v);
+            }
+        });
+
+        addIng.setOnClickListener(new View.OnClickListener() {
+            @Override
+
+            //Clicking the add button adds the first row to the database
+            public void onClick(View view) {
+                Log.i(TAG, "adding to cupboard");
+
+                String quant = ((EditText)findViewById(R.id.ingQuant)).getText().toString();
+                String unit = ((Spinner)findViewById(R.id.ingUnit)).getSelectedItem().toString();
+                String ingName = ((EditText)findViewById(R.id.ingName)).getText().toString();
+
+                if (dbHelper.addIngredient(quant, unit, ingName) > 0){
+                    Log.i(TAG, "added to cupboard");
+                }
+
+                finish(); // This takes us back to the previous fragment
             }
         });
     }
