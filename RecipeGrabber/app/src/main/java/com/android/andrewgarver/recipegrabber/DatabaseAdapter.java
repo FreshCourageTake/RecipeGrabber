@@ -16,6 +16,7 @@ import java.util.List;
  * Created by Andrew Garver on 11/19/2015.
  */
 public class DatabaseAdapter {
+    private static final String TAG = "DatabaseAdapter";
 
     DatabaseHelper helper;
     public DatabaseAdapter(Context context) {
@@ -106,6 +107,47 @@ public class DatabaseAdapter {
             items.add(name);
         }
         return items;
+    }
+
+    /**
+     * Created by Andrew Garver on 11/19/2015.
+     *
+     * Get a specific recipe
+     */
+    public String[] getRecipe(String name) {
+        Log.i(TAG, "getting recipe");
+        SQLiteDatabase db = helper.getWritableDatabase();
+        String[] recipeColumns = {helper.PRIMARY_KEY, helper.NAME, helper.INSTRUCTIONS};
+        Cursor cursor = db.query(helper.TABLE_RECIPES, recipeColumns, "NAME=?", new String[] {name}, null, null, null, "1");
+        Log.i(TAG, "It's working!");
+        String[] items = new String[4];
+        Log.i(TAG, "about to parse returned data from recipe");
+        while (cursor.moveToNext()) {
+            int cid = cursor.getInt(0);
+            String displayName = cursor.getString(1);
+            String instructions = cursor.getString(2);
+            items[0] = Integer.toString(cid);
+            items[1] = displayName;
+            items[2] = instructions;
+        }
+        Log.i(TAG, "returning recipe for you sir");
+        return items;
+    }
+
+    /**
+     * Created by Andrew Garver on 11/19/2015.
+     *
+     * Get the ingredients of a specific recipe
+     */
+    public String getRecipeIngredients(long id) {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        String[] ingredientColumns = {helper.PRIMARY_KEY, helper.INGREDIENTS, helper.RECIPE_ID};
+        Cursor cursor = db.query(helper.TABLE_RECIPEINGREDIENTS, ingredientColumns, "RECIPE_ID=?", new String[] {Long.toString(id)}, null, null, null, "1");
+        String ingredients = null;
+        while(cursor.moveToNext()) {
+            ingredients = cursor.getString(1);
+        }
+        return ingredients;
     }
 
     static class DatabaseHelper extends SQLiteOpenHelper {

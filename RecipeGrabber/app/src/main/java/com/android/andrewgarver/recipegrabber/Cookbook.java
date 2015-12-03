@@ -19,18 +19,10 @@ import java.util.ArrayList;
  * Created by Andrew Garver on 11/2/2015.
  */
 public class Cookbook extends Fragment {
+    private static final String TAG = "Cookbook";
 
     ListView list;
     DatabaseAdapter dbHelper;
-
-//    String[] items = {"Pancakes", "Pizza", "Burger", "Spaghetti", "Peanut Butter and Jelly",
-//            "Pancakes", "Pizza", "Burger", "Spaghetti", "Peanut Butter and Jelly",
-//            "Pancakes", "Pizza", "Burger", "Spaghetti", "Peanut Butter and Jelly"};
-
-//    Integer[] imageId = { R.drawable.burger, R.drawable.burger, R.drawable.burger, R.drawable.burger,
-//            R.drawable.burger, R.drawable.burger, R.drawable.burger, R.drawable.burger,
-//            R.drawable.burger, R.drawable.burger, R.drawable.burger, R.drawable.burger,
-//            R.drawable.burger, R.drawable.burger, R.drawable.burger };
 
     @Nullable
     @Override
@@ -43,14 +35,20 @@ public class Cookbook extends Fragment {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),
                 R.layout.row_layout,
                 items);
-//        CustomList adapter = new CustomList(getActivity(), items, imageId);
         list = (ListView) view.findViewById(R.id.listView);
         list.setAdapter(adapter);
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(getActivity(), DisplayRecipe.class));
+                // Get the name of the activity
+                String recipeName = list.getItemAtPosition(position).toString();
+                // Use bundles to share data between activities
+                Intent intent = new Intent(getActivity(), DisplayRecipe.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("recipeName", recipeName);
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
         });
 
