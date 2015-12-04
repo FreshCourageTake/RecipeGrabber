@@ -30,7 +30,7 @@ public class Menu extends Fragment {
 
     // add the days to the calender
     private RecyclerView recyclerView;
-    private DayAdapter dayAdapter;
+   // private DayAdapter dayAdapter;
     private String month;
     private int monthNum;
     private int year;
@@ -85,8 +85,8 @@ public class Menu extends Fragment {
 
         // add the day to the calender
         recyclerView = (RecyclerView) view.findViewById(R.id.calendarRV);
-        dayAdapter = new DayAdapter(getActivity(), getDay());
-        recyclerView.setAdapter(dayAdapter);
+//        dayAdapter = new DayAdapter(getActivity(), getDay());
+//        recyclerView.setAdapter(dayAdapter);
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 7));
 
         //gCalendar.getFirstDayOfWeek();
@@ -94,28 +94,28 @@ public class Menu extends Fragment {
         return view;
     }
 
-    public static List<CalDay> getDay() {
-        List<CalDay> numDays = new ArrayList<>();
-
-        //log the number of days
-        Log.i(TAG, "The number of days in the month are " + num_month_days);
-
-        /////////day.setBackgroundColor(context.getResources().getColor(R.color.white));
-
-        //error log ensures that the number of days is valid
-        if (num_month_days > 31 || num_month_days < 28)
-            Log.e(TAG, num_month_days + " is not a valid number of days for any month. Change num_month_days.");
-
-        // add each day the list of Calender Days
-        for (int i = 1; i <= num_month_days; i++) {
-
-            // add the number of days to each month
-            CalDay current = new CalDay();
-            current.day_of_month = Integer.toString(i);
-            numDays.add(current);
-            //Log.i(TAG, "day " + i);
-        }
-
-        return numDays;
-    }
+//    public static List<CalDay> getDay() {
+//        List<CalDay> numDays = new ArrayList<>();
+//
+//        //log the number of days
+//        Log.i(TAG, "The number of days in the month are " + num_month_days);
+//
+//        /////////day.setBackgroundColor(context.getResources().getColor(R.color.white));
+//
+//        //error log ensures that the number of days is valid
+//        if (num_month_days > 31 || num_month_days < 28)
+//            Log.e(TAG, num_month_days + " is not a valid number of days for any month. Change num_month_days.");
+//
+//        // add each day the list of Calender Days
+//        for (int i = 1; i <= num_month_days; i++) {
+//
+//            // add the number of days to each month
+//            CalDay current = new CalDay();
+//            current.day_of_month = Integer.toString(i);
+//            numDays.add(current);
+//            //Log.i(TAG, "day " + i);
+//        }
+//
+//        return numDays;
+//    }
 }
