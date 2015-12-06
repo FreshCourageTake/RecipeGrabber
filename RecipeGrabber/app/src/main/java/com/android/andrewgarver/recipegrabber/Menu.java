@@ -17,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.android.andrewgarver.recipegrabber.extendCalView.CalendarProvider;
+import com.android.andrewgarver.recipegrabber.extendCalView.Day;
 import com.android.andrewgarver.recipegrabber.extendCalView.Event;
 import com.android.andrewgarver.recipegrabber.extendCalView.ExtendedCalendarView;
 
@@ -49,44 +50,35 @@ public class Menu extends Fragment {
                 items);
 
         ContentValues values = new ContentValues();
-        values.put(CalendarProvider.COLOR, Event.COLOR_RED);
-
+        values.put(CalendarProvider.COLOR, Event.COLOR_BLUE);
         values.put(CalendarProvider.DESCRIPTION, "Some Description");
         values.put(CalendarProvider.LOCATION, "Some location");
         values.put(CalendarProvider.EVENT, "Event name");
 
         Calendar cal = Calendar.getInstance();
         TimeZone tz = TimeZone.getDefault();
+        cal.set(2015, 11, 15, 5, 35);
 
-
-        int year = 2015;
-        int month = 12;
-        int day = 15;
-        int hour = 12;
-        int min = 12;
-
-        int julianDay = Time.getJulianDay(cal.getTimeInMillis(), TimeUnit.MILLISECONDS.toSeconds(tz.getOffset(cal.getTimeInMillis())));
-        cal.set(year, month, day, hour, min);
+        int StartDayJulian = Time.getJulianDay(cal.getTimeInMillis(), TimeUnit.MILLISECONDS.toSeconds(tz.getOffset(cal.getTimeInMillis())));
         values.put(CalendarProvider.START, cal.getTimeInMillis());
-        values.put(CalendarProvider.START_DAY, julianDay);
+        values.put(CalendarProvider.START_DAY, StartDayJulian);
 
-
-        cal.set(year, month, day, hour, min + 5);
+        cal.set(2015, 11, 15, 12, 12);
         int endDayJulian = Time.getJulianDay(cal.getTimeInMillis(), TimeUnit.MILLISECONDS.toSeconds(tz.getOffset(cal.getTimeInMillis())));
 
         values.put(CalendarProvider.END, cal.getTimeInMillis());
         values.put(CalendarProvider.END_DAY, endDayJulian);
-
-       // Uri uri = getContentResolver().insert(CalendarProvider.CONTENT_URI, values);
+        Log.i(TAG, "The day of the month is " + getContext());
+        getActivity().getContentResolver().insert(CalendarProvider.CONTENT_URI, values); //can we reset the database?
       //  extendedCalendarView.setBackgroundColor(5);
-
-        Log.i(TAG, "The day of the month is ");
 
 
         Log.i(TAG, "Use to test: ");
 
         Log.i(TAG, "The Month is ");
 
+        extendedCalendarView = (ExtendedCalendarView) view.findViewById(R.id.calendarMenu);
+        extendedCalendarView.setMonthTextBackgroundColor(R.color.black);
 
         listView = (ListView) view.findViewById(R.id.menuListView);
         listView.setAdapter(adapter);

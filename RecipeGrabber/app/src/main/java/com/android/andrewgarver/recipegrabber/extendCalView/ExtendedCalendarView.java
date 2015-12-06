@@ -269,7 +269,7 @@ public class ExtendedCalendarView extends RelativeLayout implements OnItemClickL
      *
      * Sets the background color of the month bar
      */
-    public void setMonehtTextBackgroundResource(int resource){
+    public void setMonthTextBackgroundResource(int resource){
         base.setBackgroundResource(resource);
     }
 
