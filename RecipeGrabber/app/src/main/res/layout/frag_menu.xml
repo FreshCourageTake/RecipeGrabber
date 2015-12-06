@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/lineLayout"
@@ -9,56 +8,26 @@
         android:clickable="true"
         android:focusable="true">
 
-    <FrameLayout
-        android:id="@+id/titleRL"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:id="@+id/cal_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:src="@drawable/calendar_title"
-            android:layout_gravity="center_horizontal"
-            android:adjustViewBounds="true"
-            android:contentDescription="@string/cal_title" />
-
-        <TextView
-            android:id="@+id/monthTV"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:textColor="#ffffff"
-            android:textSize="20sp"
-            android:textStyle="bold|italic"
-            android:typeface="serif"
-            android:textAlignment="center"
-            android:adjustViewBounds="true" />
-
-    </FrameLayout>
-
     <RelativeLayout
         android:id="@+id/menuLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.4"
+        android:layout_weight="0.5"
         android:clickable="true"
         android:focusable="true">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/calendarRV"
+        <com.android.andrewgarver.recipegrabber.extendCalView.ExtendedCalendarView
+            android:id="@+id/calendarMenu"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:numColumns="7">
-        </android.support.v7.widget.RecyclerView>
-
+            android:layout_height="match_parent">
+        </com.android.andrewgarver.recipegrabber.extendCalView.ExtendedCalendarView>
     </RelativeLayout>
 
     <ListView
         android:id="@+id/menuListView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.4"
+        android:layout_weight="0.3"
         android:layout_gravity="center_horizontal|center"
         android:clickable="true"
         android:focusable="true">
