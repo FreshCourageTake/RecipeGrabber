@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
@@ -26,6 +27,7 @@ import com.android.andrewgarver.recipegrabber.R;
 public class ExtendedCalendarView extends RelativeLayout implements OnItemClickListener,
         OnClickListener{
 
+    private static final String TAG = ExtendedCalendarView.class.getSimpleName();
     private Context context;
     private OnDayClickListener dayListener;
     private GridView calendar;
@@ -68,7 +70,7 @@ public class ExtendedCalendarView extends RelativeLayout implements OnItemClickL
     private void init(){
         cal = Calendar.getInstance();
         base = new RelativeLayout(context);
-        base.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT));
+        base.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         base.setMinimumHeight(50);
 
         base.setId(4);
@@ -92,9 +94,10 @@ public class ExtendedCalendarView extends RelativeLayout implements OnItemClickL
         month.setId(2);
         month.setLayoutParams(params);
         month.setTextAppearance(context, android.R.attr.textAppearanceLarge);
-        month.setText(cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault())+" "+cal.get(Calendar.YEAR));
+        month.setText(cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()) + " " + cal.get(Calendar.YEAR));
         month.setTextSize(25);
 
+        Log.i(TAG, "The day of the month is " + month.getText());
         base.addView(month);
 
         params = new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
@@ -203,7 +206,7 @@ public class ExtendedCalendarView extends RelativeLayout implements OnItemClickL
 
     private void previousMonth(){
         if(cal.get(Calendar.MONTH) == cal.getActualMinimum(Calendar.MONTH)) {
-            cal.set((cal.get(Calendar.YEAR)-1),cal.getActualMaximum(Calendar.MONTH),1);
+            cal.set((cal.get(Calendar.YEAR)-1),cal.getActualMaximum(Calendar.MONTH), Calendar.SATURDAY);
         } else {
             cal.set(Calendar.MONTH,cal.get(Calendar.MONTH)-1);
         }
@@ -212,7 +215,7 @@ public class ExtendedCalendarView extends RelativeLayout implements OnItemClickL
 
     private void nextMonth(){
         if(cal.get(Calendar.MONTH) == cal.getActualMaximum(Calendar.MONTH)) {
-            cal.set((cal.get(Calendar.YEAR)+1),cal.getActualMinimum(Calendar.MONTH),1);
+            cal.set((cal.get(Calendar.YEAR)+1),cal.getActualMinimum(Calendar.MONTH), Calendar.SATURDAY);
         } else {
             cal.set(Calendar.MONTH,cal.get(Calendar.MONTH)+1);
         }
@@ -230,6 +233,8 @@ public class ExtendedCalendarView extends RelativeLayout implements OnItemClickL
      * Refreshes the month
      */
     public void refreshCalendar(){
+        mAdapter = new CalendarAdapter(context,cal);
+        calendar.setAdapter(mAdapter);
         mAdapter.refreshDays();
         mAdapter.notifyDataSetChanged();
     }

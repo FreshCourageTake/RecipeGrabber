@@ -38,7 +38,7 @@ public class CalendarAdapter extends BaseAdapter{
     public CalendarAdapter(Context context, Calendar cal){
         this.cal = cal;
         this.context = context;
-        cal.set(Calendar.DAY_OF_MONTH, 1);
+        cal.set(Calendar.DAY_OF_MONTH, Calendar.SATURDAY);
         refreshDays();
     }
 
@@ -83,20 +83,21 @@ public class CalendarAdapter extends BaseAdapter{
             v = vi.inflate(R.layout.day_of_week, null);
             TextView day = (TextView)v.findViewById(R.id.textView1);
 
+
             if(position == 0){
-                day.setText(R.string.sunday);
-            }else if(position == 1){
                 day.setText(R.string.monday);
-            }else if(position == 2){
+            }else if(position == 1){
                 day.setText(R.string.tuesday);
-            }else if(position == 3){
+            }else if(position == 2){
                 day.setText(R.string.wednesday);
-            }else if(position == 4){
+            }else if(position == 3){
                 day.setText(R.string.thursday);
-            }else if(position == 5){
+            }else if(position == 4){
                 day.setText(R.string.friday);
-            }else if(position == 6){
+            }else if(position == 5){
                 day.setText(R.string.saturday);
+            }else if(position == 6) {
+                day.setText(R.string.sunday);
             }
 
         }else{

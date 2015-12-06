@@ -5,8 +5,11 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
 public class Event {
+
+    private static final String TAG = Event.class.getSimpleName();
 
     private int color;
     private String name;
@@ -99,7 +102,7 @@ public class Event {
     public String getStartDate(String dateFormat){
         DateFormat df = new SimpleDateFormat(dateFormat,Locale.getDefault());
         String date = df.format(start);
-
+        Log.i(TAG, "The day of the month is " + date);
         return date;
     }
 
