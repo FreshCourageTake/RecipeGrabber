@@ -59,7 +59,7 @@ public class DatabaseAdapter {
      *
      * Add Ingredients that are part of a recipe
      */
-    public long addRecipeIngredients(String ingredients, long recipeId) { // long here might give probs because it's int in table
+    public long addRecipeIngredients(String ingredients, long recipeId) {
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues ingContentValues = new ContentValues();
 
@@ -150,6 +150,38 @@ public class DatabaseAdapter {
         return ingredients;
     }
 
+    /**
+     * Created by Andrew Garver on 11/19/2015.
+     *
+     * Insert item(s) into shopping list database
+     */
+    public long addToShoppingList(String item) {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(DatabaseHelper.ITEM, item);
+        long id = db.insert(DatabaseHelper.TABLE_SHOPPINGLIST, null, contentValues);
+        return id;
+    }
+
+    /**
+     * Created by Andrew Garver on 11/19/2015.
+     *
+     * Get all the recipes in the cookbook
+     */
+    public ArrayList<String> getAllShoppingListItems() {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        String[] columns = {helper.PRIMARY_KEY, helper.ITEM};
+        Cursor cursor = db.query(helper.TABLE_SHOPPINGLIST, columns, null, null, null, null, null);
+        ArrayList<String> items = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            int cid = cursor.getInt(0);
+            String item = cursor.getString(1);
+            items.add(item);
+        }
+        return items;
+    }
+
     static class DatabaseHelper extends SQLiteOpenHelper {
 
         // Database global constants
@@ -157,6 +189,7 @@ public class DatabaseAdapter {
         public static final String TABLE_RECIPES = "recipes";
         public static final String TABLE_RECIPEINGREDIENTS = "recipeIngredients";
         public static final String TABLE_INGREDIENTS = "ingredients";
+        public static final String TABLE_SHOPPINGLIST = "shoppingList";
         public static final String PRIMARY_KEY = "ID";
         public static final String NAME = "NAME";
         public static final String PIC = "PIC";
@@ -165,8 +198,9 @@ public class DatabaseAdapter {
         public static final String METRIC = "METRIC";
         public static final String INGREDIENTS = "INGREDIENTS";
         public static final String RECIPE_ID = "RECIPE_ID";
+        public static final String ITEM = "item";
 
-        public static final int DATABASE_VERSION = 35;
+        public static final int DATABASE_VERSION = 39;
 
         DatabaseHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -187,6 +221,12 @@ public class DatabaseAdapter {
                         "INGREDIENTS VARCHAR(255), " +
                         "RECIPE_ID INTEGER, " +
                         "FOREIGN KEY(RECIPE_ID) REFERENCES recipes(ID));");
+                db.execSQL("CREATE TABLE shoppingList (ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        "ITEM VARCHAR(255));");
+                db.execSQL("CREATE TABLE plannedRecipes (ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        "RECIPE_ID INTEGER, " +
+                        "DATE VARCHAR(255)" +
+                        "FOREIGN KEY(RECIPE_ID) REFERENCES recipes(ID));");
                 Log.i("thing", "Table creation successful");
             } catch(SQLException e) {
                 Log.e("thing", "Failure to create database", e);
@@ -198,6 +238,8 @@ public class DatabaseAdapter {
                 db.execSQL("DROP TABLE IF EXISTS recipes");
                 db.execSQL("DROP TABLE IF EXISTS ingredients");
                 db.execSQL("DROP TABLE IF EXISTS recipeIngredients");
+                db.execSQL("DROP TABLE IF EXISTS shoppingList");
+                db.execSQL("DROP TABLE IF EXISTS plannedRecipes");
                 onCreate(db);
             } catch (SQLException e) {
                 e.printStackTrace();

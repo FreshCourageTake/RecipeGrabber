@@ -11,16 +11,23 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+
 /**
  * Created by Andrew Garver on 11/2/2015.
  */
 public class ShoppingList extends Fragment {
 
+    DatabaseAdapter dbHelper;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        String[] items = {"Cereal", "Soda Pop", "Tomato Paste", "Spaghetti Noodles", "Chocolate Chips", "Hot Dogs", "Snacks",
-                "Cereal", "Soda Pop", "Tomato Paste", "Spaghetti Noodles", "Chocolate Chips", "Hot Dogs", "Snacks"};
+//        String[] items = {"Cereal", "Soda Pop", "Tomato Paste", "Spaghetti Noodles", "Chocolate Chips", "Hot Dogs", "Snacks",
+//                "Cereal", "Soda Pop", "Tomato Paste", "Spaghetti Noodles", "Chocolate Chips", "Hot Dogs", "Snacks"};
+
+        dbHelper = new DatabaseAdapter(getActivity());
+        ArrayList<String> items = dbHelper.getAllShoppingListItems();
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),
                 R.layout.row_layout,
