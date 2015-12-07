@@ -65,6 +65,7 @@ public class ActivityMain extends AppCompatActivity {
         dbHelper = new DatabaseAdapter(this);
         database = dbHelper.helper.getWritableDatabase();
         Log.i("Main", "after getWriteableDatabase");
+
     }
 
 

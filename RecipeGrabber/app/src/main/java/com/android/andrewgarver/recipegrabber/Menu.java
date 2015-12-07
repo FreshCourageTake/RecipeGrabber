@@ -1,11 +1,13 @@
 package com.android.andrewgarver.recipegrabber;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,47 +15,70 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
+
+import com.android.andrewgarver.recipegrabber.extendCalView.CalendarProvider;
+import com.android.andrewgarver.recipegrabber.extendCalView.Day;
+import com.android.andrewgarver.recipegrabber.extendCalView.Event;
+import com.android.andrewgarver.recipegrabber.extendCalView.ExtendedCalendarView;
+
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Andrew Garver on 11/2/2015.
  */
 public class Menu extends Fragment {
     private static final String TAG = Menu.class.getSimpleName();
+
     private ListView listView;
-    private GregorianCalendar gCalender;
-
-    // add the days to the calender
-    private RecyclerView recyclerView;
-    private DayAdapter dayAdapter;
-
-    private TextView monthTextView;
-    private int num_month_days = 27;
+    private ExtendedCalendarView extendedCalendarView;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        String[] items = {"Pancakes", "Pizza", "Burger", "Spaghetti", "Peanut Butter and Jelly",
-                "Pancakes", "Pizza", "Burger", "Spaghetti", "Peanut Butter and Jelly",
-                "Pancakes", "Pizza", "Burger", "Spaghetti", "Peanut Butter and Jelly"};
-
-
-        String[] months = {"January", "February", "March", "April", "May", "June", "July",
-                "August", "September", "October", "November", "December"};
+        String[] items = {"Pancakes", "Pizza", "Burger"};
 
         View view = inflater.inflate(R.layout.frag_menu, container, false);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity().getApplicationContext(),
                 R.layout.row_layout,
                 items);
 
-        monthTextView = (TextView)view.findViewById(R.id.monthTV);
-        Log.i(TAG,"The Month is " + months[10]);
-        monthTextView.setText(months[10]);
+        ContentValues values = new ContentValues();
+        values.put(CalendarProvider.COLOR, Event.COLOR_BLUE);
+        values.put(CalendarProvider.DESCRIPTION, "Some Description");
+        values.put(CalendarProvider.LOCATION, "Some location");
+        values.put(CalendarProvider.EVENT, "Event name");
+
+        Calendar cal = Calendar.getInstance();
+        TimeZone tz = TimeZone.getDefault();
+        cal.set(2015, 11, 15, 5, 35);
+
+        int StartDayJulian = Time.getJulianDay(cal.getTimeInMillis(), TimeUnit.MILLISECONDS.toSeconds(tz.getOffset(cal.getTimeInMillis())));
+        values.put(CalendarProvider.START, cal.getTimeInMillis());
+        values.put(CalendarProvider.START_DAY, StartDayJulian);
+
+        cal.set(2015, 11, 15, 12, 12);
+        int endDayJulian = Time.getJulianDay(cal.getTimeInMillis(), TimeUnit.MILLISECONDS.toSeconds(tz.getOffset(cal.getTimeInMillis())));
+
+        values.put(CalendarProvider.END, cal.getTimeInMillis());
+        values.put(CalendarProvider.END_DAY, endDayJulian);
+        Log.i(TAG, "The day of the month is " + getContext());
+        getActivity().getContentResolver().insert(CalendarProvider.CONTENT_URI, values); //can we reset the database?
+      //  extendedCalendarView.setBackgroundColor(5);
+
+
+        Log.i(TAG, "Use to test: ");
+
+        Log.i(TAG, "The Month is ");
+
+        extendedCalendarView = (ExtendedCalendarView) view.findViewById(R.id.calendarMenu);
+        extendedCalendarView.setMonthTextBackgroundColor(R.color.black);
 
         listView = (ListView) view.findViewById(R.id.menuListView);
         listView.setAdapter(adapter);
@@ -67,43 +92,11 @@ public class Menu extends Fragment {
         });
 
         // add the day to the calender
-        recyclerView = (RecyclerView) view.findViewById(R.id.calendarRV);
-        dayAdapter = new DayAdapter(getActivity(), getDay(num_month_days));
-        recyclerView.setAdapter(dayAdapter);
-        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 7));
 
-        gCalender = new GregorianCalendar(Locale.US);
-
-                //gCalender.getFirstDayOfWeek();
 
         return view;
     }
 
-    public static List<CalDay> getDay(int num_month_days) {
-        List<CalDay> numDays = new ArrayList<>();
 
-        //log the number of days
-        Log.i(TAG, "The number of days in the month are " + num_month_days);
 
-        //error log ensures that the number of days is valid
-        if (num_month_days > 31 || num_month_days < 28)
-            Log.e(TAG, num_month_days + " is not a valid number of days for any month. Change num_month_days.");
-
-        // list of day number to be displayed
-        String[] days = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14",
-                "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28",
-                "29", "30", "31"};
-
-        // add each day the list of Calender Days
-        for (int i = 0; i < days.length; i++) {
-
-            // add the number of days to each month
-            CalDay current = new CalDay();
-            current.day_of_month = days[i];
-            numDays.add(current);
-            Log.i(TAG, "day " + days[i]);
-        }
-
-        return numDays;
-    }
 }
