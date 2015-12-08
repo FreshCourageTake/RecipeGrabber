@@ -33,4 +33,20 @@
         android:focusable="true">
     </ListView>
 
+    <ImageButton
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/add"
+        android:background="@null"
+        android:layout_gravity="end|bottom"
+        android:baselineAligned="false"
+        android:nestedScrollingEnabled="false"
+        android:cropToPadding="false"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:clickable="true"
+        android:contextClickable="false"
+        android:contentDescription="Add Recipe Event to Calendar"
+        android:id="@+id/addEvent" />
+
 </LinearLayout>

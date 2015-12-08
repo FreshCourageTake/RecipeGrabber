@@ -234,9 +234,8 @@ public class CalendarAdapter extends BaseAdapter{
         for(int i=j-1;i<days.length;i++) {
             Day d = new Day(context,dayNumber,year,month);
 
-            Calendar cTemp = Calendar.getInstance();
-            cTemp.set(year, month, dayNumber);
-            int startDay = Time.getJulianDay(cTemp.getTimeInMillis(), TimeUnit.MILLISECONDS.toSeconds(tz.getOffset(cTemp.getTimeInMillis())));
+            //modified
+            int startDay = julianDay(year, month, dayNumber);
 
             d.setAdapter(this);
             d.setStartDay(startDay);
@@ -245,6 +244,15 @@ public class CalendarAdapter extends BaseAdapter{
             dayNumber++;
             dayList.add(d);
         }
+    }
+
+    //added so does not use deprecated Time class
+    private int julianDay(int year, int month, int day) {
+        int mon = month + 1;
+        int a = (14 - mon) / 12;
+        int y = year + 4800 - a;
+        int m = mon + 12 * a - 3;
+        return day + (153 * m + 2) / 5 + 365 * y + y / 4 - y / 100 + y / 400 - 32045;
     }
 
 //	public abstract static class OnAddNewEventClick{

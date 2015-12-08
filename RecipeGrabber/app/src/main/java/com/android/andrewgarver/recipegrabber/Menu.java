@@ -1,102 +1,110 @@
 package com.android.andrewgarver.recipegrabber;
 
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ListView;
-
 import com.android.andrewgarver.recipegrabber.extendCalView.CalendarProvider;
 import com.android.andrewgarver.recipegrabber.extendCalView.Day;
 import com.android.andrewgarver.recipegrabber.extendCalView.Event;
 import com.android.andrewgarver.recipegrabber.extendCalView.ExtendedCalendarView;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Andrew Garver on 11/2/2015.
  */
 public class Menu extends Fragment {
     private static final String TAG = Menu.class.getSimpleName();
+    private static final int recipeRequest = 1;
 
     private ListView listView;
     private ExtendedCalendarView extendedCalendarView;
+    private Day selDay;
+    private ArrayList<String> items;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        String[] items = {"Pancakes", "Pizza", "Burger"};
-
         View view = inflater.inflate(R.layout.frag_menu, container, false);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity().getApplicationContext(),
-                R.layout.row_layout,
-                items);
-
-        ContentValues values = new ContentValues();
-        values.put(CalendarProvider.COLOR, Event.COLOR_BLUE);
-        values.put(CalendarProvider.DESCRIPTION, "Some Description");
-        values.put(CalendarProvider.LOCATION, "Some location");
-        values.put(CalendarProvider.EVENT, "Event name");
-
-        Calendar cal = Calendar.getInstance();
-        TimeZone tz = TimeZone.getDefault();
-        cal.set(2015, 11, 15, 5, 35);
-
-        int StartDayJulian = Time.getJulianDay(cal.getTimeInMillis(), TimeUnit.MILLISECONDS.toSeconds(tz.getOffset(cal.getTimeInMillis())));
-        values.put(CalendarProvider.START, cal.getTimeInMillis());
-        values.put(CalendarProvider.START_DAY, StartDayJulian);
-
-        cal.set(2015, 11, 15, 12, 12);
-        int endDayJulian = Time.getJulianDay(cal.getTimeInMillis(), TimeUnit.MILLISECONDS.toSeconds(tz.getOffset(cal.getTimeInMillis())));
-
-        values.put(CalendarProvider.END, cal.getTimeInMillis());
-        values.put(CalendarProvider.END_DAY, endDayJulian);
-        Log.i(TAG, "The day of the month is " + getContext());
-        getActivity().getContentResolver().insert(CalendarProvider.CONTENT_URI, values); //can we reset the database?
-      //  extendedCalendarView.setBackgroundColor(5);
-
-
-        Log.i(TAG, "Use to test: ");
-
-        Log.i(TAG, "The Month is ");
+        listView = (ListView) view.findViewById(R.id.menuListView);
 
         extendedCalendarView = (ExtendedCalendarView) view.findViewById(R.id.calendarMenu);
         extendedCalendarView.setMonthTextBackgroundColor(R.color.black);
+        extendedCalendarView.setOnDayClickListener(new ExtendedCalendarView.OnDayClickListener() {
+            @Override
+            public void onDayClicked(AdapterView<?> adapter, View view, int position, long id, Day day) {
+                selDay = day;
+                getEventDetails(day);
+                listView.setAdapter(new ArrayAdapter(getContext(), R.layout.row_layout, items));
+            }
+        });
 
-        listView = (ListView) view.findViewById(R.id.menuListView);
-        listView.setAdapter(adapter);
+        //
+
+        ImageButton addBtn = (ImageButton) view.findViewById(R.id.addEvent);
+        addBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (selDay != null)
+                    startActivityForResult(new Intent(getContext(), PickRecipe.class), recipeRequest);
+            }
+        });
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position,
                                     long id) {
-                startActivity(new Intent(getActivity(), DisplayRecipe.class));
+                // Get the name of the activity
+                String recipeName = listView.getItemAtPosition(position).toString();
+                // Use bundles to share data between activities
+                Intent intent = new Intent(getActivity(), DisplayRecipe.class);
+                Bundle bundle = new Bundle(); //we can use intent.putExtra("recipeName", recipeName); don't need bundle
+                bundle.putString("recipeName", recipeName);
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
         });
-
-        // add the day to the calender
-
 
         return view;
     }
 
+    private void getEventDetails(Day day) {
+        items = new ArrayList();
+
+        for (Event e : day.getEvents()) {Log.i(TAG, "Event in List: " + e.getTitle());
+            items.add(e.getTitle());}
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == recipeRequest) {
+            Log.i(TAG, "Request == recipeRequest");
+            if (resultCode == getActivity().RESULT_OK) {
+                Log.i(TAG, "RESULT OKAY");
+                String recipe = data.getStringExtra("recipeName");
+                ContentValues values = new ContentValues();
+                values.put(CalendarProvider.COLOR, Event.COLOR_RED);
+                values.put(CalendarProvider.EVENT, recipe);
+                int eventJulDay = selDay.getStartDay();
+                Log.i(TAG, "Event Date (day/month/year): " + selDay.getDay() + '/' +
+                        (selDay.getMonth() + 1) + '/' + selDay.getYear());
+                Log.i(TAG, "Event Julian Day: " + eventJulDay);
+                Log.i(TAG, "Event Name: " + recipe);
+                values.put(CalendarProvider.START_DAY, eventJulDay);
+                values.put(CalendarProvider.END_DAY, eventJulDay);
+                getActivity().getContentResolver().insert(CalendarProvider.CONTENT_URI, values);
+                extendedCalendarView.refreshCalendar();
+            }
+        }
+    }
 
 
 }

@@ -33,7 +33,7 @@ public class Cookbook extends Fragment {
         dbHelper = new DatabaseAdapter(getActivity());
         ArrayList<String> items = dbHelper.getAllRecipes();
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity().getApplicationContext(),
                 R.layout.row_layout,
                 items);
         list = (ListView) view.findViewById(R.id.listView);

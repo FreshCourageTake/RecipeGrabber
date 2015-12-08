@@ -36,11 +36,15 @@
         <activity
             android:name=".DisplayRecipe"
             android:label="Lets Make It"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar" >
         </activity>
+
         <provider
-            android:name="com.android.andrewgarver.recipegrabber.extendCalView.CalendarProvider"
-            android:authorities="com.android.andrewgarver.recipegrabber.extendCalView.calendarprovider"/>
+            android:name=".extendCalView.CalendarProvider"
+            android:authorities="com.android.andrewgarver.recipegrabber.extendCalView.calendarprovider" />
+
+        <activity android:name=".PickRecipe" >
+        </activity>
     </application>
 
 </manifest>
