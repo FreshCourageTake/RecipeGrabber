@@ -30,7 +30,7 @@
         </activity>
         <activity
             android:name=".AddToShoppingList"
-            android:label="Add a Recipe"
+            android:label="Add To Shopping List"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
         <activity
@@ -38,6 +38,9 @@
             android:label="Lets Make It"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        <provider
+            android:name="com.android.andrewgarver.recipegrabber.extendCalView.CalendarProvider"
+            android:authorities="com.android.andrewgarver.recipegrabber.extendCalView.calendarprovider"/>
     </application>
 
 </manifest>

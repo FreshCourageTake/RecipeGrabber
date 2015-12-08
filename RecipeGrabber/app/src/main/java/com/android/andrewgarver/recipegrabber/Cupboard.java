@@ -11,16 +11,22 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+
 /**
  * Created by Andrew Garver on 11/2/2015.
  */
 public class Cupboard extends Fragment {
 
+    DatabaseAdapter dbHelper;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        String[] items = {"Salt", "Pepper", "Milk", "Pepperoni", "Mozzarella Cheese", "Parsley", "Nutmeg",
-                "Salt", "Pepper", "Milk", "Pepperoni", "Mozzarella Cheese", "Parsley", "Nutmeg"};
+
+        dbHelper = new DatabaseAdapter(getActivity());
+
+        ArrayList<String> items = dbHelper.getAllIngredients();
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),
                 R.layout.row_layout,

@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -60,55 +58,154 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="17dp"
                 android:clickable="true"
-                android:src="@drawable/burger" />
+                android:src="@drawable/coming_soon_image" />
 
-            <EditText
-                android:id="@+id/quantity"
-                android:layout_width="wrap_content"
+            <RelativeLayout
                 android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/recipeName"
-                android:layout_below="@+id/recipePic"
-                android:layout_toStartOf="@+id/recipePic"
-                android:ems="10"
-                android:gravity="center"
-                android:hint="3"
-                android:inputType="number" />
+                android:layout_width="fill_parent"
+                android:id="@+id/headers"
+                android:layout_below="@id/recipePic">
 
-            <Spinner
-                android:id="@+id/metricSpinner"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_alignStart="@+id/recipePic"
-                android:layout_below="@+id/recipePic"
-                android:entries="@array/metrics"
-                android:spinnerMode="dropdown" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="Quantity"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:id="@+id/quanText"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginTop="25dp"/>
 
-            <Spinner
-                android:id="@+id/ingredientSpinner"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_alignTop="@+id/metricSpinner"
-                android:layout_toEndOf="@+id/metricSpinner"
-                android:entries="@array/ingredients"
-                android:spinnerMode="dropdown" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="50dp"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="Units"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:id="@+id/unitText"
+                    android:layout_alignTop="@+id/quanText"
+                    android:layout_toRightOf="@+id/quanText"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/unitText"
+                    android:layout_alignTop="@id/unitText"
+                    android:paddingLeft="50dp"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="Ingredient Name"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:id="@+id/nameText"/>
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:id="@+id/input"
+                android:layout_below="@id/headers"
+                >
+
+                <EditText
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:ems="10"
+                    android:id="@+id/ingQuant"
+                    android:singleLine="true"
+                    android:lines="1"
+                    android:layout_marginTop="45dp"
+                    android:textAppearance="?android:attr/textAppearanceListItemSmall"
+                    android:layout_marginStart="40dp"
+                    android:layout_alignParentStart="true" />
+
+                <Spinner
+                    android:id="@+id/ingUnit"
+                    android:layout_width="100dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_alignTop="@+id/ingQuant"
+                    android:layout_toRightOf="@+id/ingQuant"
+                    android:entries="@array/metrics"
+                    android:spinnerMode="dropdown" />
+
+                <EditText
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:ems="10"
+                    android:id="@+id/ingName"
+                    android:singleLine="true"
+                    android:lines="1"
+                    android:textAppearance="?android:attr/textAppearanceListItemSmall"
+                    android:layout_alignTop="@+id/ingQuant"
+                    android:layout_toEndOf="@+id/ingUnit"
+                    android:layout_marginStart="15dp" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_below="@id/input">
+            </LinearLayout>
 
             <ImageButton
-                android:id="@+id/imageButton"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:id="@+id/addMore"
+                android:contentDescription="Add More Ingredients"
+                android:src="@drawable/add"
+                android:background="@null"
+                android:layout_gravity="end|bottom"
+                android:baselineAligned="false"
+                android:nestedScrollingEnabled="false"
+                android:clickable="true"
+                android:contextClickable="false"
+                android:cropToPadding="false"
+                android:layout_marginStart="32dp"
+                android:layout_below="@+id/container"
+                android:layout_marginTop="20dp"
+                android:layout_alignParentStart="true" />
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/quantity"
-                android:layout_below="@+id/metricSpinner"
-                android:src="@android:drawable/ic_input_add" />
+                android:layout_below="@id/addMore"
+                android:paddingLeft="50dp"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Instructions"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:id="@+id/instructionLabel"/>
 
             <EditText
                 android:id="@+id/editText"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/metricSpinner"
-                android:layout_below="@+id/imageButton"
+                android:paddingLeft="50dp"
                 android:ems="10"
                 android:hint="1. Melt butter in microwave safe dish\n2. Mix butter and sugar in..."
-                android:inputType="textMultiLine" />
+                android:inputType="textMultiLine"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/instructionLabel"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add To Cookbook"
+                android:id="@+id/addRecipe"
+                android:singleLine="false"
+                android:layout_below="@+id/editText"
+                android:layout_centerHorizontal="true"
+                android:clickable="true" />
         </RelativeLayout>
     </ScrollView>
 </RelativeLayout>
