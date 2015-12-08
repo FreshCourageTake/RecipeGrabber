@@ -8,7 +8,6 @@ import android.widget.TextView;
 public class DisplayRecipe extends AppCompatActivity {
     private static final String TAG = "displayRecipe";
 
-
     DatabaseAdapter dbHelper;
 
     @Override
