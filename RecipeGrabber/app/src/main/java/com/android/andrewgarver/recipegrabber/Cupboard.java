@@ -19,9 +19,9 @@ import java.util.ArrayList;
 public class Cupboard extends Fragment {
 
     private static final int ingredCode = 2;
-    DatabaseAdapter dbHelper;
-    ArrayAdapter<String> adapter;
-
+    private DatabaseAdapter dbHelper;
+    private ArrayAdapter<String> adapter;
+    private ListView list;
 
 
     @Nullable
@@ -35,7 +35,7 @@ public class Cupboard extends Fragment {
         adapter = new ArrayAdapter<>(getContext(), R.layout.row_layout, items);
 
         View view = inflater.inflate(R.layout.frag_cupboard, container, false);
-        ListView list = (ListView) view.findViewById(R.id.listView);
+        list = (ListView) view.findViewById(R.id.listView);
         list.setAdapter(adapter);
 
         ImageButton addBtn = (ImageButton) view.findViewById(R.id.addTo);
@@ -52,8 +52,7 @@ public class Cupboard extends Fragment {
         if (requestCode == ingredCode) {
             if (resultCode == getActivity().RESULT_OK) {
                 ArrayList<String> ingredList = data.getStringArrayListExtra("results");
-                for (String ingred : ingredList)
-                    adapter.add(ingred);
+                adapter.addAll(ingredList);
             }
         }
     }

@@ -18,33 +18,39 @@ import java.util.ArrayList;
  */
 public class ShoppingList extends Fragment {
 
-    DatabaseAdapter dbHelper;
+    private final static int shoppingCode = 3;
+    private DatabaseAdapter dbHelper;
+    private ListView list;
+    private ArrayAdapter<String> adapter;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-//        String[] items = {"Cereal", "Soda Pop", "Tomato Paste", "Spaghetti Noodles", "Chocolate Chips", "Hot Dogs", "Snacks",
-//                "Cereal", "Soda Pop", "Tomato Paste", "Spaghetti Noodles", "Chocolate Chips", "Hot Dogs", "Snacks"};
-
         dbHelper = new DatabaseAdapter(getActivity());
         ArrayList<String> items = dbHelper.getAllShoppingListItems();
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),
-                R.layout.row_layout,
-                items);
+        adapter = new ArrayAdapter<>(getContext(), R.layout.row_layout, items);
 
         View view = inflater.inflate(R.layout.frag_shoppinglist, container, false);
-        ListView list = (ListView) view.findViewById(R.id.listView);
+        list = (ListView) view.findViewById(R.id.listView);
         list.setAdapter(adapter);
 
         ImageButton addBtn = (ImageButton) view.findViewById(R.id.addToShoppingList);
         addBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                startActivity(new Intent(getContext(), AddToShoppingList.class));
+                startActivityForResult(new Intent(getContext(), AddToShoppingList.class), shoppingCode);
             }
         });
 
-
         return view;
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == shoppingCode) {
+            if (resultCode == getActivity().RESULT_OK) {
+                ArrayList<String> shopping = data.getStringArrayListExtra("results");
+                adapter.addAll(shopping);
+            }
+        }
     }
 }
