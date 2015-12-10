@@ -21,7 +21,7 @@ import java.util.ArrayList;
 public class ShoppingList extends Fragment {
 
     private final static int shoppingCode = 3;
-    private final static String TAG = this.getClass().getSimpleName();
+    private final static String TAG = ShoppingList.class.getSimpleName();
     private DatabaseAdapter dbHelper;
     private ListView list;
     private ArrayAdapter<String> adapter;

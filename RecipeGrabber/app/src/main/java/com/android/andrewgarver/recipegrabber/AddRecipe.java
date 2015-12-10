@@ -20,7 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
 public class AddRecipe extends AppCompatActivity {
-    private static final String TAG = "AddRecipe";
+    private static final String TAG = AddRecipe.class.getSimpleName();
 
     DatabaseAdapter dbHelper;
 

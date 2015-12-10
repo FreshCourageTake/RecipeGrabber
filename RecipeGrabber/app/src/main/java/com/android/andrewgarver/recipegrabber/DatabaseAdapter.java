@@ -16,7 +16,7 @@ import java.util.List;
  * Created by Andrew Garver on 11/19/2015.
  */
 public class DatabaseAdapter {
-    private static final String TAG = "DatabaseAdapter";
+    private static final String TAG = DatabaseAdapter.class.getSimpleName();
 
     DatabaseHelper helper;
 

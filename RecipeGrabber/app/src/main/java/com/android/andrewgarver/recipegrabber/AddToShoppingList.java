@@ -20,7 +20,7 @@ import android.widget.Spinner;
 import java.util.ArrayList;
 
 public class AddToShoppingList extends AppCompatActivity {
-    private static final String TAG = "AddToShoppingList";
+    private static final String TAG = AddToShoppingList.class.getSimpleName();
     DatabaseAdapter dbHelper;
 
 

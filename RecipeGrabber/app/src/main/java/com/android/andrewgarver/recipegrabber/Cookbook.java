@@ -21,7 +21,7 @@ import java.util.ArrayList;
  * Created by Andrew Garver on 11/2/2015.
  */
 public class Cookbook extends Fragment {
-    private static final String TAG = "Cookbook";
+    private static final String TAG = Cookbook.class.getSimpleName();
     private static final int newRecipeCode = 0;
 
     ListView list;
