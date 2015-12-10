@@ -1,5 +1,6 @@
 package com.android.andrewgarver.recipegrabber;
 
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -68,7 +69,6 @@ public class ActivityMain extends AppCompatActivity {
 
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -85,13 +85,12 @@ public class ActivityMain extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_about) {
-            setContentView(R.layout.activity_about_page);
+            startActivity(new Intent(this, About_page.class));
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
-
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
