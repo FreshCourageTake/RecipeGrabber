@@ -78,7 +78,7 @@ public class AddToShoppingList extends AppCompatActivity {
                 String ingName = ((EditText) findViewById(R.id.ingName)).getText().toString();
                 if (!ingQuant.equals("") && !ingUnit.equals("") && !ingName.equals("")) {
                     item = ingName + " - " + ingQuant + " " + ingUnit;
-                    if (dbHelper.addToShoppingList(ingName, ingQuant, ingUnit) > 0) {
+                    if (dbHelper.addToShoppingList(ingName, ingQuant, ingUnit, false) > 0) {
                         Log.i(TAG, "added ingredients");
                     } else {
                         Log.i(TAG, "failed to add ingredients");
@@ -92,7 +92,7 @@ public class AddToShoppingList extends AppCompatActivity {
                     ingName = ((EditText) rel.findViewById(R.id.nameNewRow)).getText().toString();
                     if (!ingQuant.equals("") && !ingUnit.equals("") && !ingName.equals("")) {
                         item = ingName + " - " + ingQuant + " " + ingUnit;
-                        if (dbHelper.addToShoppingList(ingName, ingQuant, ingUnit) > 0) {
+                        if (dbHelper.addToShoppingList(ingName, ingQuant, ingUnit, false) > 0) {
                             Log.i(TAG, "added ingredients");
                         } else {
                             Log.i(TAG, "failed to add ingredients");

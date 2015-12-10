@@ -28,14 +28,15 @@ public class ShoppingList extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-//        String[] items = {"Cereal", "Soda Pop", "Tomato Paste", "Spaghetti Noodles", "Chocolate Chips", "Hot Dogs", "Snacks",
-//                "Cereal", "Soda Pop", "Tomato Paste", "Spaghetti Noodles", "Chocolate Chips", "Hot Dogs", "Snacks"};
 
         dbHelper = new DatabaseAdapter(getActivity());
         cpHelper = new CalendarProvider();
         cpHelper.setContext(getActivity());
 
         // This is where we automatically add things to the shopping list
+
+        // We need to refresh the shoppingList before anything so we don't get duplicates
+        dbHelper.refreshShoppingList();
 
         // Gets the recipe names
         ArrayList<String> plannedRecipes = cpHelper.getPlannedRecipes();
@@ -62,12 +63,12 @@ public class ShoppingList extends Fragment {
                     haveInCupboard = true;
                             if (planned.getQuantity() > cupboard.getQuantity()) { // don't have enough in the cupboard
                         // Add the results to the shopping list
-                        dbHelper.addToShoppingList(planned.getName(), String.valueOf(planned.getQuantity() - cupboard.getQuantity()), planned.getMetric());
+                        dbHelper.addToShoppingList(planned.getName(), String.valueOf(planned.getQuantity() - cupboard.getQuantity()), planned.getMetric(), true);
                     }
                 }
             }
             if (!haveInCupboard) {
-                dbHelper.addToShoppingList(planned.getName(), String.valueOf(planned.getQuantity()), planned.getMetric());
+                dbHelper.addToShoppingList(planned.getName(), String.valueOf(planned.getQuantity()), planned.getMetric(), true);
             }
         }
 

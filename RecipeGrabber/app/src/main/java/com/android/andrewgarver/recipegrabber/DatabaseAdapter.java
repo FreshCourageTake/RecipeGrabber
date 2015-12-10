@@ -217,7 +217,7 @@ public class DatabaseAdapter {
      * <p/>
      * Insert item(s) into shopping list database
      */
-    public long addToShoppingList(String name, String quant, String unit) {
+    public long addToShoppingList(String name, String quant, String unit, boolean auto) {
         SQLiteDatabase db = helper.getWritableDatabase();
 
         int quantNum = Integer.parseInt(quant);
@@ -225,7 +225,7 @@ public class DatabaseAdapter {
         for (Ingredient i : shoppingList) {
             if (i.getName().equalsIgnoreCase(name) && i.getMetric().equals(unit)) {
                 quantNum += i.getQuantity();
-                db.delete(helper.TABLE_SHOPPINGLIST, "NAME=? AND METRIC=?", new String[] {name, unit});
+                db.delete(helper.TABLE_SHOPPINGLIST, "NAME=? AND METRIC=?", new String[]{name, unit});
             }
         }
 
@@ -233,6 +233,10 @@ public class DatabaseAdapter {
         contentValues.put(DatabaseHelper.NAME, name);
         contentValues.put(DatabaseHelper.QUANTITY, String.valueOf(quantNum));
         contentValues.put(DatabaseHelper.METRIC, unit);
+        if (auto)
+            contentValues.put(DatabaseHelper.MANUAL_ADD, 0);
+        else
+            contentValues.put(DatabaseHelper.MANUAL_ADD, 1);
         Log.i(TAG, "called addToShoppingList");
         long id = db.insert(DatabaseHelper.TABLE_SHOPPINGLIST, null, contentValues);
         return id;
@@ -280,6 +284,16 @@ public class DatabaseAdapter {
         return ingredients;
     }
 
+    /**
+     * Created by Andrew Garver on 11/19/2015.
+     * <p/>
+     * Drop the shopping list table and rebuild it.
+     */
+    public void refreshShoppingList() {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        db.delete(helper.TABLE_SHOPPINGLIST, helper.MANUAL_ADD+"=?", new String[] {"0"});
+    }
+
     static class DatabaseHelper extends SQLiteOpenHelper {
 
         // Database global constants
@@ -297,8 +311,9 @@ public class DatabaseAdapter {
         public static final String INGREDIENTS = "INGREDIENTS";
         public static final String RECIPE_ID = "RECIPE_ID";
         public static final String ITEM = "item";
+        public static final String MANUAL_ADD = "MANUAL_ADD";
 
-        public static final int DATABASE_VERSION = 44;
+        public static final int DATABASE_VERSION = 50;
 
         DatabaseHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -324,10 +339,11 @@ public class DatabaseAdapter {
                 db.execSQL("CREATE TABLE shoppingList (ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         "NAME VARCHAR(255), " +
                         "QUANTITY INTEGER, " +
-                        "METRIC VARCHAR(255));");
+                        "METRIC VARCHAR(255), " +
+                        "MANUAL_ADD INTEGER);");
                 db.execSQL("CREATE TABLE plannedRecipes (ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         "RECIPE_ID INTEGER, " +
-                        "DATE VARCHAR(255)" +
+                        "DATE VARCHAR(255), " +
                         "FOREIGN KEY(RECIPE_ID) REFERENCES recipes(ID));");
                 Log.i("thing", "Table creation successful");
             } catch (SQLException e) {
