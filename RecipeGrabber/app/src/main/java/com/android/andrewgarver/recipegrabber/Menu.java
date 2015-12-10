@@ -32,7 +32,6 @@ public class Menu extends Fragment {
     private ListView listView;
     private ExtendedCalendarView extendedCalendarView;
     private Day selDay;
-    private ArrayList<String> items;
     private ArrayAdapter<String> adapter;
 
     @Nullable
@@ -40,7 +39,7 @@ public class Menu extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_menu, container, false);
         listView = (ListView) view.findViewById(R.id.menuListView);
-        items = new ArrayList();
+        ArrayList<String> items = new ArrayList();
         adapter = new ArrayAdapter<>(getContext(), R.layout.row_layout, items);
         listView.setAdapter(adapter);
 
@@ -81,6 +80,7 @@ public class Menu extends Fragment {
     }
 
     private void getEventDetails(Day day) {
+        adapter.clear();
         for (Event e : day.getEvents()) {Log.i(TAG, "Event in List: " + e.getTitle());
             adapter.add(e.getTitle());}
     }

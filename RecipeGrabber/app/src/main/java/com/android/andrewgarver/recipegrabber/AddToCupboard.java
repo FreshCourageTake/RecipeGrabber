@@ -20,25 +20,13 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 public class AddToCupboard extends AppCompatActivity {
     private static final String TAG = AddToCupboard.class.getSimpleName();
     DatabaseAdapter dbHelper;
 
-
-
-
-
-
-
     int numNewLines; // TODO: On refresh we need to reset this to 0!!!
-
-
-
-
-
-
-
-
 
     int ids[] = {R.id.newRow1, R.id.newRow2, R.id.newRow3, R.id.newRow4, R.id.newRow5,
             R.id.newRow6, R.id.newRow7, R.id.newRow8, R.id.newRow9, R.id.newRow10,
@@ -59,6 +47,7 @@ public class AddToCupboard extends AppCompatActivity {
         //this must be final since it is accessed from an inner class
         final ImageButton add = (ImageButton) findViewById(R.id.addMore);
         final Button addIng = (Button) findViewById(R.id.addIng);
+        final ArrayList<String> results = new ArrayList<>();
 
         //need to add the listener to add an extra row of input fields
         add.setOnClickListener(new View.OnClickListener() {
@@ -101,6 +90,7 @@ public class AddToCupboard extends AppCompatActivity {
                 if (!quant.equals("") && !unit.equals("") && !ingName.equals("")) {
                     if (dbHelper.addIngredient(quant, unit, ingName) > 0) {
                         Log.i(TAG, "added to cupboard");
+                        results.add(ingName + ": " + quant + ' ' + unit);
                     }
                 }
 
@@ -114,11 +104,15 @@ public class AddToCupboard extends AppCompatActivity {
                     if (!dynamicQuant.equals("") && !dynamicUnit.equals("") && !dynamicIngName.equals("")) {
                         if (dbHelper.addIngredient(dynamicQuant, dynamicUnit, dynamicIngName) > 0) {
                             Log.i(TAG, "added to cupboard");
+                            results.add(dynamicIngName + ": " + dynamicQuant + ' ' + dynamicUnit);
                         }
                     }
                     Log.i(TAG, "added line " + i + 1 + " to DB with id of " + ids[i]);
                 }
 
+                Intent data = new Intent();
+                data.putStringArrayListExtra("results", results);
+                setResult(RESULT_OK, data);
                 finish(); // This takes us back to the previous fragment
             }
         });

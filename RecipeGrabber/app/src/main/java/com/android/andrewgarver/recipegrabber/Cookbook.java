@@ -27,7 +27,6 @@ public class Cookbook extends Fragment {
     ListView list;
     DatabaseAdapter dbHelper;
     ArrayAdapter<String> adapter;
-    ArrayList<String> items;
 
     @Nullable
     @Override
@@ -35,7 +34,7 @@ public class Cookbook extends Fragment {
 
         View view = inflater.inflate(R.layout.frag_cookbook, container, false);
         dbHelper = new DatabaseAdapter(getActivity());
-        items = dbHelper.getAllRecipes();
+        ArrayList<String> items = dbHelper.getAllRecipes();
 
         adapter = new ArrayAdapter<>(getContext(), R.layout.row_layout, items);
         list = (ListView) view.findViewById(R.id.listView);

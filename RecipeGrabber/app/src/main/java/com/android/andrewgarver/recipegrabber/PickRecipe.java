@@ -11,7 +11,6 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 public class PickRecipe extends AppCompatActivity {
-
     ListView recipesList;
     DatabaseAdapter dbHelper;
 
@@ -27,6 +26,7 @@ public class PickRecipe extends AppCompatActivity {
         recipesList.setAdapter(adapter);
 
         recipesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent data = new Intent();
