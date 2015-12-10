@@ -1,5 +1,6 @@
 package com.android.andrewgarver.recipegrabber;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,9 +22,12 @@ import java.util.ArrayList;
  */
 public class Cookbook extends Fragment {
     private static final String TAG = "Cookbook";
+    private static final int newRecipeCode = 0;
 
     ListView list;
     DatabaseAdapter dbHelper;
+    ArrayAdapter<String> adapter;
+    ArrayList<String> items;
 
     @Nullable
     @Override
@@ -31,11 +35,9 @@ public class Cookbook extends Fragment {
 
         View view = inflater.inflate(R.layout.frag_cookbook, container, false);
         dbHelper = new DatabaseAdapter(getActivity());
-        ArrayList<String> items = dbHelper.getAllRecipes();
+        items = dbHelper.getAllRecipes();
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity().getApplicationContext(),
-                R.layout.row_layout,
-                items);
+        adapter = new ArrayAdapter<>(getContext(), R.layout.row_layout, items);
         list = (ListView) view.findViewById(R.id.listView);
         list.setAdapter(adapter);
 
@@ -56,11 +58,21 @@ public class Cookbook extends Fragment {
         ImageButton addBtn = (ImageButton) view.findViewById(R.id.addRecipe);
             addBtn.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    startActivity(new Intent(getContext(), AddRecipe.class));
+                    startActivityForResult(new Intent(getContext(), AddRecipe.class), newRecipeCode);
                 }
             });
 
         return view;
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == newRecipeCode) {
+            if (resultCode == getActivity().RESULT_OK) {
+                Log.i(TAG, "RESULT OKAY");
+                String recipe = data.getStringExtra("recipeName");
+                adapter.add(recipe);
+            }
+        }
     }
 
 }

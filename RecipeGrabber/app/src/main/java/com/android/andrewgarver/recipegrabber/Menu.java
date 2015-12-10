@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import com.android.andrewgarver.recipegrabber.extendCalView.CalendarProvider;
 import com.android.andrewgarver.recipegrabber.extendCalView.Day;
@@ -19,6 +20,7 @@ import com.android.andrewgarver.recipegrabber.extendCalView.Event;
 import com.android.andrewgarver.recipegrabber.extendCalView.ExtendedCalendarView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Andrew Garver on 11/2/2015.
@@ -31,12 +33,16 @@ public class Menu extends Fragment {
     private ExtendedCalendarView extendedCalendarView;
     private Day selDay;
     private ArrayList<String> items;
+    private ArrayAdapter<String> adapter;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_menu, container, false);
         listView = (ListView) view.findViewById(R.id.menuListView);
+        items = new ArrayList();
+        adapter = new ArrayAdapter<>(getContext(), R.layout.row_layout, items);
+        listView.setAdapter(adapter);
 
         extendedCalendarView = (ExtendedCalendarView) view.findViewById(R.id.calendarMenu);
         extendedCalendarView.setMonthTextBackgroundColor(R.color.black);
@@ -45,11 +51,8 @@ public class Menu extends Fragment {
             public void onDayClicked(AdapterView<?> adapter, View view, int position, long id, Day day) {
                 selDay = day;
                 getEventDetails(day);
-                listView.setAdapter(new ArrayAdapter(getContext(), R.layout.row_layout, items));
             }
         });
-
-        //
 
         ImageButton addBtn = (ImageButton) view.findViewById(R.id.addEvent);
         addBtn.setOnClickListener(new View.OnClickListener() {
@@ -78,10 +81,8 @@ public class Menu extends Fragment {
     }
 
     private void getEventDetails(Day day) {
-        items = new ArrayList();
-
         for (Event e : day.getEvents()) {Log.i(TAG, "Event in List: " + e.getTitle());
-            items.add(e.getTitle());}
+            adapter.add(e.getTitle());}
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -102,6 +103,7 @@ public class Menu extends Fragment {
                 values.put(CalendarProvider.END_DAY, eventJulDay);
                 getActivity().getContentResolver().insert(CalendarProvider.CONTENT_URI, values);
                 extendedCalendarView.refreshCalendar();
+                adapter.add(recipe);
             }
         }
     }
