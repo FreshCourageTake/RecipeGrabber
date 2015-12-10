@@ -74,6 +74,7 @@ public class AddRecipe extends AppCompatActivity {
             public void onClick(View view) {
                 Log.i(TAG, "adding recipe");
 
+                // insert the name and instructions of the recipe into the DB
                 String recName = ((EditText) findViewById(R.id.recipeName)).getText().toString();
                 String recInstructions = ((EditText) findViewById(R.id.editText)).getText().toString();
                 long id = -1;
@@ -92,8 +93,9 @@ public class AddRecipe extends AppCompatActivity {
                 String ingUnit = ((Spinner) findViewById(R.id.ingUnit)).getSelectedItem().toString();
                 String ingName = ((EditText) findViewById(R.id.ingName)).getText().toString();
                 if (!ingQuant.equals("") && !ingUnit.equals("") && !ingName.equals("")) {
-                    ingredients += ingQuant + " " + ingUnit + " " + ingName;
+                    dbHelper.addRecipeIngredients(ingName, ingQuant, ingUnit, id);
                 }
+
 
                 for (int i = 0; i < numNewLines; ++i) {
                     RelativeLayout rel = ((RelativeLayout) findViewById(ids[i]));
@@ -101,18 +103,7 @@ public class AddRecipe extends AppCompatActivity {
                     ingUnit = ((Spinner) rel.findViewById(R.id.unitNewRow)).getSelectedItem().toString();
                     ingName = ((EditText) rel.findViewById(R.id.nameNewRow)).getText().toString();
                     if (!ingQuant.equals("") && !ingUnit.equals("") && !ingName.equals("")) {
-                        if (ingredients.equals(""))
-                            ingredients = ingQuant + " " + ingUnit + " " + ingName;
-                        else
-                            ingredients += "\n" + ingQuant + " " + ingUnit + " " + ingName;
-                    }
-                }
-
-                if (!ingredients.equals("")) {
-                    if (dbHelper.addRecipeIngredients(ingredients, id) > 0) {
-                        Log.i(TAG, "added ingredients");
-                    } else {
-                        Log.i(TAG, "failed to add ingredients");
+                        dbHelper.addRecipeIngredients(ingName, ingQuant, ingUnit, id);
                     }
                 }
 
@@ -121,7 +112,6 @@ public class AddRecipe extends AppCompatActivity {
         });
 
     }
-
 
 
 }

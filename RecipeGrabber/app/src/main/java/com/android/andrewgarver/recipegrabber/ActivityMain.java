@@ -85,7 +85,7 @@ public class ActivityMain extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_about) {
-            setContentView(R.layout.activity_about_page);
+//            setContentView(R.layout.activity_about_page);
             return true;
         }
 
