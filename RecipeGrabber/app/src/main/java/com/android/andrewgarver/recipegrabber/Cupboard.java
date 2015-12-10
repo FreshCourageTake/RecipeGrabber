@@ -18,7 +18,11 @@ import java.util.ArrayList;
  */
 public class Cupboard extends Fragment {
 
-    DatabaseAdapter dbHelper;
+    private static final int ingredCode = 2;
+    private DatabaseAdapter dbHelper;
+    private ArrayAdapter<String> adapter;
+    private ListView list;
+
 
     @Nullable
     @Override
@@ -28,22 +32,29 @@ public class Cupboard extends Fragment {
 
         ArrayList<String> items = dbHelper.getAllIngredients();
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),
-                R.layout.row_layout,
-                items);
+        adapter = new ArrayAdapter<>(getContext(), R.layout.row_layout, items);
 
         View view = inflater.inflate(R.layout.frag_cupboard, container, false);
-        ListView list = (ListView) view.findViewById(R.id.listView);
+        list = (ListView) view.findViewById(R.id.listView);
         list.setAdapter(adapter);
 
         ImageButton addBtn = (ImageButton) view.findViewById(R.id.addTo);
         addBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                startActivity(new Intent(getContext(), AddToCupboard.class));
+                startActivityForResult(new Intent(getContext(), AddToCupboard.class), ingredCode);
             }
         });
 
         return view;
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == ingredCode) {
+            if (resultCode == getActivity().RESULT_OK) {
+                ArrayList<String> ingredList = data.getStringArrayListExtra("results");
+                adapter.addAll(ingredList);
+            }
+        }
     }
 
 

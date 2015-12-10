@@ -6,7 +6,7 @@ import android.util.Log;
 import android.widget.TextView;
 
 public class DisplayRecipe extends AppCompatActivity {
-    private static final String TAG = "displayRecipe";
+    private static final String TAG = DisplayRecipe.class.getSimpleName();
 
     DatabaseAdapter dbHelper;
 

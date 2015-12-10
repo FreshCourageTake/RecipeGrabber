@@ -68,7 +68,7 @@ public class ActivityMain extends AppCompatActivity {
         Log.i("Main", "after getWriteableDatabase");
 
     }
-
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

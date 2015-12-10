@@ -1,6 +1,7 @@
 package com.android.andrewgarver.recipegrabber;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -16,8 +17,10 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
+import java.util.ArrayList;
+
 public class AddToShoppingList extends AppCompatActivity {
-    private static final String TAG = "AddToShoppingList";
+    private static final String TAG = AddToShoppingList.class.getSimpleName();
     DatabaseAdapter dbHelper;
 
 
@@ -43,6 +46,7 @@ public class AddToShoppingList extends AppCompatActivity {
         //this must be final since it is accessed from an inner class
         final ImageButton add = (ImageButton) findViewById(R.id.addMore);
         final Button addIng = (Button) findViewById(R.id.addIng);
+        final ArrayList<String> results = new ArrayList<>();
 
         //need to add the listener to add an extra row of input fields
         add.setOnClickListener(new View.OnClickListener() {
@@ -77,9 +81,10 @@ public class AddToShoppingList extends AppCompatActivity {
                 String ingUnit = ((Spinner) findViewById(R.id.ingUnit)).getSelectedItem().toString();
                 String ingName = ((EditText) findViewById(R.id.ingName)).getText().toString();
                 if (!ingQuant.equals("") && !ingUnit.equals("") && !ingName.equals("")) {
-                    item += ingQuant + " " + ingUnit + " " + ingName;
-                    if (dbHelper.addToShoppingList(item) > 0) {
+                    item = ingName + " - " + ingQuant + " " + ingUnit;
+                    if (dbHelper.addToShoppingList(ingName, ingQuant, ingUnit, false) > 0) {
                         Log.i(TAG, "added ingredients");
+                        results.add(item);
                     } else {
                         Log.i(TAG, "failed to add ingredients");
                     }
@@ -91,15 +96,19 @@ public class AddToShoppingList extends AppCompatActivity {
                     ingUnit = ((Spinner) rel.findViewById(R.id.unitNewRow)).getSelectedItem().toString();
                     ingName = ((EditText) rel.findViewById(R.id.nameNewRow)).getText().toString();
                     if (!ingQuant.equals("") && !ingUnit.equals("") && !ingName.equals("")) {
-                        item = ingQuant + " " + ingUnit + " " + ingName;
-                        if (dbHelper.addToShoppingList(item) > 0) {
+                        item = ingName + " - " + ingQuant + " " + ingUnit;
+                        if (dbHelper.addToShoppingList(ingName, ingQuant, ingUnit, false) > 0) {
                             Log.i(TAG, "added ingredients");
+                            results.add(item);
                         } else {
                             Log.i(TAG, "failed to add ingredients");
                         }
                     }
                 }
 
+                Intent data = new Intent();
+                data.putStringArrayListExtra("results", results);
+                setResult(RESULT_OK, data);
                 finish(); // This takes us back to the previous fragment
             }
         });

@@ -1,5 +1,8 @@
 package com.android.andrewgarver.recipegrabber;
 
+import android.app.AlertDialog;
+import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -20,10 +24,12 @@ import java.util.ArrayList;
  * Created by Andrew Garver on 11/2/2015.
  */
 public class Cookbook extends Fragment {
-    private static final String TAG = "Cookbook";
+    private static final String TAG = Cookbook.class.getSimpleName();
+    private static final int newRecipeCode = 0;
 
     ListView list;
     DatabaseAdapter dbHelper;
+    ArrayAdapter<String> adapter;
 
     @Nullable
     @Override
@@ -31,11 +37,9 @@ public class Cookbook extends Fragment {
 
         View view = inflater.inflate(R.layout.frag_cookbook, container, false);
         dbHelper = new DatabaseAdapter(getActivity());
-        ArrayList<String> items = dbHelper.getAllRecipes();
+        final ArrayList<String> items = dbHelper.getAllRecipes();
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity().getApplicationContext(),
-                R.layout.row_layout,
-                items);
+        adapter = new ArrayAdapter<>(getContext(), R.layout.row_layout, items);
         list = (ListView) view.findViewById(R.id.listView);
         list.setAdapter(adapter);
 
@@ -53,14 +57,51 @@ public class Cookbook extends Fragment {
             }
         });
 
+        list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                final String toDel = adapter.getItem(position);
+                AlertDialog.Builder adb = new AlertDialog.Builder(getContext());
+                adb.setTitle("Delete recipe: " + toDel + '?');
+                adb.setMessage("Are you sure you want to remove this recipe?");
+                adb.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        adapter.remove(toDel);
+                        //need to remove from database still
+                        Toast.makeText(getContext(), "Recipe Deleted", Toast.LENGTH_LONG).show();
+                    }
+                });
+                adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+
+                AlertDialog ad = adb.create();
+                ad.show();
+                return true;
+            }
+        });
+
         ImageButton addBtn = (ImageButton) view.findViewById(R.id.addRecipe);
-            addBtn.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    startActivity(new Intent(getContext(), AddRecipe.class));
-                }
+        addBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                startActivityForResult(new Intent(getContext(), AddRecipe.class), newRecipeCode);
+            }
             });
 
         return view;
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == newRecipeCode) {
+            if (resultCode == getActivity().RESULT_OK) {
+                Log.i(TAG, "RESULT OKAY");
+                String recipe = data.getStringExtra("recipeName");
+                adapter.add(recipe);
+            }
+        }
     }
 
 }

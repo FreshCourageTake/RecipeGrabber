@@ -1,5 +1,6 @@
 package com.android.andrewgarver.recipegrabber.extendCalView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -23,9 +24,11 @@ import android.util.Log;
  */
 public class CalendarProvider extends ContentProvider {
 
+    String TAG = "CalendarProvider";
+
     private static final String DATABASE_NAME = "Calendar";
     private static final String EVENTS_TABLE = "events";
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 8;
     private static final String  AUTHORITY = "com.android.andrewgarver.recipegrabber.extendCalView.calendarprovider";
     public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/events");
     public static final Uri CONTENT_ID_URI_BASE = Uri.parse("content://" + AUTHORITY + "/events/");
@@ -44,6 +47,23 @@ public class CalendarProvider extends ContentProvider {
     private static final HashMap<String, String> mMap;
     private DatabaseHelper DBHelper;
     private SQLiteDatabase db;
+
+    public ArrayList<String> getPlannedRecipes() {
+        SQLiteDatabase db = DBHelper.getWritableDatabase();
+        String[] columns = {ID, EVENT};
+        Cursor cursor = db.query(EVENTS_TABLE, columns, null, null, null, null, null);
+        ArrayList<String> items = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            int cid = cursor.getInt(0);
+            String name = cursor.getString(1);
+            items.add(name);
+        }
+        return items;
+    }
+
+    public void setContext(Context context) {
+        DBHelper = new DatabaseHelper(context);
+    }
 
     private static class DatabaseHelper extends SQLiteOpenHelper{
         DatabaseHelper(Context context)
