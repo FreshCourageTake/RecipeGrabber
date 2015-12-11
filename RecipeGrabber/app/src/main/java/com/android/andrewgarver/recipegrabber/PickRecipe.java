@@ -35,5 +35,20 @@ public class PickRecipe extends AppCompatActivity {
                 finish();
             }
         });
+
+        recipesList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                // Get the name of the activity
+                String recipeName = recipesList.getItemAtPosition(position).toString();
+                // Use bundles to share data between activities
+                Intent intent = new Intent(getApplicationContext(), DisplayRecipe.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("recipeName", recipeName);
+                intent.putExtras(bundle);
+                startActivity(intent);
+                return true;
+            }
+        });
     }
 }

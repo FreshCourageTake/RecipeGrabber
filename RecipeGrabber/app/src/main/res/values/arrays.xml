@@ -2,7 +2,6 @@
 <resources>
     <string-array name="metrics">
         <item> </item>
-        <item>add new...</item>
         <item>lb</item>
         <item>oz</item>
         <item>pint</item>
@@ -14,17 +13,5 @@
         <item>fl oz</item>
         <item>ml</item>
         <item>liter</item>
-    </string-array>
-    <string-array name="ingredients">
-        <item> </item>
-        <item>add new...</item>
-        <item>flour</item>
-        <item>eggs</item>
-        <item>milk</item>
-        <item>bacon</item>
-        <item>ground beef</item>
-        <item>ginger</item>
-        <item>salt</item>
-        <item>parsley</item>
     </string-array>
 </resources>
