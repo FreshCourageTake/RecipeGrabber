@@ -2,16 +2,20 @@
 <resources>
     <string-array name="metrics">
         <item> </item>
+        <item>cup</item>
+        <item>dash</item>
+        <item>fl oz</item>
+        <item>gallon</item>
         <item>lb</item>
+        <item>liter</item>
+        <item>ml</item>
         <item>oz</item>
+        <item>piece</item>
+        <item>pinch</item>
         <item>pint</item>
         <item>quart</item>
-        <item>gallon</item>
-        <item>tsp</item>
+        <item>slice</item>
         <item>tbsp</item>
-        <item>cup</item>
-        <item>fl oz</item>
-        <item>ml</item>
-        <item>liter</item>
+        <item>tsp</item>
     </string-array>
 </resources>

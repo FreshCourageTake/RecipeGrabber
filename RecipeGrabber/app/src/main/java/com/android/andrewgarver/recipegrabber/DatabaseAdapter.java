@@ -338,7 +338,7 @@ public class DatabaseAdapter {
         public static final String ITEM = "item";
         public static final String MANUAL_ADD = "MANUAL_ADD";
 
-        public static final int DATABASE_VERSION = 50;
+        public static final int DATABASE_VERSION = 51;
 
         DatabaseHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);

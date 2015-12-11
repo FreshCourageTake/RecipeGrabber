@@ -28,7 +28,7 @@ public class CalendarProvider extends ContentProvider {
 
     private static final String DATABASE_NAME = "Calendar";
     private static final String EVENTS_TABLE = "events";
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 9;
     private static final String  AUTHORITY = "com.android.andrewgarver.recipegrabber.extendCalView.calendarprovider";
     public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/events");
     public static final Uri CONTENT_ID_URI_BASE = Uri.parse("content://" + AUTHORITY + "/events/");

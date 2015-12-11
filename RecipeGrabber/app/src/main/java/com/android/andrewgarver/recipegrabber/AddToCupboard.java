@@ -87,10 +87,10 @@ public class AddToCupboard extends AppCompatActivity {
                 String unit = ((Spinner)findViewById(R.id.ingUnit)).getSelectedItem().toString();
                 String ingName = ((EditText)findViewById(R.id.ingName)).getText().toString();
 
-                if (!quant.equals("") && !unit.equals("") && !ingName.equals("")) {
+                if (!quant.equals("") && !ingName.equals("")) {
                     if (dbHelper.addIngredient(quant, unit, ingName) > 0) {
                         Log.i(TAG, "added to cupboard");
-                        results.add(ingName + ": " + quant + ' ' + unit);
+                        results.add(ingName + " - " + quant + ' ' + unit);
                     }
                 }
 
@@ -101,10 +101,10 @@ public class AddToCupboard extends AppCompatActivity {
                     String dynamicUnit = ((Spinner)rel.findViewById(R.id.unitNewRow)).getSelectedItem().toString();
                     String dynamicIngName = ((EditText)rel.findViewById(R.id.nameNewRow)).getText().toString();
 
-                    if (!dynamicQuant.equals("") && !dynamicUnit.equals("") && !dynamicIngName.equals("")) {
+                    if (!dynamicQuant.equals("") && !dynamicIngName.equals("")) {
                         if (dbHelper.addIngredient(dynamicQuant, dynamicUnit, dynamicIngName) > 0) {
                             Log.i(TAG, "added to cupboard");
-                            results.add(dynamicIngName + ": " + dynamicQuant + ' ' + dynamicUnit);
+                            results.add(dynamicIngName + " - " + dynamicQuant + ' ' + dynamicUnit);
                         }
                     }
                     Log.i(TAG, "added line " + i + 1 + " to DB with id of " + ids[i]);

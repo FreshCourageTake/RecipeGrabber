@@ -93,7 +93,7 @@ public class AddRecipe extends AppCompatActivity {
                 String ingQuant = ((EditText) findViewById(R.id.ingQuant)).getText().toString();
                 String ingUnit = ((Spinner) findViewById(R.id.ingUnit)).getSelectedItem().toString();
                 String ingName = ((EditText) findViewById(R.id.ingName)).getText().toString();
-                if (!ingQuant.equals("") && !ingUnit.equals("") && !ingName.equals("")) {
+                if (!ingQuant.equals("") && !ingName.equals("")) {
                     dbHelper.addRecipeIngredients(ingName, ingQuant, ingUnit, id);
                 }
 
@@ -103,7 +103,7 @@ public class AddRecipe extends AppCompatActivity {
                     ingQuant = ((EditText) rel.findViewById(R.id.quanNewRow)).getText().toString();
                     ingUnit = ((Spinner) rel.findViewById(R.id.unitNewRow)).getSelectedItem().toString();
                     ingName = ((EditText) rel.findViewById(R.id.nameNewRow)).getText().toString();
-                    if (!ingQuant.equals("") && !ingUnit.equals("") && !ingName.equals("")) {
+                    if (!ingQuant.equals("") && !ingName.equals("")) {
                         dbHelper.addRecipeIngredients(ingName, ingQuant, ingUnit, id);
                     }
                 }

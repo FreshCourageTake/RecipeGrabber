@@ -80,7 +80,7 @@ public class AddToShoppingList extends AppCompatActivity {
                 String ingQuant = ((EditText) findViewById(R.id.ingQuant)).getText().toString();
                 String ingUnit = ((Spinner) findViewById(R.id.ingUnit)).getSelectedItem().toString();
                 String ingName = ((EditText) findViewById(R.id.ingName)).getText().toString();
-                if (!ingQuant.equals("") && !ingUnit.equals("") && !ingName.equals("")) {
+                if (!ingQuant.equals("") && !ingName.equals("")) {
                     item = ingName + " - " + ingQuant + " " + ingUnit;
                     if (dbHelper.addToShoppingList(ingName, ingQuant, ingUnit, false) > 0) {
                         Log.i(TAG, "added ingredients");
@@ -95,7 +95,7 @@ public class AddToShoppingList extends AppCompatActivity {
                     ingQuant = ((EditText) rel.findViewById(R.id.quanNewRow)).getText().toString();
                     ingUnit = ((Spinner) rel.findViewById(R.id.unitNewRow)).getSelectedItem().toString();
                     ingName = ((EditText) rel.findViewById(R.id.nameNewRow)).getText().toString();
-                    if (!ingQuant.equals("") && !ingUnit.equals("") && !ingName.equals("")) {
+                    if (!ingQuant.equals("") && !ingName.equals("")) {
                         item = ingName + " - " + ingQuant + " " + ingUnit;
                         if (dbHelper.addToShoppingList(ingName, ingQuant, ingUnit, false) > 0) {
                             Log.i(TAG, "added ingredients");
