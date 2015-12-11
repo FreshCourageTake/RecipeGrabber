@@ -1,6 +1,8 @@
 package com.android.andrewgarver.recipegrabber;
 
+import android.app.AlertDialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,15 +14,15 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
-import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import com.android.andrewgarver.recipegrabber.extendCalView.CalendarProvider;
 import com.android.andrewgarver.recipegrabber.extendCalView.Day;
 import com.android.andrewgarver.recipegrabber.extendCalView.Event;
 import com.android.andrewgarver.recipegrabber.extendCalView.ExtendedCalendarView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Andrew Garver on 11/2/2015.
@@ -29,8 +31,8 @@ public class Menu extends Fragment {
     private static final String TAG = Menu.class.getSimpleName();
     private static final int recipeRequest = 1;
 
-    private ListView listView;
-    private ExtendedCalendarView extendedCalendarView;
+    private ListView list;
+    private ExtendedCalendarView extCalendar;
     private Day selDay;
     private ArrayAdapter<String> adapter;
 
@@ -38,14 +40,14 @@ public class Menu extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_menu, container, false);
-        listView = (ListView) view.findViewById(R.id.menuListView);
+        list = (ListView) view.findViewById(R.id.menuListView);
         ArrayList<String> items = new ArrayList();
         adapter = new ArrayAdapter<>(getContext(), R.layout.row_layout, items);
-        listView.setAdapter(adapter);
+        list.setAdapter(adapter);
 
-        extendedCalendarView = (ExtendedCalendarView) view.findViewById(R.id.calendarMenu);
-        extendedCalendarView.setMonthTextBackgroundColor(R.color.black);
-        extendedCalendarView.setOnDayClickListener(new ExtendedCalendarView.OnDayClickListener() {
+        extCalendar = (ExtendedCalendarView) view.findViewById(R.id.calendarMenu);
+        extCalendar.setMonthTextBackgroundColor(R.color.black);
+        extCalendar.setOnDayClickListener(new ExtendedCalendarView.OnDayClickListener() {
             @Override
             public void onDayClicked(AdapterView<?> adapter, View view, int position, long id, Day day) {
                 selDay = day;
@@ -61,12 +63,12 @@ public class Menu extends Fragment {
             }
         });
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position,
                                     long id) {
                 // Get the name of the activity
-                String recipeName = listView.getItemAtPosition(position).toString();
+                String recipeName = list.getItemAtPosition(position).toString();
                 // Use bundles to share data between activities
                 Intent intent = new Intent(getActivity(), DisplayRecipe.class);
                 Bundle bundle = new Bundle(); //we can use intent.putExtra("recipeName", recipeName); don't need bundle
@@ -76,13 +78,41 @@ public class Menu extends Fragment {
             }
         });
 
+        list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                final String toDel = adapter.getItem(position);
+                AlertDialog.Builder adb = new AlertDialog.Builder(getContext());
+                adb.setTitle("Delete planned recipe: " + toDel + '?');
+                adb.setMessage("Are you sure you want to remove this recipe from your menu?");
+                adb.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        adapter.remove(toDel);
+                        getActivity().getContentResolver().delete(CalendarProvider.CONTENT_URI, CalendarProvider.EVENT + "='" + toDel + "'", null);
+                        extCalendar.refreshCalendar();
+                        Toast.makeText(getContext(), "Deleting from menu", Toast.LENGTH_LONG).show();
+                    }
+                });
+                adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+
+                AlertDialog ad = adb.create();
+                ad.show();
+                return true;
+            }
+        });
+
         return view;
     }
 
     private void getEventDetails(Day day) {
         adapter.clear();
-        for (Event e : day.getEvents()) {Log.i(TAG, "Event in List: " + e.getTitle());
-            adapter.add(e.getTitle());}
+        for (Event e : day.getEvents())
+            adapter.add(e.getTitle());
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -102,7 +132,7 @@ public class Menu extends Fragment {
                 values.put(CalendarProvider.START_DAY, eventJulDay);
                 values.put(CalendarProvider.END_DAY, eventJulDay);
                 getActivity().getContentResolver().insert(CalendarProvider.CONTENT_URI, values);
-                extendedCalendarView.refreshCalendar();
+                extCalendar.refreshCalendar();
                 adapter.add(recipe);
             }
         }

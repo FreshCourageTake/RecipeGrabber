@@ -1,5 +1,7 @@
 package com.android.andrewgarver.recipegrabber;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,9 +10,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import com.android.andrewgarver.recipegrabber.extendCalView.CalendarProvider;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -47,7 +52,7 @@ public class ShoppingList extends Fragment {
             plannedRecipeIds.add(dbHelper.getRecipeId(s));
         }
         // Get the ingredients from the recipes using the recipe_ids
-        ArrayList<Ingredient> plannedIngredients = dbHelper.getPlannedIngredients(plannedRecipeIds);
+        final ArrayList<Ingredient> plannedIngredients = dbHelper.getPlannedIngredients(plannedRecipeIds);
 
         // Get the ingredients in the Cupboard
         ArrayList<Ingredient> cupboardIngredients = dbHelper.getAllIngredientsVerbose();
@@ -81,6 +86,41 @@ public class ShoppingList extends Fragment {
         View view = inflater.inflate(R.layout.frag_shoppinglist, container, false);
         list = (ListView) view.findViewById(R.id.listView);
         list.setAdapter(adapter);
+
+        list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                final String preSplit = adapter.getItem(position);
+                final String toDel = preSplit.split(" - ")[0];
+                AlertDialog.Builder adb = new AlertDialog.Builder(getContext());
+                adb.setTitle("Delete ingredient: " + toDel + '?');
+                adb.setMessage("Are you sure you want to remove this ingredient from your shopping list?");
+                adb.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        for (Ingredient ing : plannedIngredients)
+                            if (ing.getName().equals(toDel)) {
+                                Toast.makeText(getContext(), "Unable to delete planned ingredient\n" +
+                                        "Remove recipe from the Menu or add ingredient to the cupboard", Toast.LENGTH_LONG).show();
+                                return;
+                            }
+
+                        adapter.remove(preSplit);
+                        dbHelper.deleteFromShoppingList(toDel);
+                        Toast.makeText(getContext(), "Deleting from shopping list", Toast.LENGTH_LONG).show();
+                    }
+                });
+                adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+
+                AlertDialog ad = adb.create();
+                ad.show();
+                return true;
+            }
+        });
 
         ImageButton addBtn = (ImageButton) view.findViewById(R.id.addToShoppingList);
         addBtn.setOnClickListener(new View.OnClickListener() {
