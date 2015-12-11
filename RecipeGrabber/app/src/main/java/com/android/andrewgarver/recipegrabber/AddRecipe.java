@@ -18,12 +18,13 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 public class AddRecipe extends AppCompatActivity {
     private static final String TAG = AddRecipe.class.getSimpleName();
 
     DatabaseAdapter dbHelper;
-
+    boolean correctInput = true;
 
     int numNewLines; // TODO: On refresh we need to reset this to 0!!!
 
@@ -81,37 +82,50 @@ public class AddRecipe extends AppCompatActivity {
                 long id = -1;
                 if (!recName.equals("") && !recInstructions.equals("")) {
                     id = dbHelper.addRecipeInfo(recName, recInstructions);
-                    if (id < 0) {
+                    if (id <= 0) {
                         Log.i(TAG, "failed to add recipe");
+                        correctInput = false;
                         return;
+                    } else {
+                        correctInput = true;
                     }
+                }
+                else {
+                    correctInput = false;
                 }
                 Log.i(TAG, "added recipe");
                 String ingredients = "";
 
-                // input the first line of ingredients
-                String ingQuant = ((EditText) findViewById(R.id.ingQuant)).getText().toString();
-                String ingUnit = ((Spinner) findViewById(R.id.ingUnit)).getSelectedItem().toString();
-                String ingName = ((EditText) findViewById(R.id.ingName)).getText().toString();
-                if (!ingQuant.equals("") && !ingName.equals("")) {
-                    dbHelper.addRecipeIngredients(ingName, ingQuant, ingUnit, id);
-                }
-
-
-                for (int i = 0; i < numNewLines; ++i) {
-                    RelativeLayout rel = ((RelativeLayout) findViewById(ids[i]));
-                    ingQuant = ((EditText) rel.findViewById(R.id.quanNewRow)).getText().toString();
-                    ingUnit = ((Spinner) rel.findViewById(R.id.unitNewRow)).getSelectedItem().toString();
-                    ingName = ((EditText) rel.findViewById(R.id.nameNewRow)).getText().toString();
+                if (id >= 0) {
+                    // input the first line of ingredients
+                    String ingQuant = ((EditText) findViewById(R.id.ingQuant)).getText().toString();
+                    String ingUnit = ((Spinner) findViewById(R.id.ingUnit)).getSelectedItem().toString();
+                    String ingName = ((EditText) findViewById(R.id.ingName)).getText().toString();
                     if (!ingQuant.equals("") && !ingName.equals("")) {
                         dbHelper.addRecipeIngredients(ingName, ingQuant, ingUnit, id);
                     }
+
+
+                    for (int i = 0; i < numNewLines; ++i) {
+                        RelativeLayout rel = ((RelativeLayout) findViewById(ids[i]));
+                        ingQuant = ((EditText) rel.findViewById(R.id.quanNewRow)).getText().toString();
+                        ingUnit = ((Spinner) rel.findViewById(R.id.unitNewRow)).getSelectedItem().toString();
+                        ingName = ((EditText) rel.findViewById(R.id.nameNewRow)).getText().toString();
+                        if (!ingQuant.equals("") && !ingName.equals("")) {
+                            dbHelper.addRecipeIngredients(ingName, ingQuant, ingUnit, id);
+                        }
+                    }
                 }
 
-                Intent data = new Intent();
-                data.putExtra("recipeName", recName);
-                setResult(RESULT_OK, data); //allows us to access this data in the previous fragment
-                finish(); // This takes us back to the previous fragment
+                if (correctInput) {
+                    Intent data = new Intent();
+                    data.putExtra("recipeName", recName);
+                    setResult(RESULT_OK, data); //allows us to access this data in the previous fragment
+                    finish(); // This takes us back to the previous fragment
+                } else {
+                    Toast.makeText(getApplicationContext(), "Please fill out all fields",
+                            Toast.LENGTH_LONG).show();
+                }
             }
         });
 
