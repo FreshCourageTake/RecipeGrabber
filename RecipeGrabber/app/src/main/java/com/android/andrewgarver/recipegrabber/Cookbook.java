@@ -68,8 +68,8 @@ public class Cookbook extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         adapter.remove(toDel);
-                        //need to remove from database still
-                        Toast.makeText(getContext(), "Recipe Deleted", Toast.LENGTH_LONG).show();
+                        dbHelper.deleteRecipe(toDel);
+                        Toast.makeText(getContext(), "Deleting recipe", Toast.LENGTH_LONG).show();
                     }
                 });
                 adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

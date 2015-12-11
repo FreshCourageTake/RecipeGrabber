@@ -39,9 +39,14 @@ public class DatabaseAdapter {
         return id;
     }
 
+    public boolean deleteIngredient(String name) {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        return db.delete(DatabaseHelper.TABLE_INGREDIENTS, DatabaseHelper.NAME + "='" + name + "'", null) > 0;
+    }
+
     /**
      * Created by Andrew Garver on 11/19/2015.
-     * <p/>
+     * <p />
      * Add Recipe Name and Instructions
      */
     public long addRecipeInfo(String recName, String instructions) {
@@ -118,19 +123,10 @@ public class DatabaseAdapter {
      * Get all the ingredients in the planned meals
      */
     public ArrayList<Ingredient> getPlannedIngredients(ArrayList<Integer> plannedRecipes) {
-        SQLiteDatabase db = helper.getWritableDatabase();
-
-        String[] columns = {helper.PRIMARY_KEY, helper.QUANTITY, helper.METRIC, helper.NAME};
         ArrayList<Ingredient> ingredients = new ArrayList<>();
-        for (int i : plannedRecipes) {
-            Cursor cursor = db.query(helper.TABLE_RECIPEINGREDIENTS, columns, "RECIPE_ID=?", new String[]{String.valueOf(i)}, null, null, null, null);
-            while (cursor.moveToNext()) {
-                int quant = cursor.getInt(1);
-                String unit = cursor.getString(2);
-                String name = cursor.getString(3);
-                ingredients.add(new Ingredient(name, quant, unit));
-            }
-        }
+        for (int i : plannedRecipes)
+            ingredients.addAll(getRecipeIngredientsVerbose(i));
+
         return ingredients;
     }
 
@@ -194,6 +190,30 @@ public class DatabaseAdapter {
         return items;
     }
 
+    public boolean deleteRecipe(String name) {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        ArrayList<Ingredient> recIngreds = getRecipeIngredientsVerbose(getRecipeId(name));
+        for (Ingredient ingred : recIngreds)
+            db.delete(DatabaseHelper.TABLE_RECIPEINGREDIENTS, DatabaseHelper.NAME + "='" + ingred.getName() + "'" , null);
+
+        return db.delete(DatabaseHelper.TABLE_RECIPES, DatabaseHelper.NAME + "='" + name + "'", null) > 0;
+    }
+
+    public ArrayList<Ingredient> getRecipeIngredientsVerbose(long id) {
+        SQLiteDatabase db = helper.getWritableDatabase();
+
+        String[] columns = {helper.PRIMARY_KEY, helper.QUANTITY, helper.METRIC, helper.NAME};
+        ArrayList<Ingredient> ingredients = new ArrayList<>();
+            Cursor cursor = db.query(helper.TABLE_RECIPEINGREDIENTS, columns, "RECIPE_ID=?", new String[]{String.valueOf(id)}, null, null, null, null);
+        while (cursor.moveToNext()) {
+            int quant = cursor.getInt(1);
+            String unit = cursor.getString(2);
+            String name = cursor.getString(3);
+            ingredients.add(new Ingredient(name, quant, unit));
+        }
+        return ingredients;
+    }
+
     /**
      * Created by Andrew Garver on 11/19/2015.
      * <p/>
@@ -240,6 +260,11 @@ public class DatabaseAdapter {
         Log.i(TAG, "called addToShoppingList");
         long id = db.insert(DatabaseHelper.TABLE_SHOPPINGLIST, null, contentValues);
         return id;
+    }
+
+    public boolean deleteFromShoppingList(String name) {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        return db.delete(DatabaseHelper.TABLE_SHOPPINGLIST, DatabaseHelper.NAME + "='" + name + "'", null) > 0;
     }
 
     /**
