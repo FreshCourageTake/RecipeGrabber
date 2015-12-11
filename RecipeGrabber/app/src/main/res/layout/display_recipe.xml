@@ -46,7 +46,7 @@
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="61dp"
+                android:layout_marginTop="20dp"
                 android:gravity="center"
                 android:text="Recipe Name"/>
 
@@ -70,36 +70,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="Quantity"
+                    android:text="Ingredients"
                     android:textStyle="bold"
                     android:textColor="@color/black"
-                    android:id="@+id/quanText"
+                    android:id="@+id/ingHeader"
                     android:layout_marginLeft="40dp"
                     android:layout_marginTop="25dp"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="50dp"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="Units"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:id="@+id/unitText"
-                    android:layout_alignTop="@+id/quanText"
-                    android:layout_toRightOf="@+id/quanText"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/unitText"
-                    android:layout_alignTop="@id/unitText"
-                    android:paddingLeft="50dp"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="Ingredient Name"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:id="@+id/nameText"/>
             </RelativeLayout>
 
 
@@ -115,33 +92,9 @@
                     android:text="Ingredients\nWill go\nHere\n"
                     android:layout_height="wrap_content"
                     android:id="@+id/ingQuant"
-                    android:layout_marginTop="20dp"
                     android:textAppearance="?android:attr/textAppearanceListItemSmall"
                     android:layout_marginStart="40dp"
                     android:layout_alignParentStart="true" />
-
-                <!--<TextView-->
-                    <!--android:id="@+id/ingUnit"-->
-                    <!--android:text="oz."-->
-                    <!--android:layout_width="100dp"-->
-                    <!--android:layout_height="40dp"-->
-                    <!--android:paddingLeft="30dp"-->
-                    <!--android:layout_marginLeft="20dp"-->
-                    <!--android:layout_alignTop="@+id/ingQuant"-->
-                    <!--android:layout_toRightOf="@+id/ingQuant"/>-->
-
-                <!--<TextView-->
-                    <!--android:layout_width="100dp"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:ems="10"-->
-                    <!--android:id="@+id/ingName"-->
-                    <!--android:singleLine="true"-->
-                    <!--android:text="beef"-->
-                    <!--android:lines="1"-->
-                    <!--android:textAppearance="?android:attr/textAppearanceListItemSmall"-->
-                    <!--android:layout_alignTop="@+id/ingQuant"-->
-                    <!--android:layout_toEndOf="@+id/ingUnit"-->
-                    <!--android:layout_marginStart="15dp" />-->
             </RelativeLayout>
 
             <LinearLayout
@@ -156,7 +109,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/container"
-                android:paddingLeft="50dp"
+                android:paddingLeft="40dp"
                 android:paddingTop="20dp"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="Instructions"
@@ -168,7 +121,7 @@
                 android:id="@+id/recipeInstructions"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="50dp"
+                android:paddingLeft="40dp"
                 android:text="1. These are the\n2. Instructions for how\n3. To make the recipe"
                 android:ems="10"
                 android:layout_centerHorizontal="true"

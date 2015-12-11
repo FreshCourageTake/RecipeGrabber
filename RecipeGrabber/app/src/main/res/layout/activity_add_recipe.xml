@@ -73,7 +73,7 @@
                     android:text="Quantity"
                     android:textStyle="bold"
                     android:textColor="@color/black"
-                    android:id="@+id/quanText"
+                    android:id="@+id/ingHeader"
                     android:layout_marginLeft="40dp"
                     android:layout_marginTop="25dp"/>
 
@@ -86,8 +86,8 @@
                     android:textStyle="bold"
                     android:textColor="@color/black"
                     android:id="@+id/unitText"
-                    android:layout_alignTop="@+id/quanText"
-                    android:layout_toRightOf="@+id/quanText"/>
+                    android:layout_alignTop="@+id/ingHeader"
+                    android:layout_toRightOf="@+id/ingHeader"/>
 
                 <TextView
                     android:layout_width="wrap_content"
