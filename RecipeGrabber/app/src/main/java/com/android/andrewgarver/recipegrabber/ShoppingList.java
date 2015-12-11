@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.android.andrewgarver.recipegrabber.extendCalView.CalendarProvider;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
@@ -64,11 +65,10 @@ public class ShoppingList extends Fragment {
         for (Ingredient planned : plannedIngredients) {
             boolean haveInCupboard = false;
             for (Ingredient cupboard : cupboardIngredients) {
-                if (planned.getName().toLowerCase().equals(cupboard.getName().toLowerCase()) // the same ingredient
-                    && planned.getMetric().equals(cupboard.getMetric())) { // with the same metric unit
+                if (planned.getName().equalsIgnoreCase(cupboard.getName()) // the same ingredient
+                        && planned.getMetric().equals(cupboard.getMetric())) { // with the same metric unit
                     haveInCupboard = true;
-                            if (planned.getQuantity() > cupboard.getQuantity()) { // don't have enough in the cupboard
-                        // Add the results to the shopping list
+                    if (planned.getQuantity() > cupboard.getQuantity()) { // don't have enough in the cupboard
                         dbHelper.addToShoppingList(planned.getName(), String.valueOf(planned.getQuantity() - cupboard.getQuantity()), planned.getMetric(), true);
                     }
                 }

@@ -245,7 +245,10 @@ public class DatabaseAdapter {
         for (Ingredient i : shoppingList) {
             if (i.getName().equalsIgnoreCase(name) && i.getMetric().equals(unit)) {
                 quantNum += i.getQuantity();
+                Log.i(TAG, "same name: " + name + " Metric: " + unit);
                 db.delete(helper.TABLE_SHOPPINGLIST, "NAME=? AND METRIC=?", new String[]{name, unit});
+                db.delete(helper.TABLE_SHOPPINGLIST, "NAME=? AND METRIC=?", new String[]{name.toLowerCase(), unit});
+
             }
         }
 
@@ -257,7 +260,6 @@ public class DatabaseAdapter {
             contentValues.put(DatabaseHelper.MANUAL_ADD, 0);
         else
             contentValues.put(DatabaseHelper.MANUAL_ADD, 1);
-        Log.i(TAG, "called addToShoppingList");
         long id = db.insert(DatabaseHelper.TABLE_SHOPPINGLIST, null, contentValues);
         return id;
     }
@@ -283,7 +285,6 @@ public class DatabaseAdapter {
             String quant = cursor.getString(2);
             String unit = cursor.getString(3);
             String item = name + " - " + quant + " " + unit;
-            Log.i(TAG, "called getAllShoppingListItems");
             items.add(item);
         }
         return items;
