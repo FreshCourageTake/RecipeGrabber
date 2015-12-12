@@ -22,17 +22,41 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+/**
+ * Adds ingredients to the Cupboard
+ *
+ *
+ *
+ * @author  Andrew Garver, Landon Jamieson, and Reed Atwood
+ * @version 1.0
+ * @since   12/10/2015
+ */
 public class AddToCupboard extends AppCompatActivity {
+
+    /**
+     * Debugging Tag to display LogCat messages for debugging
+     */
     private static final String TAG = AddToCupboard.class.getSimpleName();
     DatabaseAdapter dbHelper;
 
+    /**
+     *
+     */
     int numNewLines; // TODO: On refresh we need to reset this to 0!!!
 
+    /**
+     *
+     */
     int ids[] = {R.id.newRow1, R.id.newRow2, R.id.newRow3, R.id.newRow4, R.id.newRow5,
             R.id.newRow6, R.id.newRow7, R.id.newRow8, R.id.newRow9, R.id.newRow10,
             R.id.newRow11, R.id.newRow12, R.id.newRow13, R.id.newRow14, R.id.newRow15,
             R.id.newRow16, R.id.newRow17, R.id.newRow18, R.id.newRow19, R.id.newRow20};
 
+    /**
+     *
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,20 +78,33 @@ public class AddToCupboard extends AppCompatActivity {
             @Override
 
             //When they click the + button, they will get another row for input.
+
+            /**
+             * When they click the + button, they will get another row for input.
+             *
+             * @param view
+             * @return Nothing if the number of Newlines is greater than 19
+             */
             public void onClick(View view) {
                 // Don't let the user enter any more than 20 new lines
                 if (numNewLines > 19)
                     return;
 
-                //We use the context of the button, since it is on the activity we are using
+                /**
+                 * We use the context of the button, since it is on the activity we are using
+                 */
                 LayoutInflater vi = (LayoutInflater) add.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View v = vi.inflate(R.layout.input_field, null); //This is the layout of the new row
 
-                // update id of container and then increment number of new lines
+                /**
+                 * update id of container and then increment number of new lines
+                 */
                 v.setId(ids[numNewLines]);
                 ++numNewLines;
 
-                //There is an (at first) empty container LinearLayout that we insert these into
+                /**
+                 * There is an (at first) empty container LinearLayout that we insert these into
+                 */
                 ((ViewGroup) findViewById(R.id.container)).addView(v);
 
                 Log.i(TAG, "added line " + numNewLines + " with id of " + ids[numNewLines - 1]);
@@ -76,17 +113,26 @@ public class AddToCupboard extends AppCompatActivity {
         });
 
         addIng.setOnClickListener(new View.OnClickListener() {
-            @Override
 
-            //Clicking the add button adds the first row to the database
+            /**
+             * Clicking the add button adds the first row to the database
+             *
+             * @param view
+             */
+            @Override
             public void onClick(View view) {
                 Log.i(TAG, "adding to cupboard");
 
-                // adds the first row to database
+                /**
+                 * adds the first row to database
+                 */
                 String quant = ((EditText)findViewById(R.id.ingQuant)).getText().toString();
                 String unit = ((Spinner)findViewById(R.id.ingUnit)).getSelectedItem().toString();
                 String ingName = ((EditText)findViewById(R.id.ingName)).getText().toString();
 
+                /**
+                 *
+                 */
                 if (!quant.equals("") && !ingName.equals("")) {
                     if (dbHelper.addIngredient(quant, unit, ingName) > 0) {
                         Log.i(TAG, "added to cupboard");
@@ -94,22 +140,31 @@ public class AddToCupboard extends AppCompatActivity {
                     }
                 }
 
-                // adds any additional rows
+                /**
+                 * adds any additional rows
+                 */
                 for (int i = 0; i < numNewLines; ++i) {
                     RelativeLayout rel = ((RelativeLayout)findViewById(ids[i]));
                     String dynamicQuant = ((EditText)rel.findViewById(R.id.quanNewRow)).getText().toString();
                     String dynamicUnit = ((Spinner)rel.findViewById(R.id.unitNewRow)).getSelectedItem().toString();
                     String dynamicIngName = ((EditText)rel.findViewById(R.id.nameNewRow)).getText().toString();
 
+                    /**
+                     *
+                     */
                     if (!dynamicQuant.equals("") && !dynamicIngName.equals("")) {
                         if (dbHelper.addIngredient(dynamicQuant, dynamicUnit, dynamicIngName) > 0) {
                             Log.i(TAG, "added to cupboard");
                             results.add(dynamicIngName + " - " + dynamicQuant + ' ' + dynamicUnit);
                         }
                     }
+
                     Log.i(TAG, "added line " + i + 1 + " to DB with id of " + ids[i]);
                 }
 
+                /**
+                 *
+                 */
                 Intent data = new Intent();
                 data.putStringArrayListExtra("results", results);
                 setResult(RESULT_OK, data);

@@ -20,9 +20,24 @@ import android.view.ViewGroup;
 
 import android.widget.TextView;
 
+/**
+ *  Main Activity for the start of the app
+ *
+ *
+ *
+ * @author  Andrew Garver, Landon Jamieson, and Reed Atwood
+ * @version 1.0
+ * @since   12/10/2015
+ */
 public class ActivityMain extends AppCompatActivity {
 
     /**
+     * Debugging Tag to display LogCat messages for debugging
+     */
+    private static final String TAG = ActivityMain.class.getSimpleName();
+
+    /**
+     *
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
      * {@link FragmentPagerAdapter} derivative, which will keep every
@@ -30,7 +45,6 @@ public class ActivityMain extends AppCompatActivity {
      * may be best to switch to a
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
-
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
     /**
@@ -44,13 +58,23 @@ public class ActivityMain extends AppCompatActivity {
     DatabaseAdapter dbHelper;
     public static SQLiteDatabase database;
 
+
+    /**
+     *
+     *
+     * @param savedInstanceState save the activity for reopening
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_activity_main);
 
+        /**
+         *
+         */
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -59,16 +83,29 @@ public class ActivityMain extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
+        /**
+         *
+         */
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
+
+        /**
+         *
+         */
         Log.i("Main", "here");
         dbHelper = new DatabaseAdapter(this);
         database = dbHelper.helper.getWritableDatabase();
         Log.i("Main", "after getWriteableDatabase");
 
     }
-    
+
+    /**
+     * Inflates the menu and adds items to to the action bar if present
+     *
+     * @param menu
+     * @return true
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -76,11 +113,23 @@ public class ActivityMain extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * Handles action bar item clicks
+     *
+     * Action bar clicks open About Page
+     *   automatically handle clicks on the Home/Up button, so long
+     *   as you specify a parent activity in AndroidManifest.xml.
+     *
+     * @param item About Page menu item
+     * @return true if action bar about is click and opened otherwise
+     *           super.onOptionsItemSelected(item)
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
+        /*
+         * Save the Menu items id so that we can open the correct page
+         */
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
@@ -92,16 +141,54 @@ public class ActivityMain extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*********************** May need to be its own java file
+
+
+
+
+
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
+     *
+     * @author  Andrew Garver, Landon Jamieson, and Reed Atwood
+     * @version 1.0
+     * @since   12/10/2015
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
+        /**
+         * Sets the FragmentManager to the super class
+         *
+         * @param fm FragmentManager
+         */
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
+        /**
+         * Gets the Items given the position
+         *
+         * @param position which tab you are on
+         * @return Cookbook, Menu, Cupboard, or ShoppingList object depending on the
+         *         position passed in
+         */
         @Override
         public Fragment getItem(int position) {
             switch(position) {
@@ -116,12 +203,24 @@ public class ActivityMain extends AppCompatActivity {
             }
         }
 
+        /**
+         * Gets the number of tabs and pages
+         *
+         * @return 4 - the number of tabs and pages.
+         */
         @Override
         public int getCount() {
             // Show 4 total pages.
             return 4;
         }
 
+        /**
+         * Gets the title of each page
+         *
+         * @param position which page you are on
+         * @return Cookbook, Menu, My Cupboard, Shopping List, or null depending
+         *           on the position passed in
+         */
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
@@ -138,19 +237,39 @@ public class ActivityMain extends AppCompatActivity {
         }
     }
 
+
+
+
+
+    /****
+     *                        ARE WE EVEN USING THIS CLASS??????????????
+     *
+     */
+
+
+
     /**
      * A placeholder fragment containing a simple view.
+     *
+     *
+     *
+     * @author  Andrew Garver, Landon Jamieson, and Reed Atwood
+     * @version 1.0
+     * @since   12/10/2015
      */
     public static class PlaceholderFragment extends Fragment {
         /**
          * The fragment argument representing the section number for this
-         * fragment.
+         * fragment. "Constant"
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
 
         /**
          * Returns a new instance of this fragment for the given section
-         * number.
+         *   number.
+         *
+         * @param sectionNumber
+         * @return fragment
          */
         public static PlaceholderFragment newInstance(int sectionNumber) {
             PlaceholderFragment fragment = new PlaceholderFragment();
@@ -163,6 +282,15 @@ public class ActivityMain extends AppCompatActivity {
         public PlaceholderFragment() {
         }
 
+
+        /**
+         * DESCRIPTION
+         *
+         * @param inflater
+         * @param container
+         * @param savedInstanceState
+         * @return  rootView
+         */
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {

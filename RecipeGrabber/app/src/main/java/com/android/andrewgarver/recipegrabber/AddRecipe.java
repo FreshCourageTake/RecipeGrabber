@@ -20,20 +20,44 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+/**
+ * Adds Recipes to the app
+ *
+ * @author  Andrew Garver, Landon Jamieson, and Reed Atwood
+ * @version 1.0
+ * @since   12/10/2015
+ */
 public class AddRecipe extends AppCompatActivity {
+
+    /**
+     * Debugging Tag to display LogCat messages for debugging
+     */
     private static final String TAG = AddRecipe.class.getSimpleName();
 
+    /**
+     *
+     */
     DatabaseAdapter dbHelper;
     boolean correctInput = true;
 
+    /**
+     *
+     */
     int numNewLines; // TODO: On refresh we need to reset this to 0!!!
 
-
+    /**
+     *
+     */
     int ids[] = {R.id.newRow1, R.id.newRow2, R.id.newRow3, R.id.newRow4, R.id.newRow5,
             R.id.newRow6, R.id.newRow7, R.id.newRow8, R.id.newRow9, R.id.newRow10,
             R.id.newRow11, R.id.newRow12, R.id.newRow13, R.id.newRow14, R.id.newRow15,
             R.id.newRow16, R.id.newRow17, R.id.newRow18, R.id.newRow19, R.id.newRow20};
 
+    /**
+     *
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,15 +67,25 @@ public class AddRecipe extends AppCompatActivity {
         dbHelper = new DatabaseAdapter(this);
         numNewLines = 0;
 
-        //this must be final since it is accessed from an inner class
+        /**
+         * this must be final since it is accessed from an inner class
+         */
         final ImageButton add = (ImageButton) findViewById(R.id.addMore);
         final Button addRecipe = (Button) findViewById(R.id.addRecipe);
 
-        //need to add the listener to add an extra row of input fields
+        /**
+         * need to add the listener to add an extra row of input fields
+         *
+         */
         add.setOnClickListener(new View.OnClickListener() {
-            @Override
 
-            //When they click the + button, they will get another row for input.
+            /**
+             * When they click the + button, they will get another row for input.
+             *
+             * @param view
+             * @return Nothing if the number of Newlines is greater than 19
+             */
+            @Override
             public void onClick(View view) {
                 // Don't let the user enter any more than 20 new lines
                 if (numNewLines > 19)
@@ -71,15 +105,27 @@ public class AddRecipe extends AppCompatActivity {
         });
 
         addRecipe.setOnClickListener(new View.OnClickListener() {
-            @Override
 
+            /**
+             *
+             *
+             * @param view
+             * @return Nothing if you failed to add a recipe
+             */
+            @Override
             public void onClick(View view) {
                 Log.i(TAG, "adding recipe");
 
-                // insert the name and instructions of the recipe into the DB
+                /**
+                 * insert the name and instructions of the recipe into the DB
+                 */
                 String recName = ((EditText) findViewById(R.id.recipeName)).getText().toString();
                 String recInstructions = ((EditText) findViewById(R.id.editText)).getText().toString();
                 long id = -1;
+
+                /**
+                 *
+                 */
                 if (!recName.equals("") && !recInstructions.equals("")) {
                     id = dbHelper.addRecipeInfo(recName, recInstructions);
                     if (id <= 0) {
@@ -93,9 +139,16 @@ public class AddRecipe extends AppCompatActivity {
                 else {
                     correctInput = false;
                 }
+
+                /**
+                 *
+                 */
                 Log.i(TAG, "added recipe");
                 String ingredients = "";
 
+                /**
+                 *
+                 */
                 if (id >= 0) {
                     // input the first line of ingredients
                     String ingQuant = ((EditText) findViewById(R.id.ingQuant)).getText().toString();
@@ -105,7 +158,9 @@ public class AddRecipe extends AppCompatActivity {
                         dbHelper.addRecipeIngredients(ingName, ingQuant, ingUnit, id);
                     }
 
-
+                    /**
+                     *
+                     */
                     for (int i = 0; i < numNewLines; ++i) {
                         RelativeLayout rel = ((RelativeLayout) findViewById(ids[i]));
                         ingQuant = ((EditText) rel.findViewById(R.id.quanNewRow)).getText().toString();
@@ -117,6 +172,9 @@ public class AddRecipe extends AppCompatActivity {
                     }
                 }
 
+                /**
+                 *
+                 */
                 if (correctInput) {
                     Intent data = new Intent();
                     data.putExtra("recipeName", recName);
@@ -128,8 +186,5 @@ public class AddRecipe extends AppCompatActivity {
                 }
             }
         });
-
     }
-
-
 }
