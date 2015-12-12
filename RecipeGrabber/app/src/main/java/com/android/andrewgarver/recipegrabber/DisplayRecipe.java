@@ -29,7 +29,7 @@ public class DisplayRecipe extends AppCompatActivity {
     /**
      *
      *
-     * @param savedInstanceState
+     * @param savedInstanceState save the activity for reopening
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {

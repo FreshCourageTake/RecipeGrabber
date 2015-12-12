@@ -288,7 +288,7 @@ public class ActivityMain extends AppCompatActivity {
          *
          * @param inflater
          * @param container
-         * @param savedInstanceState
+         * @param savedInstanceState save the activity for reopening
          * @return  rootView
          */
         @Override

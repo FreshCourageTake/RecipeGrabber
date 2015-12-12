@@ -35,18 +35,18 @@ public class AddRecipe extends AppCompatActivity {
     private static final String TAG = AddRecipe.class.getSimpleName();
 
     /**
-     *
+     * Set up DatabaseAdapter and a flag for if there is correct input
      */
     DatabaseAdapter dbHelper;
     boolean correctInput = true;
 
     /**
-     *
+     * Keep track of how many new lines there is
      */
     int numNewLines; // TODO: On refresh we need to reset this to 0!!!
 
     /**
-     *
+     * Have ids for each of he rows to keep track of what is on them
      */
     int ids[] = {R.id.newRow1, R.id.newRow2, R.id.newRow3, R.id.newRow4, R.id.newRow5,
             R.id.newRow6, R.id.newRow7, R.id.newRow8, R.id.newRow9, R.id.newRow10,
@@ -56,7 +56,7 @@ public class AddRecipe extends AppCompatActivity {
     /**
      *
      *
-     * @param savedInstanceState
+     * @param savedInstanceState save the activity for reopening
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,24 +82,32 @@ public class AddRecipe extends AppCompatActivity {
             /**
              * When they click the + button, they will get another row for input.
              *
-             * @param view
+             * @param view get the current view
              * @return Nothing if the number of Newlines is greater than 19
              */
             @Override
             public void onClick(View view) {
-                // Don't let the user enter any more than 20 new lines
+                /**
+                 * Don't let the user enter any more than 20 new lines
+                 */
                 if (numNewLines > 19)
                     return;
 
-                //We use the context of the button, since it is on the activity we are using
+                /**
+                 * We use the context of the button, since it is on the activity we are using
+                 */
                 LayoutInflater vi = (LayoutInflater) add.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View v = vi.inflate(R.layout.input_field, null); //This is the layout of the new row
 
-                // update id of container and then increment number of new lines
+                /**
+                 * update id of container and then increment number of new lines
+                 */
                 v.setId(ids[numNewLines]);
                 ++numNewLines;
 
-                //There is an (at first) empty container LinearLayout that we insert these into
+                /**
+                 * There is an (at first) empty container LinearLayout that we insert these into
+                 */
                 ((ViewGroup) findViewById(R.id.container)).addView(v);
             }
         });
