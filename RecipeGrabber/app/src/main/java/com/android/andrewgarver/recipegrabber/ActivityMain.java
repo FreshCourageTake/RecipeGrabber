@@ -11,12 +11,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 /**
  *  Main Activity for the start of the app this will handle the fragments
@@ -212,70 +208,6 @@ public class ActivityMain extends AppCompatActivity {
                     return "Shopping List";
             }
             return null;
-        }
-    }
-
-
-
-
-
-    /****
-     *                        ARE WE EVEN USING THIS CLASS??????????????
-     *
-     */
-
-
-
-    /**
-     * A placeholder fragment containing a simple view.
-     *
-     *
-     *
-     * @author  Andrew Garver, Landon Jamieson, and Reed Atwood
-     * @version 1.0
-     * @since   12/10/2015
-     */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment. "Constant"
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         *   number.
-         *
-         * @param sectionNumber
-         * @return fragment
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        public PlaceholderFragment() {
-        }
-
-
-        /**
-         * DESCRIPTION
-         *
-         * @param inflater
-         * @param container
-         * @param savedInstanceState save the activity for reopening
-         * @return  rootView
-         */
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_activity_main, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
-            return rootView;
         }
     }
 }
