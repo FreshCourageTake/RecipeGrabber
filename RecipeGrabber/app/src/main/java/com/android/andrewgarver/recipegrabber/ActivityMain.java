@@ -18,8 +18,6 @@ import android.view.MenuItem;
  *  Main Activity for the start of the app this will handle the fragments
  *  and their switching.
  *
- *
- *
  * @author  Andrew Garver, Landon Jamieson, and Reed Atwood
  * @version 1.0
  * @since   12/10/2015
@@ -32,12 +30,7 @@ public class ActivityMain extends AppCompatActivity {
     private static final String TAG = ActivityMain.class.getSimpleName();
 
     /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
+     * Adapter for displaying the fragment.
      */
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
@@ -72,24 +65,26 @@ public class ActivityMain extends AppCompatActivity {
          */
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        // Set up the ViewPager with the sections adapter.
+        /**
+         * Set up the ViewPager with the sections adapter.
+         */
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         /**
-         *
+         * Sets up the tabs to connect to the ViewPager
          */
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
 
         /**
-         *
+         * Set up the DatabaseAdapter
          */
-        Log.i("Main", "here");
-        dbHelper = new DatabaseAdapter(this);
+        Log.i(TAG, "here");
+        dbHelper = new DatabaseAdapter(this); // are these supposed to be used in the fragments?
         database = dbHelper.getHelper().getWritableDatabase();
-        Log.i("Main", "after getWriteableDatabase");
+        Log.i(TAG, "after getWriteableDatabase");
 
     }
 
@@ -101,7 +96,9 @@ public class ActivityMain extends AppCompatActivity {
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+        /**
+         * Inflate the menu this adds items to the action bar if it is present.
+         */
         getMenuInflater().inflate(R.menu.menu_activity_main, menu);
         return true;
     }

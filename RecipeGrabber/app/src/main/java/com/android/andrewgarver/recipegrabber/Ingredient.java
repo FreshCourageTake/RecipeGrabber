@@ -65,4 +65,22 @@ public class Ingredient implements Serializable {
     public int getQuantity() {
         return quantity;
     }
+
+    /**
+     * Get the quantity as a string
+     *
+     * @return quantity
+     */
+    public String getQuantityString() {
+        return Integer.toString(quantity);
+    }
+
+    /**
+     * set the quantity
+     *
+     */
+    public void setQuantity(int newQuantity) {
+        if (newQuantity > 0)
+            quantity = newQuantity;
+    }
 }

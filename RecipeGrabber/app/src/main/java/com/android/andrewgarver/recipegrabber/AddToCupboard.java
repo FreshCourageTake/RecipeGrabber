@@ -33,18 +33,23 @@ public class AddToCupboard extends AppCompatActivity {
      * Debugging Tag to display LogCat messages for debugging
      */
     private static final String TAG = AddToCupboard.class.getSimpleName();
-
     private DatabaseAdapter dbHelper;
 
     /**
      * Flag to ensure all entries are filled
      */
     private boolean correctInput = true;
-
+    private boolean inCupboard = false;
+    private boolean inShoppingList = false;
     /**
      * Keep track of how many new lines there is
      */
     private int numNewLines;
+
+    private ArrayList<Ingredient> toAddToDatabase = new ArrayList<>();
+    private ArrayList<Ingredient> cupboardIngreds;
+    ArrayList<Ingredient> shoppingListItems;
+
 
     /**
      * Array of ids for each of he rows to keep track of what is on them
@@ -77,7 +82,6 @@ public class AddToCupboard extends AppCompatActivity {
          */
         final ImageButton add = (ImageButton) findViewById(R.id.addMore);
         final Button addIng = (Button) findViewById(R.id.addIng);
-        final ArrayList<Ingredient> results = new ArrayList<>();
 
         /**
          * need to add the listener to add an extra row of input fields
@@ -151,57 +155,79 @@ public class AddToCupboard extends AppCompatActivity {
                  * Error handling for if quantity and ingredient name are blank
                  */
                 if (!quant.equals("") && !ingName.equals("")) {
+                    toAddToDatabase.add(new Ingredient(ingName, Integer.parseInt(quant), unit));
+                    //reset the flag
+                    correctInput = true;
 
-                    if (dbHelper.addIngredient(quant, unit, ingName) > 0) {
-                        Log.i(TAG, "added ingredients to cupboard");
-                        results.add(new Ingredient(ingName, Integer.parseInt(quant), unit));
-                        
-                        // reset the flag
-                        correctInput = true;
-
-                    } else {
-                        Log.i(TAG, "failed to add ingredient");
-                        correctInput = false;
-                    }
-                } else {
-                    correctInput = false;
-                }
-
-                /**
-                 * Adds any additional rows.
-                 */
-                for (int i = 0; i < numNewLines; ++i) {
-                    RelativeLayout rel = ((RelativeLayout)findViewById(ids[i]));
-                    quant = ((EditText)rel.findViewById(R.id.quanNewRow)).getText().toString();
-                    unit = ((Spinner)rel.findViewById(R.id.unitNewRow)).getSelectedItem().toString();
-                    ingName = ((EditText)rel.findViewById(R.id.nameNewRow)).getText().toString();
-                    ingName = ingName.replace("  ", " "); //remove double spaces if any
+                    RelativeLayout rel;
 
                     /**
                      * Add more ingredients if there is more than one.
                      */
-                    if (!quant.equals("") && !ingName.equals("")) {
-                        if (dbHelper.addIngredient(quant, unit, ingName) > 0) {
-                            Log.i(TAG, "added to cupboard");
-                            results.add(new Ingredient(ingName, Integer.parseInt(quant), unit));
-                        } else {
-                            Log.i(TAG, "failed to add ingredients");
-                        }
-                    }
+                    for (int i = 0; i < numNewLines; ++i) {
+                        rel = ((RelativeLayout)findViewById(ids[i]));
+                        quant = ((EditText)rel.findViewById(R.id.quanNewRow)).getText().toString();
+                        unit = ((Spinner)rel.findViewById(R.id.unitNewRow)).getSelectedItem().toString();
+                        ingName = ((EditText)rel.findViewById(R.id.nameNewRow)).getText().toString();
+                        ingName = ingName.replace("  ", " "); //remove double spaces if any
 
-                    Log.i(TAG, "added line " + i + 1 + " to DB with id of " + ids[i]);
+                        /**
+                         * only add them if they have something there.
+                         */
+                        if (!quant.equals("") && !ingName.equals(""))
+                            toAddToDatabase.add(new Ingredient(ingName, Integer.parseInt(quant), unit));
+
+                        Log.i(TAG, "added line " + i + 1 + " to DB with id of " + ids[i]);
+                    }
                 }
+                else
+                    correctInput = false;
 
                 /**
                  * Update the activity if all fields are filled out correctly and displays a
                  *   message if not all filled out
                  */
                 if (correctInput) {
-                    Intent data = new Intent();
-                    data.putExtra("results", results);
-                    setResult(RESULT_OK, data);
-                    finish(); // This takes us back to the previous fragment
-                } else {
+                    shoppingListItems = dbHelper.getAllShoppingListItemsVerbose();
+                    cupboardIngreds = dbHelper.getAllIngredientsVerbose();
+
+                    for (Ingredient ingred : toAddToDatabase) {
+                        for (Ingredient cupboard : cupboardIngreds)
+                            if (cupboard.getName().equalsIgnoreCase(ingred.getName()) // the same ingredient
+                                    && cupboard.getMetric().equals(ingred.getMetric())) {
+                                inCupboard = true;
+                                ingred.setQuantity(ingred.getQuantity() + cupboard.getQuantity());
+                                break;
+                            }
+
+                        for (Ingredient itemOnList : shoppingListItems) {
+                            Log.i(TAG, "for item on list: " + itemOnList.getName());
+                            if (itemOnList.getName().equalsIgnoreCase(ingred.getName()) // the same ingredient
+                                    && itemOnList.getMetric().equals(ingred.getMetric())) {// with the same metric unit)
+                                Log.i(TAG, "Same item, " + ingred.getName() + " " + ingred.getMetric());
+                                dbHelper.deleteFromShoppingList(itemOnList);
+                                if (itemOnList.getQuantity() > ingred.getQuantity())
+                                    dbHelper.addToShoppingList(ingred.getName(),
+                                            Integer.toString(itemOnList.getQuantity() -
+                                                    ingred.getQuantity()) ,ingred.getMetric(), false);
+                                inShoppingList = true;
+                                break; //don't need to keep looking for this ingredient
+                            }
+                        }
+
+                        if (inShoppingList)
+                            ShoppingList.refreshShoppingList();
+
+                        if (inCupboard)
+                            dbHelper.deleteIngredient(ingred);
+
+                        dbHelper.addIngredient(ingred.getQuantityString(), ingred.getMetric(), ingred.getName());
+                        Cupboard.refreshCupboard();
+                        Log.i(TAG, "added ingredients to cupboard");
+                        finish();
+                    }
+                }
+                else {
                     Toast.makeText(getApplicationContext(), "Please fill out all fields",
                              Toast.LENGTH_LONG).show();
                 }
