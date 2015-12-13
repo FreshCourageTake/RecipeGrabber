@@ -1,12 +1,8 @@
 package com.android.andrewgarver.recipegrabber;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -18,14 +14,14 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
-
+import android.widget.Toast;
 import java.util.ArrayList;
 
 /**
- * Adds ingredients to the Cupboard
- *
- *
+ * Class to add ingredients to the Cupboard
+ * <p>
+ * Creates fields to add quantity, units, and ingredients up to 20 at a time
+ *   to your cupboard.
  *
  * @author  Andrew Garver, Landon Jamieson, and Reed Atwood
  * @version 1.0
@@ -37,15 +33,21 @@ public class AddToCupboard extends AppCompatActivity {
      * Debugging Tag to display LogCat messages for debugging
      */
     private static final String TAG = AddToCupboard.class.getSimpleName();
+
     DatabaseAdapter dbHelper;
 
     /**
-     *
+     * Flag to ensure all entries are filled
      */
-    int numNewLines; // TODO: On refresh we need to reset this to 0!!!
+    boolean correctInput = true;
 
     /**
-     *
+     * Keep track of how many new lines there is
+     */
+    int numNewLines;
+
+    /**
+     * Array of ids for each of he rows to keep track of what is on them
      */
     int ids[] = {R.id.newRow1, R.id.newRow2, R.id.newRow3, R.id.newRow4, R.id.newRow5,
             R.id.newRow6, R.id.newRow7, R.id.newRow8, R.id.newRow9, R.id.newRow10,
@@ -53,7 +55,10 @@ public class AddToCupboard extends AppCompatActivity {
             R.id.newRow16, R.id.newRow17, R.id.newRow18, R.id.newRow19, R.id.newRow20};
 
     /**
-     *
+     * Opens AddToCupboard Activity so that you can add a ingredients to the cupboard
+     * <p>
+     * Adds fields to add quantity, units, and ingredients to the database.
+     * Sets numNewLines to 0.
      *
      * @param savedInstanceState save the activity for reopening
      */
@@ -65,28 +70,34 @@ public class AddToCupboard extends AppCompatActivity {
         setSupportActionBar(toolbar);
         numNewLines = 0;
         Log.i(TAG, "Started Add To Cupboard");
-
         dbHelper = new DatabaseAdapter(this);
 
-        //this must be final since it is accessed from an inner class
+        /**
+         * this must be final since it is accessed from an inner class
+         */
         final ImageButton add = (ImageButton) findViewById(R.id.addMore);
         final Button addIng = (Button) findViewById(R.id.addIng);
         final ArrayList<String> results = new ArrayList<>();
 
-        //need to add the listener to add an extra row of input fields
+        /**
+         * need to add the listener to add an extra row of input fields
+         */
         add.setOnClickListener(new View.OnClickListener() {
-            @Override
-
-            //When they click the + button, they will get another row for input.
 
             /**
              * When they click the + button, they will get another row for input.
+             * <p>
+             * Insures that there in no more than 20 new lines, When the plus(+)
+             *   button is clicked, we add a new row to the View and increments
+             *   numNewLines by 1.
              *
-             * @param view
-             * @return Nothing if the number of Newlines is greater than 19
+             * @param view The view that was clicked.
              */
+            @Override
             public void onClick(View view) {
-                // Don't let the user enter any more than 20 new lines
+                /**
+                 * Don't let the user enter any more than 20 new lines
+                 */
                 if (numNewLines > 19)
                     return;
 
@@ -108,16 +119,19 @@ public class AddToCupboard extends AppCompatActivity {
                 ((ViewGroup) findViewById(R.id.container)).addView(v);
 
                 Log.i(TAG, "added line " + numNewLines + " with id of " + ids[numNewLines - 1]);
-
             }
         });
 
         addIng.setOnClickListener(new View.OnClickListener() {
 
             /**
+             * Adds ingredient to the database and broadcasts the changes
+             * <p>
+             * Adds ingredient's quantity, units, and ingredient to the database
+             * Checks to ensure that all of the fields are filled out.
              * Clicking the add button adds the first row to the database
              *
-             * @param view
+             * @param view The view that was clicked.
              */
             @Override
             public void onClick(View view) {
@@ -125,37 +139,51 @@ public class AddToCupboard extends AppCompatActivity {
 
                 /**
                  * adds the first row to database
+                 * Quantity = quant
+                 * Ingredient Name = ingName
                  */
-                String quant = ((EditText)findViewById(R.id.ingQuant)).getText().toString();
-                String unit = ((Spinner)findViewById(R.id.ingUnit)).getSelectedItem().toString();
-                String ingName = ((EditText)findViewById(R.id.ingName)).getText().toString();
+                String quant = ((EditText) findViewById(R.id.ingQuant)).getText().toString();
+                String unit = ((Spinner) findViewById(R.id.ingUnit)).getSelectedItem().toString();
+                String ingName = ((EditText) findViewById(R.id.ingName)).getText().toString();
 
                 /**
-                 *
+                 * Error handling for if quantity and ingredient name are blank
                  */
                 if (!quant.equals("") && !ingName.equals("")) {
+
                     if (dbHelper.addIngredient(quant, unit, ingName) > 0) {
-                        Log.i(TAG, "added to cupboard");
+                        Log.i(TAG, "added ingredients to cupboard");
                         results.add(ingName + " - " + quant + ' ' + unit);
+
+                        // reset the flag
+                        correctInput = true;
+
+                    } else {
+                        Log.i(TAG, "failed to add ingredient");
+                        correctInput = false;
                     }
+                } else {
+                    correctInput = false;
                 }
 
                 /**
-                 * adds any additional rows
+                 * Adds any additional rows.
                  */
                 for (int i = 0; i < numNewLines; ++i) {
-                    RelativeLayout rel = ((RelativeLayout)findViewById(ids[i]));
-                    String dynamicQuant = ((EditText)rel.findViewById(R.id.quanNewRow)).getText().toString();
-                    String dynamicUnit = ((Spinner)rel.findViewById(R.id.unitNewRow)).getSelectedItem().toString();
-                    String dynamicIngName = ((EditText)rel.findViewById(R.id.nameNewRow)).getText().toString();
+                    RelativeLayout rel = ((RelativeLayout) findViewById(ids[i]));
+                    String dynamicQuant = ((EditText) rel.findViewById(R.id.quanNewRow)).getText().toString();
+                    String dynamicUnit = ((Spinner) rel.findViewById(R.id.unitNewRow)).getSelectedItem().toString();
+                    String dynamicIngName = ((EditText) rel.findViewById(R.id.nameNewRow)).getText().toString();
 
                     /**
-                     *
+                     * Add more ingredients if there is more than one.
                      */
                     if (!dynamicQuant.equals("") && !dynamicIngName.equals("")) {
                         if (dbHelper.addIngredient(dynamicQuant, dynamicUnit, dynamicIngName) > 0) {
                             Log.i(TAG, "added to cupboard");
                             results.add(dynamicIngName + " - " + dynamicQuant + ' ' + dynamicUnit);
+                        } else {
+                            Log.i(TAG, "failed to add ingredients");
                         }
                     }
 
@@ -163,12 +191,19 @@ public class AddToCupboard extends AppCompatActivity {
                 }
 
                 /**
-                 *
+                 * Update the activity if all fields are filled out correctly and displays a
+                 *   message if not all filled out
                  */
-                Intent data = new Intent();
-                data.putStringArrayListExtra("results", results);
-                setResult(RESULT_OK, data);
-                finish(); // This takes us back to the previous fragment
+                if (correctInput) {
+                    Intent data = new Intent();
+                    data.putStringArrayListExtra("results", results);
+                    setResult(RESULT_OK, data);
+                    finish(); // This takes us back to the previous fragment
+
+                } else {
+                    Toast.makeText(getApplicationContext(), "Please fill out all fields",
+                             Toast.LENGTH_LONG).show();
+                }
             }
         });
     }

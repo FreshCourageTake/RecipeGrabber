@@ -3,8 +3,6 @@ package com.android.andrewgarver.recipegrabber;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -16,13 +14,14 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
-
+import android.widget.Toast;
 import java.util.ArrayList;
 
 /**
- * Add items to shopping list
- *
- *
+ * Class to add ingredients to shopping list
+ * <p>
+ * Creates fields to add quantity, units, and ingredients up to 20 at a time
+ *   to your shopping list.
  *
  * @author  Andrew Garver, Landon Jamieson, and Reed Atwood
  * @version 1.0
@@ -37,12 +36,17 @@ public class AddToShoppingList extends AppCompatActivity {
     DatabaseAdapter dbHelper;
 
     /**
-     *
+     * Flag to ensure all entries are filled
      */
-    int numNewLines; // TODO: On refresh we need to reset this to 0!!!
+    boolean correctInput = true;
 
     /**
-     *
+     * Keep track of how many new lines there is
+     */
+    int numNewLines;
+
+    /**
+     * Array of ids for each of he rows to keep track of what is on them
      */
     int ids[] = {R.id.newRow1, R.id.newRow2, R.id.newRow3, R.id.newRow4, R.id.newRow5,
             R.id.newRow6, R.id.newRow7, R.id.newRow8, R.id.newRow9, R.id.newRow10,
@@ -51,7 +55,10 @@ public class AddToShoppingList extends AppCompatActivity {
 
 
     /**
-     *
+     * Opens AddToShoppingLst. Activity so that you can add a ingredients to the shopping list
+     * <p>
+     * Adds fields to add quantity, units, and ingredients to the database.
+     * Sets numNewLines to 0.
      *
      * @param savedInstanceState save the activity for reopening
      */
@@ -62,10 +69,6 @@ public class AddToShoppingList extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         numNewLines = 0;
-
-        /**
-         *
-         */
         dbHelper = new DatabaseAdapter(this);
 
         /**
@@ -82,11 +85,21 @@ public class AddToShoppingList extends AppCompatActivity {
 
             /**
              * When they click the + button, they will get another row for input.
+             * <p>
+             * Insures that there in no more than 20 new lines, When the plus(+)
+             *   button is clicked, we add a new row to the View and increments
+             *   numNewLines by 1.
              *
-             * @param view
+             * @param view The view that was clicked.
              */
             @Override
             public void onClick(View view) {
+
+                /**
+                 * Don't let the user enter any more than 20 new lines
+                 */
+                if (numNewLines > 19)
+                    return;
 
                 /**
                  * We use the context of the button, since it is on the activity we are using
@@ -104,48 +117,60 @@ public class AddToShoppingList extends AppCompatActivity {
                  * There is an (at first) empty container LinearLayout that we insert these into
                  */
                 ((ViewGroup) findViewById(R.id.container)).addView(v);
+
+                Log.i(TAG, "added line " + numNewLines + " with id of " + ids[numNewLines - 1]);
             }
         });
 
         addIng.setOnClickListener(new View.OnClickListener() {
 
             /**
+             * Adds ingredient to the database and broadcasts the changes
+             * <p>
+             * Adds ingredient's quantity, units, and ingredient to the database
+             * Checks to ensure that all of the fields are filled out.
+             * Clicking the add button adds the first row to the database
              *
-             *
-             * @param view
+             * @param view The view that was clicked.
              */
             @Override
             public void onClick(View view) {
-                Log.i(TAG, "adding item");
+                Log.i(TAG, "adding item to shopping list");
 
                 String item = "";
 
                 /**
-                 * input the first line of ingredients
+                 * Input the first line of ingredients.
+                 * Ingredient Quantity = ingQuant.
+                 * Ingredient Unit = ingUnit.
+                 * Ingredient Name = ingName.
                  */
                 String ingQuant = ((EditText) findViewById(R.id.ingQuant)).getText().toString();
                 String ingUnit = ((Spinner) findViewById(R.id.ingUnit)).getSelectedItem().toString();
                 String ingName = ((EditText) findViewById(R.id.ingName)).getText().toString();
 
                 /**
-                 *
+                 * Error handling for if quantity and ingredient name are blank
                  */
                 if (!ingQuant.equals("") && !ingName.equals("")) {
                     item = ingName + " - " + ingQuant + " " + ingUnit;
 
-                    /**
-                     *
-                     */
                     if (dbHelper.addToShoppingList(ingName, ingQuant, ingUnit, false) > 0) {
-                        Log.i(TAG, "added ingredients");
+                        Log.i(TAG, "added ingredients to shopping list");
                         results.add(item);
+
+                        // reset the flag
+                        correctInput = true;
                     } else {
                         Log.i(TAG, "failed to add ingredients");
+                        correctInput = false;
                     }
+                } else {
+                    correctInput = false;
                 }
 
                 /**
-                 *
+                 * Adds any additional rows.
                  */
                 for (int i = 0; i < numNewLines; ++i) {
                     RelativeLayout rel = ((RelativeLayout) findViewById(ids[i]));
@@ -154,14 +179,11 @@ public class AddToShoppingList extends AppCompatActivity {
                     ingName = ((EditText) rel.findViewById(R.id.nameNewRow)).getText().toString();
 
                     /**
-                     *
+                     * Add more ingredients if there is more than one.
                      */
                     if (!ingQuant.equals("") && !ingName.equals("")) {
-                        item = ingName + " - " + ingQuant + " " + ingUnit;
 
-                        /**
-                         *
-                         */
+                        item = ingName + " - " + ingQuant + " " + ingUnit;
                         if (dbHelper.addToShoppingList(ingName, ingQuant, ingUnit, false) > 0) {
                             Log.i(TAG, "added ingredients");
                             results.add(item);
@@ -172,12 +194,19 @@ public class AddToShoppingList extends AppCompatActivity {
                 }
 
                 /**
-                 *
+                 * Update the activity if all fields are filled out correctly and displays a
+                 *   message if not all filled out
                  */
-                Intent data = new Intent();
-                data.putStringArrayListExtra("results", results);
-                setResult(RESULT_OK, data);
-                finish(); // This takes us back to the previous fragment
+                if (correctInput) {
+                    Intent data = new Intent();
+                    data.putStringArrayListExtra("results", results);
+                    setResult(RESULT_OK, data);
+                    finish(); // This takes us back to the previous fragment
+
+                } else {
+                    Toast.makeText(getApplicationContext(), "Please fill out all fields",
+                            Toast.LENGTH_LONG).show();
+                }
             }
         });
     }

@@ -40,7 +40,7 @@ public class About_page extends AppCompatActivity {
 
         /**
          * Set the TextView to display the About Page displays the licencing information
-         *   calling {@link app.res.layout.activity_about_page.xml}
+         *   calling {@link activity_about_page.xml
          */
         textView = (TextView)findViewById(R.id.tvAbout);
     }

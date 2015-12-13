@@ -192,7 +192,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="50dp"
                 android:ems="10"
-                android:hint="1. Melt butter in microwave safe dish\n2. Mix butter and sugar in..."
+                android:hint="Example:\n1. Melt butter in microwave safe dish\n2. Mix butter and sugar in..."
                 android:inputType="textMultiLine"
                 android:layout_centerHorizontal="true"
                 android:layout_below="@id/instructionLabel"/>
