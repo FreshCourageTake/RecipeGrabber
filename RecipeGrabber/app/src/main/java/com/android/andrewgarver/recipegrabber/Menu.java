@@ -151,12 +151,10 @@ public class Menu extends Fragment {
                 String recipeName = list.getItemAtPosition(position).toString();
 
                 /**
-                 * Use bundles to share data between activities
+                 * Use Extras on intent to share information
                  */
                 Intent intent = new Intent(getActivity(), DisplayRecipe.class);
-                Bundle bundle = new Bundle(); //we can use intent.putExtra("recipeName", recipeName); don't need bundle
-                bundle.putString("recipeName", recipeName);
-                intent.putExtras(bundle);
+                intent.putExtra("recipeName", recipeName);
                 startActivity(intent);
             }
         });

@@ -6,8 +6,10 @@ import android.util.Log;
 import android.widget.TextView;
 
 /**
- *
- *
+ * This activity will handle displaying the recipe by pulling information from the database
+ * <p>
+ * The recipe will be accessed by its
+ * </p>
  *
  *
  * @author  Andrew Garver, Landon Jamieson, and Reed Atwood
@@ -49,8 +51,7 @@ public class DisplayRecipe extends AppCompatActivity {
         /**
          * get the name of the selected recipe
          */
-        Bundle bundle = getIntent().getExtras();
-        String recipeName = bundle.getString("recipeName");
+        String recipeName = getIntent().getStringExtra("recipeName");
         Log.i(TAG, recipeName);
 
         /**
