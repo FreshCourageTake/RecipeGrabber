@@ -22,8 +22,12 @@ import com.android.andrewgarver.recipegrabber.extendCalView.ExtendedCalendarView
 import java.util.ArrayList;
 
 /**
- *
- *
+ * Displays a calendar with the recipes that are planned
+ * <p>
+ * Highlights the current day. Implements the <a href="https://github.com/tyczj/ExtendedCalendarView">
+ *     ExtendedCalendarView</a> from a third party.
+ * Clicking the plus button, lets you add a recipe to the ListView below the calendar.
+ * LongClicking deletes event from calendar.
  *
  * @author  Andrew Garver, Landon Jamieson, and Reed Atwood
  * @version 1.0
@@ -42,18 +46,15 @@ public class Menu extends Fragment {
     private static final int recipeRequest = 1;
 
     /**
-     *
+     * Setup variables
      */
     private ListView list;
     private static ExtendedCalendarView extCalendar;
     private Day selDay;
     private static ArrayAdapter<String> adapter;
 
-
     /**
-     * Short one line description.
-     * <p>
-     *
+     * Sets up the ExtendedCalendarView and the ListView
      *
      * @param inflater The LayoutInflater object that can be used to inflate any
      *                 views in the fragment.
@@ -65,37 +66,26 @@ public class Menu extends Fragment {
      *                           from a previous saved state as given here.
      * @return Return the View for the fragment's UI, or null
      */
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        /**
-         *
-         */
         View view = inflater.inflate(R.layout.frag_menu, container, false);
         list = (ListView) view.findViewById(R.id.menuListView);
         ArrayList<String> items = new ArrayList();
         adapter = new ArrayAdapter<>(getContext(), R.layout.row_layout, items);
         list.setAdapter(adapter);
 
-        /**
-         *
-         */
         extCalendar = (ExtendedCalendarView) view.findViewById(R.id.calendarMenu);
         extCalendar.setMonthTextBackgroundColor(R.color.black);
-
-        /**
-         *
-         */
         extCalendar.setOnDayClickListener(new ExtendedCalendarView.OnDayClickListener() {
 
             /**
+             * Gets the day that was clicked
              *
-             *
-             * @param adapter
-             * @param view
-             * @param position
-             * @param id
-             * @param day
+             * @param adapter Saves the where the item was clicked.
+             * @param view The view that was clicked.
+             * @param position The position inside the ListView that was clicked.
+             * @param id Not used in this function, needed because parent overridden.
+             * @param day The current day that is clicked.
              */
             @Override
             public void onDayClicked(AdapterView<?> adapter, View view, int position, long id, Day day) {
@@ -105,42 +95,36 @@ public class Menu extends Fragment {
         });
 
         /**
-         *
+         * Displays the plus(+) to set it to the onclickListener
          */
         ImageButton addBtn = (ImageButton) view.findViewById(R.id.addEvent);
 
-        /**
-         *
-         */
         addBtn.setOnClickListener(new View.OnClickListener() {
 
             /**
+             * Starts the PickRecipe activity only if a day has been selected
              *
-             *
-             * @param v view
+             * @param v The view that was clicked. Labeled v.
              */
             public void onClick(View v) {
 
                 /**
-                 *
+                 * If plus button clicked without selecting a day it won't do anything
                  */
                 if (selDay != null)
                     startActivityForResult(new Intent(getContext(), PickRecipe.class), recipeRequest);
             }
         });
 
-        /**
-         *
-         */
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             /**
+             * Opens the DisplayRecipe activity to be display the recipe
              *
-             *
-             * @param parent
-             * @param view
-             * @param position
-             * @param id
+             * @param parent Saves the where the item was clicked.
+             * @param view The view that was clicked.
+             * @param position The position inside the ListView that was clicked.
+             * @param id Not used in this function, needed because parent overridden.
              */
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position,
@@ -161,45 +145,39 @@ public class Menu extends Fragment {
             }
         });
 
-        /**
-         *
-         */
         list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
             /**
+             * On Item Long Click displays message to delete the recipe
              *
-             *
-             * @param parent
-             * @param view
-             * @param position
-             * @param id
-             * @return true
+             * @param parent Saves the where the item was clicked
+             * @param view The view that was clicked.
+             * @param position The position inside the ListView that was clicked.
+             * @param id Not used in this function, needed because parent overridden
+             * @return true Consumes the long click
              */
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
 
                 /**
-                 *
+                 * This must be final since it is accessed from an inner class
                  */
                 final String toDel = adapter.getItem(position);
 
                 /**
-                 *
+                 * Message to be displayed when deleting a recipe
                  */
                 AlertDialog.Builder adb = new AlertDialog.Builder(getContext());
                 adb.setTitle("Delete planned recipe: " + toDel + '?');
                 adb.setMessage("Are you sure you want to remove this recipe from your menu?");
 
-                /**
-                 *
-                 */
                 adb.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
 
                     /**
+                     * Display message to delete recipe
                      *
-                     *
-                     * @param dialog
-                     * @param which
+                     * @param dialog Dialog that was started
+                     * @param which Which button that was clicked
                      */
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -214,16 +192,13 @@ public class Menu extends Fragment {
                     }
                 });
 
-                /**
-                 *
-                 */
                 adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 
                     /**
+                     * Display message to cancel deleting recipe
                      *
-                     *
-                     * @param dialog
-                     * @param which
+                     * @param dialog Dialog that was started
+                     * @param which Which button that was clicked
                      */
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -231,11 +206,14 @@ public class Menu extends Fragment {
                 });
 
                 /**
-                 *
+                 * Displays box with the delete and cancel message
                  */
                 AlertDialog ad = adb.create();
                 ad.show();
 
+                /**
+                 * Consumes the click so it wont continue to click
+                 */
                 return true;
             }
         });
@@ -244,21 +222,19 @@ public class Menu extends Fragment {
     }
 
     /**
+     * Gets the events and adds the name of the recipes to the ListView
      *
-     * <p>
-     *
-     *
-     * @param  day
+     * @param  day The current day that is clicked.
      */
     private void getEventDetails(Day day) {
 
         /**
-         *
+         * Clear the ListView so there is no duplication
          */
         adapter.clear();
 
         /**
-         *
+         * Adds the names of all recipes
          */
         for (Event e : day.getEvents())
             adapter.add(e.getTitle());
@@ -275,6 +251,8 @@ public class Menu extends Fragment {
     /**
      *
      *
+     * @deprecated Time was deprecated and changed by use to mathematical formula
+     *
      * @param requestCode
      * @param resultCode
      * @param data
@@ -285,26 +263,20 @@ public class Menu extends Fragment {
          *
          */
         if (requestCode == recipeRequest) {
-
-            /**
-             *
-             */
             Log.i(TAG, "Request == recipeRequest");
             if (resultCode == getActivity().RESULT_OK) {
 
-                /**
-                 *
-                  */
                 Log.i(TAG, "RESULT OKAY");
                 String recipe = data.getStringExtra("recipeName");
                 ContentValues values = new ContentValues();
                 values.put(CalendarProvider.COLOR, Event.COLOR_RED);
                 values.put(CalendarProvider.EVENT, recipe);
-                int eventJulDay = selDay.getStartDay();
 
                 /**
-                 *
+                 * getStartDay was modified from ExtendedCalendarView because Time was deprecated
                  */
+                int eventJulDay = selDay.getStartDay();
+
                 Log.i(TAG, "Event Date (day/month/year): " + selDay.getDay() + '/' +
                         (selDay.getMonth() + 1) + '/' + selDay.getYear());
                 Log.i(TAG, "Event Julian Day: " + eventJulDay);
