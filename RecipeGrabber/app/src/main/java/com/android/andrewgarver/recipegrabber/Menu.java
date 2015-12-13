@@ -246,18 +246,19 @@ public class Menu extends Fragment {
     }
 
     /**
-     *
+     * This is what gets called when the Activity that was called finishes
      *
      * @deprecated Time was deprecated and changed by use to mathematical formula
      *
-     * @param requestCode
-     * @param resultCode
-     * @param data
+     * @param requestCode Code that was sent with the activity
+     * @param resultCode If the result was okay
+     * @param data The intent that was sent with the result
      */
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         /**
-         *
+         * If it was a request for the recipe then if it was okay we will add the recipe to the
+         * correct place on the calendar
          */
         if (requestCode == recipeRequest) {
             Log.i(TAG, "Request == recipeRequest");
