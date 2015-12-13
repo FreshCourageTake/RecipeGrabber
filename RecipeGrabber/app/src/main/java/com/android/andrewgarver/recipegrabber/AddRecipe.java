@@ -83,7 +83,6 @@ public class AddRecipe extends AppCompatActivity {
              * When they click the + button, they will get another row for input.
              *
              * @param view get the current view
-             * @return Nothing if the number of Newlines is greater than 19
              */
             @Override
             public void onClick(View view) {
@@ -128,6 +127,7 @@ public class AddRecipe extends AppCompatActivity {
                  * insert the name and instructions of the recipe into the DB
                  */
                 String recName = ((EditText) findViewById(R.id.recipeName)).getText().toString();
+                recName = recName.replace("  ", " "); //remove double spaces if any
                 String recInstructions = ((EditText) findViewById(R.id.editText)).getText().toString();
                 long id = -1;
 
@@ -162,6 +162,7 @@ public class AddRecipe extends AppCompatActivity {
                     String ingQuant = ((EditText) findViewById(R.id.ingQuant)).getText().toString();
                     String ingUnit = ((Spinner) findViewById(R.id.ingUnit)).getSelectedItem().toString();
                     String ingName = ((EditText) findViewById(R.id.ingName)).getText().toString();
+                    ingName = ingName.replace("  ", " "); //remove double spaces if any
                     if (!ingQuant.equals("") && !ingName.equals("")) {
                         dbHelper.addRecipeIngredients(ingName, ingQuant, ingUnit, id);
                     }
@@ -174,6 +175,7 @@ public class AddRecipe extends AppCompatActivity {
                         ingQuant = ((EditText) rel.findViewById(R.id.quanNewRow)).getText().toString();
                         ingUnit = ((Spinner) rel.findViewById(R.id.unitNewRow)).getSelectedItem().toString();
                         ingName = ((EditText) rel.findViewById(R.id.nameNewRow)).getText().toString();
+                        ingName = ingName.replace("  ", " "); //remove double spaces if any
                         if (!ingQuant.equals("") && !ingName.equals("")) {
                             dbHelper.addRecipeIngredients(ingName, ingQuant, ingUnit, id);
                         }

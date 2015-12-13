@@ -21,7 +21,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 /**
- *  Main Activity for the start of the app
+ *  Main Activity for the start of the app this will handle the fragments
+ *  and their switching.
  *
  *
  *
@@ -37,7 +38,6 @@ public class ActivityMain extends AppCompatActivity {
     private static final String TAG = ActivityMain.class.getSimpleName();
 
     /**
-     *
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
      * {@link FragmentPagerAdapter} derivative, which will keep every
@@ -60,7 +60,7 @@ public class ActivityMain extends AppCompatActivity {
 
 
     /**
-     *
+     * Sets up this activity and our fragments.
      *
      * @param savedInstanceState save the activity for reopening
      */
@@ -69,14 +69,14 @@ public class ActivityMain extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_activity_main);
 
-        /**
-         *
-         */
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
+        /**
+         * Create the adapter that will return a fragment for each of the three
+         * primary sections of the activity.
+         */
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
@@ -141,27 +141,7 @@ public class ActivityMain extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     /*********************** May need to be its own java file
-
-
-
-
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -196,8 +197,28 @@ public class Cupboard extends Fragment {
              *
              */
             if (resultCode == getActivity().RESULT_OK) {
-                ArrayList<String> ingredList = data.getStringArrayListExtra("results");
-                adapter.addAll(ingredList);
+                Log.i(TAG, "Request == IngredRequest");
+                ArrayList<Ingredient> ingredList = (ArrayList<Ingredient>) data.getSerializableExtra("results");
+                Log.i(TAG, "Size of array sent: " + ingredList.size());
+                ArrayList<Ingredient> shoppingListItems = dbHelper.getAllShoppingListItemsVerbose();
+                for (Ingredient ingred : ingredList) {
+                    Log.i(TAG, "Handling new ingredient " + ingred.getName());
+                    adapter.add(ingred.getName() + " - " + ingred.getQuantity() + ' ' + ingred.getMetric());
+
+                    for (Ingredient itemOnList : shoppingListItems) {
+                        Log.i(TAG, "for item on list: " + itemOnList.getName());
+                        if (itemOnList.getName().equalsIgnoreCase(ingred.getName()) // the same ingredient
+                                && itemOnList.getMetric().equals(ingred.getMetric())) {// with the same metric unit)
+                            Log.i(TAG, "Same item, " + ingred.getName() + " " + ingred.getMetric());
+                            dbHelper.deleteFromShoppingList(itemOnList);
+                            if (itemOnList.getQuantity() > ingred.getQuantity())
+                                dbHelper.addToShoppingList(ingred.getName(), Integer.toString(itemOnList.getQuantity() - ingred.getQuantity()) ,ingred.getMetric(), false);
+                        }
+                    }
+                }
+
+                ShoppingList.refreshShoppingList();
+
             }
         }
     }

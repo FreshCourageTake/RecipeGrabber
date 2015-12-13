@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -71,7 +73,7 @@ public class AddToCupboard extends AppCompatActivity {
         //this must be final since it is accessed from an inner class
         final ImageButton add = (ImageButton) findViewById(R.id.addMore);
         final Button addIng = (Button) findViewById(R.id.addIng);
-        final ArrayList<String> results = new ArrayList<>();
+        final ArrayList<Ingredient> results = new ArrayList<>();
 
         //need to add the listener to add an extra row of input fields
         add.setOnClickListener(new View.OnClickListener() {
@@ -129,6 +131,7 @@ public class AddToCupboard extends AppCompatActivity {
                 String quant = ((EditText)findViewById(R.id.ingQuant)).getText().toString();
                 String unit = ((Spinner)findViewById(R.id.ingUnit)).getSelectedItem().toString();
                 String ingName = ((EditText)findViewById(R.id.ingName)).getText().toString();
+                ingName = ingName.replace("  ", " "); //remove double spaces if any
 
                 /**
                  *
@@ -136,7 +139,7 @@ public class AddToCupboard extends AppCompatActivity {
                 if (!quant.equals("") && !ingName.equals("")) {
                     if (dbHelper.addIngredient(quant, unit, ingName) > 0) {
                         Log.i(TAG, "added to cupboard");
-                        results.add(ingName + " - " + quant + ' ' + unit);
+                        results.add(new Ingredient(ingName, Integer.parseInt(quant), unit));
                     }
                 }
 
@@ -145,17 +148,18 @@ public class AddToCupboard extends AppCompatActivity {
                  */
                 for (int i = 0; i < numNewLines; ++i) {
                     RelativeLayout rel = ((RelativeLayout)findViewById(ids[i]));
-                    String dynamicQuant = ((EditText)rel.findViewById(R.id.quanNewRow)).getText().toString();
-                    String dynamicUnit = ((Spinner)rel.findViewById(R.id.unitNewRow)).getSelectedItem().toString();
-                    String dynamicIngName = ((EditText)rel.findViewById(R.id.nameNewRow)).getText().toString();
+                    quant = ((EditText)rel.findViewById(R.id.quanNewRow)).getText().toString();
+                    unit = ((Spinner)rel.findViewById(R.id.unitNewRow)).getSelectedItem().toString();
+                    ingName = ((EditText)rel.findViewById(R.id.nameNewRow)).getText().toString();
+                    ingName = ingName.replace("  ", " "); //remove double spaces if any
 
                     /**
                      *
                      */
-                    if (!dynamicQuant.equals("") && !dynamicIngName.equals("")) {
-                        if (dbHelper.addIngredient(dynamicQuant, dynamicUnit, dynamicIngName) > 0) {
+                    if (!quant.equals("") && !ingName.equals("")) {
+                        if (dbHelper.addIngredient(quant, unit, ingName) > 0) {
                             Log.i(TAG, "added to cupboard");
-                            results.add(dynamicIngName + " - " + dynamicQuant + ' ' + dynamicUnit);
+                            results.add(new Ingredient(ingName, Integer.parseInt(quant), unit));
                         }
                     }
 
@@ -166,7 +170,7 @@ public class AddToCupboard extends AppCompatActivity {
                  *
                  */
                 Intent data = new Intent();
-                data.putStringArrayListExtra("results", results);
+                data.putExtra("results", results);
                 setResult(RESULT_OK, data);
                 finish(); // This takes us back to the previous fragment
             }

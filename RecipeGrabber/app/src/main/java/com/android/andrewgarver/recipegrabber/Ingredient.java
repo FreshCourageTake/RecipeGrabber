@@ -1,5 +1,7 @@
 package com.android.andrewgarver.recipegrabber;
 
+import java.io.Serializable;
+
 /**
  * Simple class for the Ingredients
  *
@@ -9,7 +11,7 @@ package com.android.andrewgarver.recipegrabber;
  * @version 1.0
  * @since   12/10/2015
  */
-public class Ingredient {
+public class Ingredient implements Serializable {
 
     /**
      * Debugging Tag to display LogCat messages for debugging
@@ -19,9 +21,9 @@ public class Ingredient {
     /**
      * Set up the types of ingredients
      */
-    String name;
-    String metric;
-    int quantity;
+    private String name;
+    private String metric;
+    private int quantity;
 
     /**
      * Non-Default constructor that has a name, quantity and metric units
@@ -30,7 +32,7 @@ public class Ingredient {
      * @param quantity
      * @param metric
      */
-    public Ingredient(String name, int quantity, String metric) {
+    public Ingredient (String name, int quantity, String metric) {
         this.name = name;
         this.quantity = quantity;
         this.metric = metric;
