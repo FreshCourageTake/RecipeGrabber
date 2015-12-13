@@ -131,8 +131,6 @@ public class ActivityMain extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /*********************** May need to be its own java file
-
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
