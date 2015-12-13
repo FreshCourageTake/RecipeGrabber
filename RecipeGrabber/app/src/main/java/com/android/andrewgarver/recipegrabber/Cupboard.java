@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,15 +32,10 @@ public class Cupboard extends Fragment {
     private static final String TAG = Cupboard.class.getSimpleName();
 
     /**
-     * The request code for adding new ingredients, used to keep the ListView updated.
-     */
-    private static final int ingredCode = 2;
-
-    /**
      *
      */
-    private DatabaseAdapter dbHelper;
-    private ArrayAdapter<String> adapter;
+    private static DatabaseAdapter dbHelper;
+    private static ArrayAdapter<String> adapter;
     private ListView list;
 
     /**
@@ -169,7 +163,7 @@ public class Cupboard extends Fragment {
              * @param v is a view
              */
             public void onClick(View v) {
-                startActivityForResult(new Intent(getContext(), AddToCupboard.class), ingredCode);
+                startActivity(new Intent(getContext(), AddToCupboard.class));
             }
         });
 
@@ -179,44 +173,10 @@ public class Cupboard extends Fragment {
     /**
      *
      *
-     * @param requestCode
-     * @param resultCode
-     * @param data
+     *
      */
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        /**
-         *
-         */
-        if (requestCode == ingredCode) {
-
-            /**
-             *
-             */
-            if (resultCode == getActivity().RESULT_OK) {
-                Log.i(TAG, "Request == IngredRequest");
-                ArrayList<Ingredient> ingredList = (ArrayList<Ingredient>) data.getSerializableExtra("results");
-                Log.i(TAG, "Size of array sent: " + ingredList.size());
-                ArrayList<Ingredient> shoppingListItems = dbHelper.getAllShoppingListItemsVerbose();
-                for (Ingredient ingred : ingredList) {
-                    Log.i(TAG, "Handling new ingredient " + ingred.getName());
-                    adapter.add(ingred.getName() + " - " + ingred.getQuantity() + ' ' + ingred.getMetric());
-
-                    for (Ingredient itemOnList : shoppingListItems) {
-                        Log.i(TAG, "for item on list: " + itemOnList.getName());
-                        if (itemOnList.getName().equalsIgnoreCase(ingred.getName()) // the same ingredient
-                                && itemOnList.getMetric().equals(ingred.getMetric())) {// with the same metric unit)
-                            Log.i(TAG, "Same item, " + ingred.getName() + " " + ingred.getMetric());
-                            dbHelper.deleteFromShoppingList(itemOnList);
-                            if (itemOnList.getQuantity() > ingred.getQuantity())
-                                dbHelper.addToShoppingList(ingred.getName(), Integer.toString(itemOnList.getQuantity() - ingred.getQuantity()) ,ingred.getMetric(), false);
-                        }
-                    }
-                }
-
-                ShoppingList.refreshShoppingList();
-
-            }
-        }
+    public static void refreshCupboard () {
+        adapter.clear();
+        adapter.addAll(dbHelper.getAllIngredients());
     }
 }

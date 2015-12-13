@@ -77,6 +77,19 @@ public class DatabaseAdapter {
     }
 
     /**
+     *
+     *
+     * @param ingred
+     * @return
+     */
+    public boolean deleteIngredient(Ingredient ingred) {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        return db.delete(DatabaseHelper.TABLE_INGREDIENTS, DatabaseHelper.NAME + "='" +
+                ingred.getName() + "' and " + DatabaseHelper.METRIC + "='" + ingred.getMetric() +
+                "'", null) > 0;
+    }
+
+    /**
      * Add Recipe Name and Instructions
      *
      *

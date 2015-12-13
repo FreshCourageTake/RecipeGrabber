@@ -201,7 +201,7 @@ public class AddToShoppingList extends AppCompatActivity {
                  */
                 if (correctInput) {
                     Intent data = new Intent();
-                    data.putStringArrayListExtra("results", results);
+                    data.putStringArrayListExtra("toAddToDatabase", results);
                     setResult(RESULT_OK, data);
                     finish(); // This takes us back to the previous fragment
 

@@ -287,7 +287,7 @@ public class ShoppingList extends Fragment {
              *
              */
             if (resultCode == getActivity().RESULT_OK) {
-                ArrayList<String> shopping = data.getStringArrayListExtra("results");
+                ArrayList<String> shopping = data.getStringArrayListExtra("toAddToDatabase");
                 adapter.addAll(shopping);
             }
         }
