@@ -73,7 +73,7 @@ public class AddToCupboard extends AppCompatActivity {
         dbHelper = new DatabaseAdapter(this);
 
         /**
-         * this must be final since it is accessed from an inner class
+         * This must be final since it is accessed from an inner class
          */
         final ImageButton add = (ImageButton) findViewById(R.id.addMore);
         final Button addIng = (Button) findViewById(R.id.addIng);

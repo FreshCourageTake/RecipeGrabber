@@ -18,9 +18,12 @@ import com.android.andrewgarver.recipegrabber.extendCalView.CalendarProvider;
 import java.util.ArrayList;
 
 /**
- *
- *
- *
+ * Class that stores, adds, and displays recipes in a ListView on the screen.
+ *<p>
+ * Displays recipes added by the user in a ListView.
+ * Long ListView clicks pull up option to delete or cancel delete.
+ * Clicking on the recipe opens DisplayRecipe and displays the recipe.
+ * Recipes are stored in a SQLLite database
  *
  * @author  Andrew Garver, Landon Jamieson, and Reed Atwood
  * @version 1.0
@@ -39,7 +42,7 @@ public class Cookbook extends Fragment {
     private static final int newRecipeCode = 0;
 
     /**
-     *
+     * Set up needed variables
      */
     private ListView list;
     private DatabaseAdapter dbHelper;
@@ -47,7 +50,7 @@ public class Cookbook extends Fragment {
 
     /**
      * What gets called on create. This handles setting the list view to the contents of the
-     * database, and setting up button onclick listeners,
+     * database, and setting up button onclick listeners.
      *
      * @param inflater The LayoutInflater object that can be used to inflate any
      *                 views in the fragment.
@@ -62,32 +65,22 @@ public class Cookbook extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        /**
-         *
-         */
         View view = inflater.inflate(R.layout.frag_cookbook, container, false);
         dbHelper = new DatabaseAdapter(getActivity());
         final ArrayList<String> items = dbHelper.getAllRecipes();
-
-        /**
-         *
-         */
         adapter = new ArrayAdapter<>(getContext(), R.layout.row_layout, items);
         list = (ListView) view.findViewById(R.id.listView);
         list.setAdapter(adapter);
 
-        /**
-         *
-         */
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             /**
              *
              *
-             * @param parent
-             * @param view
-             * @param position
-             * @param id
+             * @param parent Saves the where the item was clicked
+             * @param view The view that was clicked.
+             * @param position The position inside the ListView that was clicked.
+             * @param id Not used in this function, needed because parent overridden
              */
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -115,28 +108,28 @@ public class Cookbook extends Fragment {
             /**
              *
              *
-             * @param parent
-             * @param view
-             * @param position
-             * @param id
+             * @param parent Saves the where the item was clicked
+             * @param view The view that was clicked.
+             * @param position The position inside the ListView that was clicked.
+             * @param id Not used in this function, needed because parent overridden
              * @return true if
              */
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
                 /**
-                 *
+                 * This must be final since it is accessed from an inner class
                  */
                 final String toDel = adapter.getItem(position);
 
                 /**
-                 *
+                 * Message to be displayed when deleting a recipe
                  */
                 AlertDialog.Builder adb = new AlertDialog.Builder(getContext());
                 adb.setTitle("Delete recipe: " + toDel + '?');
                 adb.setMessage("Are you sure you want to remove this recipe?");
 
                 /**
-                 *
+                 * Button that deletes
                  */
                 adb.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
 

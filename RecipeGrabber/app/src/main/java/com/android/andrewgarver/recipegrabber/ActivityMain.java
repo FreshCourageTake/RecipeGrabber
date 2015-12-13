@@ -52,7 +52,6 @@ public class ActivityMain extends AppCompatActivity {
     private DatabaseAdapter dbHelper;
     public static SQLiteDatabase database;
 
-
     /**
      * Sets up this activity and our fragments.
      *
