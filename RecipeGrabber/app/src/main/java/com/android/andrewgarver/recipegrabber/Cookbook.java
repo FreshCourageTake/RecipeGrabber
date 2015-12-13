@@ -58,7 +58,7 @@ public class Cookbook extends Fragment {
      * @return Return the View for the fragment's UI, or null
      */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.frag_cookbook, container, false);
         dbHelper = new DatabaseAdapter(getActivity());
@@ -85,12 +85,10 @@ public class Cookbook extends Fragment {
                 String recipeName = list.getItemAtPosition(position).toString();
 
                 /**
-                 * Use bundles to share data between activities
+                 * Use Extras on intent to share information
                  */
                 Intent intent = new Intent(getActivity(), DisplayRecipe.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("recipeName", recipeName);
-                intent.putExtras(bundle);
+                intent.putExtra("recipeName", recipeName);
                 startActivity(intent);
             }
         });

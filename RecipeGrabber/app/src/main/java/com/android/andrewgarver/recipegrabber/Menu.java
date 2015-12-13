@@ -151,12 +151,10 @@ public class Menu extends Fragment {
                 String recipeName = list.getItemAtPosition(position).toString();
 
                 /**
-                 * Use bundles to share data between activities
+                 * Use Extras on intent to share information
                  */
                 Intent intent = new Intent(getActivity(), DisplayRecipe.class);
-                Bundle bundle = new Bundle(); //we can use intent.putExtra("recipeName", recipeName); don't need bundle
-                bundle.putString("recipeName", recipeName);
-                intent.putExtras(bundle);
+                intent.putExtra("recipeName", recipeName);
                 startActivity(intent);
             }
         });
@@ -206,8 +204,7 @@ public class Menu extends Fragment {
                         adapter.remove(toDel);
                         getActivity().getContentResolver().delete(CalendarProvider.CONTENT_URI,
                                 CalendarProvider.EVENT + "='" + toDel + "' and " +
-                                        CalendarProvider.START_DAY + "='" + selDay.getStartDay() +
-                                        "'", null);
+                                        CalendarProvider.START_DAY + "='" + selDay.getStartDay() + "'", null);
                         extCalendar.refreshCalendar();
                         adapter.clear();
                         Toast.makeText(getContext(), "Deleting from menu", Toast.LENGTH_LONG).show();
