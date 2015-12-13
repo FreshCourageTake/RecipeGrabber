@@ -24,7 +24,7 @@ public class DisplayRecipe extends AppCompatActivity {
     /**
      *
      */
-    DatabaseAdapter dbHelper;
+    private DatabaseAdapter dbHelper;
 
     /**
      *

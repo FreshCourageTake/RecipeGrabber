@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,7 +14,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 
 /**
@@ -35,7 +33,7 @@ public class Cupboard extends Fragment {
     private static final String TAG = Cupboard.class.getSimpleName();
 
     /**
-     * Constant ingredCode = 2
+     * The request code for adding new ingredients, used to keep the ListView updated.
      */
     private static final int ingredCode = 2;
 
@@ -60,7 +58,6 @@ public class Cupboard extends Fragment {
      *                           from a previous saved state as given here.
      * @return Return the View for the fragment's UI, or null.
      */
-    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 

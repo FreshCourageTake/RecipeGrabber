@@ -4,9 +4,10 @@ import java.io.Serializable;
 
 /**
  * Simple class for the Ingredients
- *
- * Contains a non-default constructor and getters for name, quantity, and metric
- *
+ * <p>
+ * Contains a non-default constructor and getters for name, quantity, and metric. It is serializable
+ * to allow it to be put as an extra into an intent.
+ * </p>
  * @author  Andrew Garver, Landon Jamieson, and Reed Atwood
  * @version 1.0
  * @since   12/10/2015

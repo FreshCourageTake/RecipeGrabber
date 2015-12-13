@@ -5,7 +5,6 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,12 +15,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import com.android.andrewgarver.recipegrabber.extendCalView.CalendarProvider;
 import com.android.andrewgarver.recipegrabber.extendCalView.Day;
 import com.android.andrewgarver.recipegrabber.extendCalView.Event;
 import com.android.andrewgarver.recipegrabber.extendCalView.ExtendedCalendarView;
-
 import java.util.ArrayList;
 
 /**
@@ -68,7 +65,7 @@ public class Menu extends Fragment {
      *                           from a previous saved state as given here.
      * @return Return the View for the fragment's UI, or null
      */
-    @Nullable
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         /**
@@ -208,7 +205,9 @@ public class Menu extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         adapter.remove(toDel);
                         getActivity().getContentResolver().delete(CalendarProvider.CONTENT_URI,
-                                CalendarProvider.EVENT + "='" + toDel + "' and " + CalendarProvider.START_DAY + "='" + selDay.getStartDay() + "'", null);
+                                CalendarProvider.EVENT + "='" + toDel + "' and " +
+                                        CalendarProvider.START_DAY + "='" + selDay.getStartDay() +
+                                        "'", null);
                         extCalendar.refreshCalendar();
                         adapter.clear();
                         Toast.makeText(getContext(), "Deleting from menu", Toast.LENGTH_LONG).show();

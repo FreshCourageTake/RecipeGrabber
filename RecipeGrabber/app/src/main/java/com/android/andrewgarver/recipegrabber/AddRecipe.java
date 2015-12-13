@@ -1,12 +1,8 @@
 package com.android.andrewgarver.recipegrabber;
 
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -42,17 +38,17 @@ public class AddRecipe extends AppCompatActivity {
     /**
      * Set up DatabaseAdapter and a flag for if there is correct input
      */
-    DatabaseAdapter dbHelper;
+    private DatabaseAdapter dbHelper;
 
     /**
      * Flag to ensure all entries are filled
      */
-    boolean correctInput = true;
+    private boolean correctInput = true;
 
     /**
      * Keep track of how many new lines there is
      */
-    int numNewLines;
+    private int numNewLines;
 
     /**
      * Array of ids for each of he rows to keep track of what is on them

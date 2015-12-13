@@ -3,8 +3,6 @@ package com.android.andrewgarver.recipegrabber;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -17,8 +15,6 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
-import android.widget.TextView;
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -38,22 +34,22 @@ public class AddToCupboard extends AppCompatActivity {
      */
     private static final String TAG = AddToCupboard.class.getSimpleName();
 
-    DatabaseAdapter dbHelper;
+    private DatabaseAdapter dbHelper;
 
     /**
      * Flag to ensure all entries are filled
      */
-    boolean correctInput = true;
+    private boolean correctInput = true;
 
     /**
      * Keep track of how many new lines there is
      */
-    int numNewLines;
+    private int numNewLines;
 
     /**
      * Array of ids for each of he rows to keep track of what is on them
      */
-    int ids[] = {R.id.newRow1, R.id.newRow2, R.id.newRow3, R.id.newRow4, R.id.newRow5,
+    private int ids[] = {R.id.newRow1, R.id.newRow2, R.id.newRow3, R.id.newRow4, R.id.newRow5,
             R.id.newRow6, R.id.newRow7, R.id.newRow8, R.id.newRow9, R.id.newRow10,
             R.id.newRow11, R.id.newRow12, R.id.newRow13, R.id.newRow14, R.id.newRow15,
             R.id.newRow16, R.id.newRow17, R.id.newRow18, R.id.newRow19, R.id.newRow20};

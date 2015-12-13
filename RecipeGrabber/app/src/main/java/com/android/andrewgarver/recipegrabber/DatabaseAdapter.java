@@ -6,11 +6,8 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.provider.ContactsContract;
 import android.util.Log;
-
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
@@ -31,7 +28,7 @@ public class DatabaseAdapter {
     /**
      *
      */
-    DatabaseHelper helper;
+    private DatabaseHelper helper;
 
     /**
      *
@@ -39,9 +36,12 @@ public class DatabaseAdapter {
      * @param context
      */
     public DatabaseAdapter(Context context) {
-        helper = new DatabaseHelper(context);
+        helper = DatabaseHelper.getInstance(context);
     }
 
+    public DatabaseHelper getHelper() {
+        return helper;
+    }
 
     /**
      * Add Ingredient
@@ -583,7 +583,7 @@ public class DatabaseAdapter {
     /**
      *
      */
-    static class DatabaseHelper extends SQLiteOpenHelper {
+    public static class DatabaseHelper extends SQLiteOpenHelper {
 
         /**
          * Database global constants
@@ -603,13 +603,24 @@ public class DatabaseAdapter {
         public static final String RECIPE_ID = "RECIPE_ID";
         public static final String ITEM = "item";
         public static final String MANUAL_ADD = "MANUAL_ADD";
-
         public static final int DATABASE_VERSION = 51;
 
+        private static DatabaseHelper instance = null;
+
         /**
-         *
+         * Singleton to prevent an error see DatabaseHelper constructor for more details
          */
-        DatabaseHelper(Context context) {
+        public static DatabaseHelper getInstance(Context context){
+            if (instance == null)
+                instance = new DatabaseHelper(context.getApplicationContext());
+            return instance;
+        }
+
+        /**
+         * Had to make this a singleton to fix a warning/notice about SQLite connection object being
+         * leaked for the database. This was the particular fix for this on stack overflow
+         */
+        private DatabaseHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
         }
 

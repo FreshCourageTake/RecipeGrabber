@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,9 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import com.android.andrewgarver.recipegrabber.extendCalView.CalendarProvider;
-
 import java.util.ArrayList;
 
 /**
@@ -37,19 +34,20 @@ public class Cookbook extends Fragment {
     private static final String TAG = Cookbook.class.getSimpleName();
 
     /**
-     * Constant newRecipeCode = 0
+     * The request code for adding new recipes, used to help added new recipes to the list
      */
     private static final int newRecipeCode = 0;
 
     /**
      *
      */
-    ListView list;
-    DatabaseAdapter dbHelper;
-    ArrayAdapter<String> adapter;
+    private ListView list;
+    private DatabaseAdapter dbHelper;
+    private ArrayAdapter<String> adapter;
 
     /**
-     *
+     * What gets called on create. This handles setting the list view to the contents of the
+     * database, and setting up button onclick listeners,
      *
      * @param inflater The LayoutInflater object that can be used to inflate any
      *                 views in the fragment.
@@ -61,7 +59,6 @@ public class Cookbook extends Fragment {
      *                           from a previous saved state as given here.
      * @return Return the View for the fragment's UI, or null
      */
-    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
