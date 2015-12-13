@@ -1,8 +1,12 @@
 package com.android.andrewgarver.recipegrabber;
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -144,6 +148,7 @@ public class AddRecipe extends AppCompatActivity {
                  * insert the name and instructions of the recipe into the DB
                  */
                 String recName = ((EditText) findViewById(R.id.recipeName)).getText().toString();
+                recName = recName.replace("  ", " "); //remove double spaces if any
                 String recInstructions = ((EditText) findViewById(R.id.editText)).getText().toString();
                 long id = -1;
 
@@ -178,6 +183,7 @@ public class AddRecipe extends AppCompatActivity {
                     String ingQuant = ((EditText) findViewById(R.id.ingQuant)).getText().toString();
                     String ingUnit = ((Spinner) findViewById(R.id.ingUnit)).getSelectedItem().toString();
                     String ingName = ((EditText) findViewById(R.id.ingName)).getText().toString();
+                    ingName = ingName.replace("  ", " "); //remove double spaces if any
 
                     /**
                      * Add if there is a quantity and a name
@@ -194,7 +200,7 @@ public class AddRecipe extends AppCompatActivity {
                         ingQuant = ((EditText) rel.findViewById(R.id.quanNewRow)).getText().toString();
                         ingUnit = ((Spinner) rel.findViewById(R.id.unitNewRow)).getSelectedItem().toString();
                         ingName = ((EditText) rel.findViewById(R.id.nameNewRow)).getText().toString();
-
+                        ingName = ingName.replace("  ", " "); //remove double spaces if any
 
                         if (!ingQuant.equals("") && !ingName.equals("")) {
                             dbHelper.addRecipeIngredients(ingName, ingQuant, ingUnit, id);

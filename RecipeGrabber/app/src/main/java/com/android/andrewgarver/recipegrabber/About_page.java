@@ -6,11 +6,11 @@ import android.widget.TextView;
 
 /**
  * About Page displays the licencing information
- *
+ * <p>
  * A class that sets the Activity to display the licencing information
  *   comes from the ExtendedCalendarView created by TYCZJ
  *   (<a href="https://github.com/tyczj/ExtendedCalendarView">ExtendedCalendarView</a>).
- *   This fixes the deprecated problems from the CalendarView.
+ *   This fixes the deprecated problems from the CalendarView.</p>
  *
  * @author  Andrew Garver, Landon Jamieson, and Reed Atwood
  * @version 1.0
@@ -25,11 +25,6 @@ public class About_page extends AppCompatActivity {
 
     /**
      * Opens the About Page for display and sets the view to the About TextView
-     * <p>
-     * A class that sets the Activity to display the licencing information
-     *   comes from the ExtendedCalendarView created by TYCZJ
-     *   (<a href="https://github.com/tyczj/ExtendedCalendarView">ExtendedCalendarView</a>).
-     *   This fixes the deprecated problems from the CalendarView.
      *
      * @param  savedInstanceState save the activity for reopening
      */

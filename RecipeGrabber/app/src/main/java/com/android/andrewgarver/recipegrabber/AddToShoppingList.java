@@ -148,6 +148,7 @@ public class AddToShoppingList extends AppCompatActivity {
                 String ingQuant = ((EditText) findViewById(R.id.ingQuant)).getText().toString();
                 String ingUnit = ((Spinner) findViewById(R.id.ingUnit)).getSelectedItem().toString();
                 String ingName = ((EditText) findViewById(R.id.ingName)).getText().toString();
+                ingName = ingName.replace("  ", " "); //remove double spaces if any
 
                 /**
                  * Error handling for if quantity and ingredient name are blank
@@ -177,6 +178,7 @@ public class AddToShoppingList extends AppCompatActivity {
                     ingQuant = ((EditText) rel.findViewById(R.id.quanNewRow)).getText().toString();
                     ingUnit = ((Spinner) rel.findViewById(R.id.unitNewRow)).getSelectedItem().toString();
                     ingName = ((EditText) rel.findViewById(R.id.nameNewRow)).getText().toString();
+                    ingName = ingName.replace("  ", " "); //remove double spaces if any
 
                     /**
                      * Add more ingredients if there is more than one.

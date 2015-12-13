@@ -497,6 +497,19 @@ public class DatabaseAdapter {
     }
 
     /**
+     *
+     *
+     * @param ingred
+     * @return
+     */
+    public boolean deleteFromShoppingList(Ingredient ingred) {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        return db.delete(DatabaseHelper.TABLE_SHOPPINGLIST,
+                DatabaseHelper.NAME + "='" + ingred.getName() + "' and " + DatabaseHelper.METRIC +
+                        "= '" + ingred.getMetric() + "'" , null) > 0;
+    }
+
+    /**
      * Get all the recipes in the cookbook
      * @return items
      */

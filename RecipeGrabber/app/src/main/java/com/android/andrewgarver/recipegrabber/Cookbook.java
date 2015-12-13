@@ -1,13 +1,11 @@
 package com.android.andrewgarver.recipegrabber;
 
 import android.app.AlertDialog;
-import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +15,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.android.andrewgarver.recipegrabber.extendCalView.CalendarProvider;
 
 import java.util.ArrayList;
 
@@ -153,6 +153,8 @@ public class Cookbook extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         adapter.remove(toDel);
                         dbHelper.deleteRecipe(toDel);
+                        getActivity().getContentResolver().delete(CalendarProvider.CONTENT_URI, CalendarProvider.EVENT + "='" + toDel + "'", null);
+                        Menu.refreshMenu();
                         Toast.makeText(getContext(), "Deleting recipe", Toast.LENGTH_LONG).show();
                     }
                 });
@@ -205,7 +207,6 @@ public class Cookbook extends Fragment {
 
         return view;
     }
-
 
     /**
      *

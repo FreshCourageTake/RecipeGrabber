@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,10 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import com.android.andrewgarver.recipegrabber.extendCalView.CalendarProvider;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -45,9 +41,9 @@ public class ShoppingList extends Fragment {
     /**
      *
       */
-    private DatabaseAdapter dbHelper;
+    private static DatabaseAdapter dbHelper;
     private ListView list;
-    private ArrayAdapter<String> adapter;
+    private static ArrayAdapter<String> adapter;
     CalendarProvider cpHelper;
 
     /**
@@ -63,7 +59,7 @@ public class ShoppingList extends Fragment {
      *                           from a previous saved state as given here.
      * @return Return the View for the fragment's UI, or null
      */
-    @Nullable
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -109,11 +105,6 @@ public class ShoppingList extends Fragment {
         ArrayList<Ingredient> cupboardIngredients = dbHelper.getAllIngredientsVerbose();
 
         /**
-         * Get the already planned items on the shopping list
-         */
-        ArrayList<Ingredient> shoppingListItems = dbHelper.getAllShoppingListItemsVerbose();
-
-        /**
          * Do math with ingredients
          */
         for (Ingredient planned : plannedIngredients) {
@@ -152,7 +143,7 @@ public class ShoppingList extends Fragment {
         /**
          * This just gets all the items in the shopping list.  This includes manually added as well as automatically added things.
          */
-        ArrayList<String> items = dbHelper.getAllShoppingListItems(); // this is what we need to update (In another function)
+        ArrayList<String> items = dbHelper.getAllShoppingListItems();
 
         adapter = new ArrayAdapter<>(getContext(), R.layout.row_layout, items);
 
@@ -271,6 +262,12 @@ public class ShoppingList extends Fragment {
         });
 
         return view;
+    }
+
+    public static void refreshShoppingList()
+    {
+        adapter.clear();
+        adapter.addAll(dbHelper.getAllShoppingListItems());
     }
 
     /**

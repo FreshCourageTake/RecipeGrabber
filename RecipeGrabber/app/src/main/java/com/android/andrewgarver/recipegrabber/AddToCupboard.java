@@ -3,6 +3,8 @@ package com.android.andrewgarver.recipegrabber;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -15,6 +17,8 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
+import android.widget.TextView;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -77,7 +81,7 @@ public class AddToCupboard extends AppCompatActivity {
          */
         final ImageButton add = (ImageButton) findViewById(R.id.addMore);
         final Button addIng = (Button) findViewById(R.id.addIng);
-        final ArrayList<String> results = new ArrayList<>();
+        final ArrayList<Ingredient> results = new ArrayList<>();
 
         /**
          * need to add the listener to add an extra row of input fields
@@ -142,9 +146,10 @@ public class AddToCupboard extends AppCompatActivity {
                  * Quantity = quant
                  * Ingredient Name = ingName
                  */
-                String quant = ((EditText) findViewById(R.id.ingQuant)).getText().toString();
-                String unit = ((Spinner) findViewById(R.id.ingUnit)).getSelectedItem().toString();
-                String ingName = ((EditText) findViewById(R.id.ingName)).getText().toString();
+                String quant = ((EditText)findViewById(R.id.ingQuant)).getText().toString();
+                String unit = ((Spinner)findViewById(R.id.ingUnit)).getSelectedItem().toString();
+                String ingName = ((EditText)findViewById(R.id.ingName)).getText().toString();
+                ingName = ingName.replace("  ", " "); //remove double spaces if any
 
                 /**
                  * Error handling for if quantity and ingredient name are blank
@@ -153,8 +158,8 @@ public class AddToCupboard extends AppCompatActivity {
 
                     if (dbHelper.addIngredient(quant, unit, ingName) > 0) {
                         Log.i(TAG, "added ingredients to cupboard");
-                        results.add(ingName + " - " + quant + ' ' + unit);
-
+                        results.add(new Ingredient(ingName, Integer.parseInt(quant), unit));
+                        
                         // reset the flag
                         correctInput = true;
 
@@ -170,18 +175,19 @@ public class AddToCupboard extends AppCompatActivity {
                  * Adds any additional rows.
                  */
                 for (int i = 0; i < numNewLines; ++i) {
-                    RelativeLayout rel = ((RelativeLayout) findViewById(ids[i]));
-                    String dynamicQuant = ((EditText) rel.findViewById(R.id.quanNewRow)).getText().toString();
-                    String dynamicUnit = ((Spinner) rel.findViewById(R.id.unitNewRow)).getSelectedItem().toString();
-                    String dynamicIngName = ((EditText) rel.findViewById(R.id.nameNewRow)).getText().toString();
+                    RelativeLayout rel = ((RelativeLayout)findViewById(ids[i]));
+                    quant = ((EditText)rel.findViewById(R.id.quanNewRow)).getText().toString();
+                    unit = ((Spinner)rel.findViewById(R.id.unitNewRow)).getSelectedItem().toString();
+                    ingName = ((EditText)rel.findViewById(R.id.nameNewRow)).getText().toString();
+                    ingName = ingName.replace("  ", " "); //remove double spaces if any
 
                     /**
                      * Add more ingredients if there is more than one.
                      */
-                    if (!dynamicQuant.equals("") && !dynamicIngName.equals("")) {
-                        if (dbHelper.addIngredient(dynamicQuant, dynamicUnit, dynamicIngName) > 0) {
+                    if (!quant.equals("") && !ingName.equals("")) {
+                        if (dbHelper.addIngredient(quant, unit, ingName) > 0) {
                             Log.i(TAG, "added to cupboard");
-                            results.add(dynamicIngName + " - " + dynamicQuant + ' ' + dynamicUnit);
+                            results.add(new Ingredient(ingName, Integer.parseInt(quant), unit));
                         } else {
                             Log.i(TAG, "failed to add ingredients");
                         }
@@ -196,14 +202,14 @@ public class AddToCupboard extends AppCompatActivity {
                  */
                 if (correctInput) {
                     Intent data = new Intent();
-                    data.putStringArrayListExtra("results", results);
+                    data.putExtra("results", results);
                     setResult(RESULT_OK, data);
                     finish(); // This takes us back to the previous fragment
-
                 } else {
                     Toast.makeText(getApplicationContext(), "Please fill out all fields",
                              Toast.LENGTH_LONG).show();
                 }
+                
             }
         });
     }

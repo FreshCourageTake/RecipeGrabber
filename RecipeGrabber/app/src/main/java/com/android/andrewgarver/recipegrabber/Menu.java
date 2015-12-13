@@ -48,9 +48,9 @@ public class Menu extends Fragment {
      *
      */
     private ListView list;
-    private ExtendedCalendarView extCalendar;
+    private static ExtendedCalendarView extCalendar;
     private Day selDay;
-    private ArrayAdapter<String> adapter;
+    private static ArrayAdapter<String> adapter;
 
 
     /**
@@ -207,8 +207,10 @@ public class Menu extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         adapter.remove(toDel);
-                        getActivity().getContentResolver().delete(CalendarProvider.CONTENT_URI, CalendarProvider.EVENT + "='" + toDel + "'", null);
+                        getActivity().getContentResolver().delete(CalendarProvider.CONTENT_URI,
+                                CalendarProvider.EVENT + "='" + toDel + "' and " + CalendarProvider.START_DAY + "='" + selDay.getStartDay() + "'", null);
                         extCalendar.refreshCalendar();
+                        adapter.clear();
                         Toast.makeText(getContext(), "Deleting from menu", Toast.LENGTH_LONG).show();
                     }
                 });
@@ -248,7 +250,6 @@ public class Menu extends Fragment {
      *
      *
      * @param  day
-     * @return nothing
      */
     private void getEventDetails(Day day) {
 
@@ -262,6 +263,14 @@ public class Menu extends Fragment {
          */
         for (Event e : day.getEvents())
             adapter.add(e.getTitle());
+    }
+
+    /**
+     * Allows another class to refresh the menu. Especially if contents were deleted
+     */
+    public static void refreshMenu() {
+        extCalendar.refreshCalendar();
+        adapter.clear();
     }
 
     /**
