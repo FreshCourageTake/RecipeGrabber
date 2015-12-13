@@ -158,31 +158,30 @@ public class AddToCupboard extends AppCompatActivity {
                     toAddToDatabase.add(new Ingredient(ingName, Integer.parseInt(quant), unit));
                     //reset the flag
                     correctInput = true;
-                }
-                else
-                    correctInput = false;
 
-
-                RelativeLayout rel;
-
-                /**
-                 * Adds any additional rows.
-                 */
-                for (int i = 0; i < numNewLines; ++i) {
-                    rel = ((RelativeLayout)findViewById(ids[i]));
-                    quant = ((EditText)rel.findViewById(R.id.quanNewRow)).getText().toString();
-                    unit = ((Spinner)rel.findViewById(R.id.unitNewRow)).getSelectedItem().toString();
-                    ingName = ((EditText)rel.findViewById(R.id.nameNewRow)).getText().toString();
-                    ingName = ingName.replace("  ", " "); //remove double spaces if any
+                    RelativeLayout rel;
 
                     /**
                      * Add more ingredients if there is more than one.
                      */
-                    if (!quant.equals("") && !ingName.equals(""))
-                        toAddToDatabase.add(new Ingredient(ingName, Integer.parseInt(quant), unit));
+                    for (int i = 0; i < numNewLines; ++i) {
+                        rel = ((RelativeLayout)findViewById(ids[i]));
+                        quant = ((EditText)rel.findViewById(R.id.quanNewRow)).getText().toString();
+                        unit = ((Spinner)rel.findViewById(R.id.unitNewRow)).getSelectedItem().toString();
+                        ingName = ((EditText)rel.findViewById(R.id.nameNewRow)).getText().toString();
+                        ingName = ingName.replace("  ", " "); //remove double spaces if any
 
-                    Log.i(TAG, "added line " + i + 1 + " to DB with id of " + ids[i]);
+                        /**
+                         * only add them if they have something there.
+                         */
+                        if (!quant.equals("") && !ingName.equals(""))
+                            toAddToDatabase.add(new Ingredient(ingName, Integer.parseInt(quant), unit));
+
+                        Log.i(TAG, "added line " + i + 1 + " to DB with id of " + ids[i]);
+                    }
                 }
+                else
+                    correctInput = false;
 
                 /**
                  * Update the activity if all fields are filled out correctly and displays a

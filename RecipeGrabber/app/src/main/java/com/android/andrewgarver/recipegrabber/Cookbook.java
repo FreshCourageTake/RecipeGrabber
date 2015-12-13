@@ -34,16 +34,11 @@ public class Cookbook extends Fragment {
     private static final String TAG = Cookbook.class.getSimpleName();
 
     /**
-     * The request code for adding new recipes, used to help added new recipes to the list
-     */
-    private static final int newRecipeCode = 0;
-
-    /**
      *
      */
     private ListView list;
-    private DatabaseAdapter dbHelper;
-    private ArrayAdapter<String> adapter;
+    private static DatabaseAdapter dbHelper;
+    private static ArrayAdapter<String> adapter;
 
     /**
      * What gets called on create. This handles setting the list view to the contents of the
@@ -198,7 +193,7 @@ public class Cookbook extends Fragment {
              * @param v is a view
              */
             public void onClick(View v) {
-                startActivityForResult(new Intent(getContext(), AddRecipe.class), newRecipeCode);
+                startActivity(new Intent(getContext(), AddRecipe.class));
             }
             });
 
@@ -206,29 +201,11 @@ public class Cookbook extends Fragment {
     }
 
     /**
-     *
-     *
-     *
-     * @param requestCode
-     * @param resultCode
-     * @param data
+     * Update the list of recipes if needed.
      */
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        /**
-         *
-         */
-        if (requestCode == newRecipeCode) {
-
-            /**
-             *
-             */
-            if (resultCode == getActivity().RESULT_OK) {
-                Log.i(TAG, "RESULT OKAY");
-                String recipe = data.getStringExtra("recipeName");
-                adapter.add(recipe);
-            }
-        }
+    public static void refreshCookbook() {
+        adapter.clear();
+        adapter.addAll(dbHelper.getAllRecipes());
     }
 
 }
