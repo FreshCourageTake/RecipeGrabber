@@ -147,7 +147,7 @@ public class ShoppingList extends Fragment {
         list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
             /**
-             *
+             * This will handle creating a AlertDialog to confirm deletion with the user
              *
              * @param parent Parent of the AdapterView
              * @param view The current view
@@ -159,44 +159,44 @@ public class ShoppingList extends Fragment {
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
 
                 /**
-                 *
+                 * This split will allow us to get the name of the ingredient we want to try to delete
                  */
                 final String preSplit = adapter.getItem(position);
                 final String toDel = preSplit.split(" - ")[0];
 
                 /**
-                 *
+                 * We must build the Alert Dialog, by setting up the Title and the message
                  */
                 AlertDialog.Builder adb = new AlertDialog.Builder(getContext());
                 adb.setTitle("Delete ingredient: " + toDel + '?');
                 adb.setMessage("Are you sure you want to remove this ingredient from your shopping list?");
 
                 /**
-                 *
+                 * This is the button to go ahead as planned and delete this ingredient.
                  */
                 adb.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                     /**
+                     * This will handle actually deleting the item, if it is not part of a planned
+                     * recipe
                      *
-                     *
-                     * @param dialog
-                     * @param which
-                     * @return nothing if you can't delete plannedIngredients
+                     * @param dialog The dialog box this was called from
+                     * @param which Which option was selected
                      */
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
                         /**
-                         *
+                         * This will make sure you are not attempting to delete a ingre
                          */
                         for (Ingredient ing : plannedIngredients)
-                            if (ing.getName().equals(toDel)) {
-                                Toast.makeText(getContext(), "Unable to delete planned ingredient\n" +
+                            if (ing.getName().equalsIgnoreCase(toDel)) {
+                                Toast.makeText(getContext(), "Unable to delete ingredient for a planned recipe.\n" +
                                         "Remove recipe from the Menu or add ingredient to the cupboard", Toast.LENGTH_LONG).show();
                                 return;
                             }
 
                         /**
-                         *
+                         * remove the item from the list and also the database. So the user sees the removal.
                          */
                         adapter.remove(preSplit);
                         dbHelper.deleteFromShoppingList(toDel);
@@ -208,10 +208,10 @@ public class ShoppingList extends Fragment {
                 adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 
                     /**
+                     * The user cancelled so nothing will happen.
                      *
-                     *
-                     * @param dialog
-                     * @param which
+                     * @param dialog The dialog box this was called from
+                     * @param which Which option was selected
                      */
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -219,23 +219,20 @@ public class ShoppingList extends Fragment {
                 });
 
                 /**
-                 *
+                 * Create the AlertDialog and show it to the user
                  */
                 AlertDialog ad = adb.create();
                 ad.show();
 
+                //this action does consume the click, thus return true.
                 return true;
             }
         });
 
         /**
-         *
+         * The onclick listener for this button will allow the user to add to the shopping list
          */
         ImageButton addBtn = (ImageButton) view.findViewById(R.id.addToShoppingList);
-
-        /**
-         *
-         */
         addBtn.setOnClickListener(new View.OnClickListener() {
 
             /**
