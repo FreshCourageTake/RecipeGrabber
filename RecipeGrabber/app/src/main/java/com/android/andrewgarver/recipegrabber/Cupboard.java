@@ -32,7 +32,7 @@ public class Cupboard extends Fragment {
     private static final String TAG = Cupboard.class.getSimpleName();
 
     /**
-     *
+     * Private member variables
      */
     private static DatabaseAdapter dbHelper;
     private static ArrayAdapter<String> adapter;
@@ -56,29 +56,29 @@ public class Cupboard extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         /**
-         *
+         * Sets up our Database helper
          */
         dbHelper = new DatabaseAdapter(getActivity());
 
         /**
-         *
+         * Contains all the ingredients on hand
          */
         ArrayList<String> items = dbHelper.getAllIngredients();
 
         /**
-         *
+         * Adapter used for the view
          */
         adapter = new ArrayAdapter<>(getContext(), R.layout.row_layout, items);
 
         /**
-         *
+         * Sets the view adapter
          */
         View view = inflater.inflate(R.layout.frag_cupboard, container, false);
         list = (ListView) view.findViewById(R.id.listView);
         list.setAdapter(adapter);
 
         /**
-         *
+         * OnLongClick listener
          */
         list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
@@ -95,20 +95,20 @@ public class Cupboard extends Fragment {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
                 /**
-                 *
+                 * Gets the position of the clicked item
                  */
                 final String preSplit = adapter.getItem(position);
                 final String toDel = preSplit.split(" - ")[0];
 
                 /**
-                 *
+                 * Creates a dialog box
                  */
                 AlertDialog.Builder adb = new AlertDialog.Builder(getContext());
                 adb.setTitle("Delete ingredient: " + toDel + '?');
                 adb.setMessage("Are you sure you want to remove this ingredient from your cupboard?");
 
                 /**
-                 *
+                 * Creates a toast to display to the user that the item was deleted
                  */
                 adb.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
 
@@ -128,7 +128,7 @@ public class Cupboard extends Fragment {
                 });
 
                 /**
-                 *
+                 * Cancel button
                  */
                 adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 
@@ -144,7 +144,7 @@ public class Cupboard extends Fragment {
                 });
 
                 /**
-                 *
+                 * Shows an alert dialog
                  */
                 AlertDialog ad = adb.create();
                 ad.show();
@@ -152,9 +152,6 @@ public class Cupboard extends Fragment {
             }
         });
 
-        /**
-         *
-         */
         ImageButton addBtn = (ImageButton) view.findViewById(R.id.addTo);
         addBtn.setOnClickListener(new View.OnClickListener() {
             /**
@@ -171,9 +168,7 @@ public class Cupboard extends Fragment {
     }
 
     /**
-     *
-     *
-     *
+     * Deletes contents from cupboard and then adds them back in order to refresh
      */
     public static void refreshCupboard () {
         adapter.clear();

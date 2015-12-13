@@ -99,26 +99,22 @@ public class ShoppingList extends Fragment {
         ArrayList<Ingredient> cupboardIngredients = dbHelper.getAllIngredientsVerbose();
 
         /**
-         * Do math with ingredients
+         * Do calculations with ingredients
          */
         for (Ingredient planned : plannedIngredients) {
 
             boolean haveInCupboard = false;
 
             /**
-             *
+             * Loop through all ingredients in the cupboard
              */
             for (Ingredient cupboard : cupboardIngredients) {
-
-                /**
-                 *
-                  */
                 if (planned.getName().equalsIgnoreCase(cupboard.getName()) // the same ingredient
                         && planned.getMetric().equals(cupboard.getMetric())) { // with the same metric unit
                     haveInCupboard = true;
 
                     /**
-                     *
+                     * If there is inadequate amounts of the ingredient in the cupboard, add the appropriate amount
                      */
                     if (planned.getQuantity() > cupboard.getQuantity()) { // don't have enough in the cupboard
                         dbHelper.addToShoppingList(planned.getName(), String.valueOf(planned.getQuantity() - cupboard.getQuantity()), planned.getMetric(), true);
@@ -127,7 +123,7 @@ public class ShoppingList extends Fragment {
             }
 
             /**
-             *
+             * If the ingredient is not found in the cupboard, add it.
              */
             if (!haveInCupboard) {
                 dbHelper.addToShoppingList(planned.getName(), String.valueOf(planned.getQuantity()), planned.getMetric(), true);
@@ -141,25 +137,22 @@ public class ShoppingList extends Fragment {
 
         adapter = new ArrayAdapter<>(getContext(), R.layout.row_layout, items);
 
-        /**
-         *
-         */
         View view = inflater.inflate(R.layout.frag_shoppinglist, container, false);
         list = (ListView) view.findViewById(R.id.listView);
         list.setAdapter(adapter);
 
         /**
-         *
+         * OnLongClick listener for the list items
          */
         list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
             /**
              *
              *
-             * @param parent
-             * @param view
-             * @param position
-             * @param id
+             * @param parent Parent of the AdapterView
+             * @param view The current view
+             * @param position Position of the item in the listView
+             * @param id Id of the item to be deleted
              * @return ture
              */
             @Override
