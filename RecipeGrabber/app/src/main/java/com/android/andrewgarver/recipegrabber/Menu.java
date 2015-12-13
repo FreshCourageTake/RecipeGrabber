@@ -206,8 +206,7 @@ public class Menu extends Fragment {
                         adapter.remove(toDel);
                         getActivity().getContentResolver().delete(CalendarProvider.CONTENT_URI,
                                 CalendarProvider.EVENT + "='" + toDel + "' and " +
-                                        CalendarProvider.START_DAY + "='" + selDay.getStartDay() +
-                                        "'", null);
+                                        CalendarProvider.START_DAY + "='" + selDay.getStartDay() + "'", null);
                         extCalendar.refreshCalendar();
                         adapter.clear();
                         Toast.makeText(getContext(), "Deleting from menu", Toast.LENGTH_LONG).show();

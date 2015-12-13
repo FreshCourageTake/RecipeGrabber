@@ -33,11 +33,6 @@ public class ShoppingList extends Fragment {
     private final static String TAG = ShoppingList.class.getSimpleName();
 
     /**
-     * Constant shoppingCode = 3
-     */
-    private final static int shoppingCode = 3;
-
-    /**
      *
       */
     private static DatabaseAdapter dbHelper;
@@ -256,40 +251,19 @@ public class ShoppingList extends Fragment {
              * @param v is a view
              */
             public void onClick(View v) {
-                startActivityForResult(new Intent(getContext(), AddToShoppingList.class), shoppingCode);
+                startActivity(new Intent(getContext(), AddToShoppingList.class));
             }
         });
 
         return view;
     }
 
+    /**
+     * Allows the shoppinglist to be refreshed if the database has changed.
+     */
     public static void refreshShoppingList()
     {
         adapter.clear();
         adapter.addAll(dbHelper.getAllShoppingListItems());
-    }
-
-    /**
-     *
-     *
-     * @param requestCode
-     * @param resultCode
-     * @param data
-     */
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        /**
-         *
-         */
-        if (requestCode == shoppingCode) {
-
-            /**
-             *
-             */
-            if (resultCode == getActivity().RESULT_OK) {
-                ArrayList<String> shopping = data.getStringArrayListExtra("toAddToDatabase");
-                adapter.addAll(shopping);
-            }
-        }
     }
 }

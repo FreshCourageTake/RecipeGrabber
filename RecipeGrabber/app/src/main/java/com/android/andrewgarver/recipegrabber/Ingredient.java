@@ -1,18 +1,15 @@
 package com.android.andrewgarver.recipegrabber;
 
-import java.io.Serializable;
-
 /**
  * Simple class for the Ingredients
  * <p>
- * Contains a non-default constructor and getters for name, quantity, and metric. It is serializable
- * to allow it to be put as an extra into an intent.
+ * Contains a non-default constructor and getters for name, quantity, and metric.
  * </p>
  * @author  Andrew Garver, Landon Jamieson, and Reed Atwood
  * @version 1.0
  * @since   12/10/2015
  */
-public class Ingredient implements Serializable {
+public class Ingredient {
 
     /**
      * Debugging Tag to display LogCat messages for debugging
