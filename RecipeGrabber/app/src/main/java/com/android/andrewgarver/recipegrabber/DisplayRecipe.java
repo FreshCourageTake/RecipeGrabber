@@ -6,8 +6,10 @@ import android.util.Log;
 import android.widget.TextView;
 
 /**
- *
- *
+ * This activity will handle displaying the recipe by pulling information from the database
+ * <p>
+ * The recipe will be accessed by its name. Each field will be filled directly from the database.
+ * </p>
  *
  *
  * @author  Andrew Garver, Landon Jamieson, and Reed Atwood
@@ -22,12 +24,13 @@ public class DisplayRecipe extends AppCompatActivity {
     private static final String TAG = DisplayRecipe.class.getSimpleName();
 
     /**
-     *
+     * This is the access point for the database
      */
     private DatabaseAdapter dbHelper;
 
     /**
-     *
+     * This is what is called when this activity is created. It handles everything that needs to be
+     * done.
      *
      * @param savedInstanceState save the activity for reopening
      */
@@ -35,23 +38,17 @@ public class DisplayRecipe extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         /**
-         *
+         * set the content view and the database adapter.
          */
         super.onCreate(savedInstanceState);
         setContentView(R.layout.display_recipe);
         dbHelper = new DatabaseAdapter(this);
 
         /**
-         *
-         */
-        Log.i(TAG, "Displaying recipe: ");
-
-        /**
          * get the name of the selected recipe
          */
-        Bundle bundle = getIntent().getExtras();
-        String recipeName = bundle.getString("recipeName");
-        Log.i(TAG, recipeName);
+        String recipeName = getIntent().getStringExtra("recipeName");
+        Log.i(TAG, "Displaying recipe: " + recipeName);
 
         /**
          * retrieve the recipe information
