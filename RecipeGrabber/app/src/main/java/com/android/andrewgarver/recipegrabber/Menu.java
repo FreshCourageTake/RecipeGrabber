@@ -297,6 +297,7 @@ public class Menu extends Fragment {
                 ContentValues values = new ContentValues();
                 values.put(CalendarProvider.COLOR, Event.COLOR_RED);
                 values.put(CalendarProvider.EVENT, recipe);
+
                 int eventJulDay = selDay.getStartDay();
 
                 /**
