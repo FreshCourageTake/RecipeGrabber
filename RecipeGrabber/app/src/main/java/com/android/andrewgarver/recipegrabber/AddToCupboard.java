@@ -41,6 +41,7 @@ public class AddToCupboard extends AppCompatActivity {
     private boolean correctInput = true;
     private boolean inCupboard = false;
     private boolean inShoppingList = false;
+    private boolean isPlanned = false;
     /**
      * Keep track of how many new lines there is
      */
@@ -48,6 +49,7 @@ public class AddToCupboard extends AppCompatActivity {
 
     private ArrayList<Ingredient> toAddToDatabase = new ArrayList<>();
     private ArrayList<Ingredient> cupboardIngreds;
+    private ArrayList<Ingredient> plannedIngreds;
     ArrayList<Ingredient> shoppingListItems;
 
 
@@ -190,6 +192,7 @@ public class AddToCupboard extends AppCompatActivity {
                 if (correctInput) {
                     shoppingListItems = dbHelper.getAllShoppingListItemsVerbose();
                     cupboardIngreds = dbHelper.getAllIngredientsVerbose();
+                    plannedIngreds = dbHelper.getPlannedIngredients();
 
                     for (Ingredient ingred : toAddToDatabase) {
                         for (Ingredient cupboard : cupboardIngreds)
@@ -206,16 +209,30 @@ public class AddToCupboard extends AppCompatActivity {
                                     && itemOnList.getMetric().equals(ingred.getMetric())) {// with the same metric unit)
                                 Log.i(TAG, "Same item, " + ingred.getName() + " " + ingred.getMetric());
                                 dbHelper.deleteFromShoppingList(itemOnList);
+
+                                for (Ingredient planned : plannedIngreds)
+                                    if (planned.getName().equalsIgnoreCase(ingred.getName()) // the same ingredient
+                                            && planned.getMetric().equals(ingred.getMetric())) {
+                                        isPlanned = true; //auto added
+
+                                        //how much is still needed?
+                                        int diff = planned.getRequired() - ingred.getQuantity();
+                                        dbHelper.deletePlannedIngredient(planned); //remove the old
+                                        planned.setQuantity(diff > 0 ? diff : 0);
+                                        dbHelper.addPlannedIngredient(planned);
+                                        break;
+                                    }
+
                                 if (itemOnList.getQuantity() > ingred.getQuantity())
                                     dbHelper.addToShoppingList(ingred.getName(),
                                             Integer.toString(itemOnList.getQuantity() -
-                                                    ingred.getQuantity()) ,ingred.getMetric(), false);
+                                                    ingred.getQuantity()), ingred.getMetric(), isPlanned);
                                 inShoppingList = true;
                                 break; //don't need to keep looking for this ingredient
                             }
                         }
 
-                        if (inShoppingList)
+                        if (inShoppingList) //TODO see if any problems crashing here on refresh
                             ShoppingList.refreshShoppingList();
 
                         if (inCupboard)

@@ -195,7 +195,6 @@ public class CalendarAdapter extends BaseAdapter{
         int firstDay = (int)cal.get(Calendar.DAY_OF_WEEK);
         int year = cal.get(Calendar.YEAR);
         int month = cal.get(Calendar.MONTH);
-        TimeZone tz = TimeZone.getDefault();
 
         // figure size of the array
         if(firstDay==1){
@@ -247,7 +246,7 @@ public class CalendarAdapter extends BaseAdapter{
     }
 
     //added so does not use deprecated Time class
-    private int julianDay(int year, int month, int day) {
+    public static int julianDay(int year, int month, int day) {
         int mon = month + 1;
         int a = (14 - mon) / 12;
         int y = year + 4800 - a;

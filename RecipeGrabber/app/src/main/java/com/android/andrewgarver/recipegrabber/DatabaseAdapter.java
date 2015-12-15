@@ -86,6 +86,12 @@ public class DatabaseAdapter {
                 "'", null) > 0;
     }
 
+    public boolean deletePlannedIngredient(Ingredient i) {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        return db.delete(DatabaseHelper.TABLE_PLANNEDINGREDIENTS, DatabaseHelper.INGREDIENT_ID + "='" +
+                i.getId() + "'", null) > 0;
+    }
+
     /**
      * Add Recipe Name and Instructions
      *
@@ -113,6 +119,42 @@ public class DatabaseAdapter {
         return id;
     }
 
+    public long addPlannedIngredients(String name) {
+        return addPlannedIngredients(getRecipeId(name));
+    }
+
+    public long addPlannedIngredients(ArrayList<Ingredient> ingreds) {
+        long id = 0;
+        for (Ingredient i : ingreds)
+            id = addPlannedIngredient(i.getId(), i);
+        return id;
+    }
+
+    public long addPlannedIngredients(long recId) {
+        ArrayList<Ingredient> ingreds = getRecipeIngredientsVerbose(recId);
+        long id = 0;
+        for (Ingredient i : ingreds)
+            id = addPlannedIngredient(i, recId);
+        return id;
+    }
+
+    public long addPlannedIngredient(Ingredient i) {
+        return addPlannedIngredient(i.getId(), i);
+    }
+
+    public long addPlannedIngredient(int ingId, Ingredient i) {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        ContentValues plannedIng = new ContentValues();
+        plannedIng.put(DatabaseHelper.INGREDIENT_ID, ingId);
+        plannedIng.put(DatabaseHelper.QUANTITY, i.getQuantity());
+        plannedIng.put(DatabaseHelper.NUM_REQUIRED, i.getRequired());
+        return db.insert(DatabaseHelper.TABLE_PLANNEDINGREDIENTS, null, plannedIng);
+    }
+
+    public long addPlannedIngredient(Ingredient i, long recId) {
+        return addPlannedIngredient(getRecipeIngredientID(i.getName(), (int) recId), i);
+    }
+
     /**
      * Add Ingredients that are part of a recipe
      *
@@ -124,7 +166,7 @@ public class DatabaseAdapter {
      * @param recipeId A long refering to the primary key of the desired recipe
      * @return id
      */
-    public long addRecipeIngredients(String name, String quant, String metric, long recipeId) {
+    public long addRecipeIngredient(String name, String quant, String metric, long recipeId) {
 
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues ingContentValues = new ContentValues();
@@ -209,22 +251,77 @@ public class DatabaseAdapter {
      *
      *
      *
-     * @param plannedRecipes ArrayList containing the primary keys of all planned recipes
      * @return ingredients ArrayList of the ingredients for all the planned recipes
      */
-    public ArrayList<Ingredient> getPlannedIngredients(ArrayList<Integer> plannedRecipes) {
-
+    public ArrayList<Ingredient> getPlannedIngredients() {
         ArrayList<Ingredient> ingredients = new ArrayList<>();
-
+        Ingredient i;
+        SQLiteDatabase db = helper.getWritableDatabase();
         /**
          * Returns all ingredients
          */
-        for (int i : plannedRecipes)
-            ingredients.addAll(getRecipeIngredientsVerbose(i));
+        String [] columns = {helper.INGREDIENT_ID, helper.QUANTITY, helper.NUM_REQUIRED};
+        Cursor cursor = db.query(helper.TABLE_PLANNEDINGREDIENTS, columns, null, null, null, null, null);
+
+        while (cursor.moveToNext()) {
+            int id = cursor.getInt(0);
+            i = getIngredientVerbose(id);
+            i.setQuantity(cursor.getInt(1));
+            i.setId(id);
+            i.setRequired(cursor.getInt(2));
+            ingredients.add(i);
+        }
 
         return ingredients;
     }
 
+    public ArrayList<Ingredient> getPlannedRecipeIngredients(int recId) {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        ArrayList<Ingredient> recIng = getRecipeIngredientsVerbose(recId);
+        String [] columns = {helper.QUANTITY, helper.NUM_REQUIRED};
+        Cursor c;
+        for (Ingredient i : recIng) {
+            c = db.query(helper.TABLE_PLANNEDINGREDIENTS, columns, helper.INGREDIENT_ID + "='" + i.getId() +
+                    "'", null, null, null, null);
+            if (c.moveToNext()) {
+                i.setQuantity(c.getInt(0));
+                i.setRequired(c.getInt(1));
+            }
+        }
+
+        return recIng;
+    }
+
+    public void removePlannedRecipe(String name) {
+
+        int recId = getRecipeId(name);
+        ArrayList<Ingredient> forRec = getRecipeIngredientsVerbose(recId);
+        ArrayList<Ingredient> plannedRecIng = getPlannedRecipeIngredients(recId);
+        ArrayList<Ingredient> shoppingList = getAutoAddedShoppingList();
+        int stdQuantity;
+        int diff;
+        for (Ingredient i : forRec) {
+            stdQuantity = i.getQuantity();
+            for (Ingredient planned : plannedRecIng)
+                if(i.getName().equalsIgnoreCase(planned.getName()) && i.getMetric().equalsIgnoreCase(planned.getMetric())) {
+                    i.setRequired(planned.getRequired() - i.getQuantity());
+                    diff = planned.getQuantity() - i.getQuantity();
+                    i.setQuantity(diff > 0 ? diff : 0);
+                    deletePlannedIngredient(planned);
+                    if (i.getRequired() > 0)
+                        addPlannedIngredient(i);
+                    break;
+                }
+            for (Ingredient onShopList : shoppingList) //TODO Not fully correct, might need to see if we have at least the required in cupboard before deleting from here?
+                if (i.getName().equalsIgnoreCase(onShopList.getName()) && i.getMetric().equalsIgnoreCase(onShopList.getMetric())) {
+                    deleteFromShoppingList(onShopList);
+                    diff = onShopList.getQuantity() - stdQuantity;
+                    if (diff > 0)
+                        addToShoppingList(onShopList.getName(), Integer.toString(diff), onShopList.getMetric(), i.getRequired() > 0);
+                    break;
+                }
+        }
+    }
     /**
      * Get the id of a recipe
      *
@@ -245,7 +342,27 @@ public class DatabaseAdapter {
         /**
          * While we still have new data to parse, create a string for the ingredient and add it to the returned ArrayList
          */
-        while (cursor.moveToNext()) {
+        if (cursor.moveToNext()) {
+            int cid = cursor.getInt(0);
+            return cid;
+        }
+
+        return -1;
+    }
+
+    public int getRecipeIngredientID(String ingName, int recID) {
+
+        /**
+         * db.query will return us this information as an array
+         */
+        SQLiteDatabase db = helper.getWritableDatabase();
+        String[] columns = {helper.PRIMARY_KEY};
+        Cursor cursor = db.query(helper.TABLE_RECIPEINGREDIENTS, columns, "NAME=? and RECIPE_ID=?", new String[]{ingName, Integer.toString(recID)}, null, null, null, "1");
+
+        /**
+         * While we still have new data to parse, create a string for the ingredient and add it to the returned ArrayList
+         */
+        if (cursor.moveToNext()) {
             int cid = cursor.getInt(0);
             return cid;
         }
@@ -313,6 +430,31 @@ public class DatabaseAdapter {
         return items;
     }
 
+    public Ingredient getCupboardIngredient(String ingName, String ingMetric) {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        String[] columns = {helper.NAME, helper.QUANTITY, helper.METRIC};
+        Cursor cursor = db.query(helper.TABLE_INGREDIENTS, columns, "NAME=? and METRIC=?", new String[]{ingName, ingMetric}, null, null, null);
+        return cursor.moveToNext() ? new Ingredient(cursor.getString(0), cursor.getInt(1), cursor.getString(2)) : null;
+    }
+
+    public Ingredient getIngredientVerbose(int id) {
+
+        /**
+         * db.query will return us this information as an array
+         */
+        Log.i(TAG, "getting ingredient");
+        SQLiteDatabase db = helper.getWritableDatabase();
+        String[] ingredientColumns = {helper.NAME, helper.QUANTITY, helper.METRIC};
+        Cursor cursor = db.query(helper.TABLE_RECIPEINGREDIENTS, ingredientColumns, "ID=?", new String[]{Integer.toString(id)}, null, null, null, "1");
+
+        /**
+         * While we still have new data to parse, create a string for the ingredient and add it to the returned ArrayList
+         */
+        if (cursor.moveToNext())
+            return new Ingredient(cursor.getString(0), cursor.getInt(1), cursor.getString(2));
+        return new Ingredient("", 0 , "");
+    }
+
     /**
      *
      *
@@ -357,7 +499,9 @@ public class DatabaseAdapter {
             int quant = cursor.getInt(1);
             String unit = cursor.getString(2);
             String name = cursor.getString(3);
-            ingredients.add(new Ingredient(name, quant, unit));
+            Ingredient i = new Ingredient(name, quant, unit);
+            i.setId(cursor.getInt(0));
+            ingredients.add(i);
         }
 
         return ingredients;
@@ -527,11 +671,18 @@ public class DatabaseAdapter {
     }
 
     /**
-     * Drop the shopping list table and rebuild it.
+     * Grab Ingredients that were added Automatically
      */
-    public void refreshShoppingList() {
+    public ArrayList<Ingredient> getAutoAddedShoppingList() {
         SQLiteDatabase db = helper.getWritableDatabase();
-        db.delete(helper.TABLE_SHOPPINGLIST, helper.MANUAL_ADD+"=?", new String[] {"0"});
+        String [] colums = {helper.NAME, helper.QUANTITY, helper.METRIC};
+        Cursor cursor = db.query(helper.TABLE_SHOPPINGLIST, colums, helper.MANUAL_ADD + "=?",
+                new String[]{"0"}, null, null, null, null);
+        ArrayList<Ingredient> results = new ArrayList<>();
+        while (cursor.moveToNext())
+            results.add(new Ingredient(cursor.getString(0), cursor.getInt(1), cursor.getString(2)));
+
+        return results;
     }
 
     /**
@@ -550,6 +701,7 @@ public class DatabaseAdapter {
         public static final String DATABASE_NAME = "recipe_grabber";
         public static final String TABLE_RECIPES = "recipes";
         public static final String TABLE_RECIPEINGREDIENTS = "recipeIngredients";
+        public static final String TABLE_PLANNEDINGREDIENTS = "plannedIngredients";
         public static final String TABLE_INGREDIENTS = "ingredients";
         public static final String TABLE_SHOPPINGLIST = "shoppingList";
         public static final String PRIMARY_KEY = "ID";
@@ -559,10 +711,12 @@ public class DatabaseAdapter {
         public static final String QUANTITY = "QUANTITY";
         public static final String METRIC = "METRIC";
         public static final String INGREDIENTS = "INGREDIENTS";
+        public static final String INGREDIENT_ID = "INGREDIENT_ID";
         public static final String RECIPE_ID = "RECIPE_ID";
         public static final String ITEM = "item";
         public static final String MANUAL_ADD = "MANUAL_ADD";
-        public static final int DATABASE_VERSION = 51;
+        public static final String NUM_REQUIRED = "NUM_REQUIRED";
+        public static final int DATABASE_VERSION = 52;
 
         private static DatabaseHelper instance = null;
 
@@ -629,19 +783,21 @@ public class DatabaseAdapter {
                         "MANUAL_ADD INTEGER);");
 
                 /**
-                 * Creates the plannedRecipes table
+                 * Creates the plannedRecipeIngredients table
                  */
-                db.execSQL("CREATE TABLE plannedRecipes (ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                        "RECIPE_ID INTEGER, " +
-                        "DATE VARCHAR(255), " +
-                        "FOREIGN KEY(RECIPE_ID) REFERENCES recipes(ID));");
+                db.execSQL("CREATE TABLE plannedIngredients (ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        "INGREDIENT_ID INTEGER, " +
+                        "QUANTITY INTEGER, " +
+                        "NUM_REQUIRED INTEGER, " +
+                        "FOREIGN KEY(INGREDIENT_ID) REFERENCES recipeIngredients(ID));");
+
                 Log.i("thing", "Table creation successful");
             } catch (SQLException e) {
 
                 /**
                  * If you actually read this, let me know and I'll give you a pat on the back
                  */
-                Log.e("thing", "Failure to create database", e);
+                Log.e(TAG, "Failure to create database", e);
             }
         }
 
@@ -662,7 +818,7 @@ public class DatabaseAdapter {
                 db.execSQL("DROP TABLE IF EXISTS ingredients");
                 db.execSQL("DROP TABLE IF EXISTS recipeIngredients");
                 db.execSQL("DROP TABLE IF EXISTS shoppingList");
-                db.execSQL("DROP TABLE IF EXISTS plannedRecipes");
+                db.execSQL("DROP TABLE IF EXISTS plannedIngredients");
                 onCreate(db);
             } catch (SQLException e) {
                 e.printStackTrace();

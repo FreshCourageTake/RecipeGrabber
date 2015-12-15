@@ -22,6 +22,8 @@ public class Ingredient {
     private String name;
     private String metric;
     private int quantity;
+    private int id;
+    private int required;
 
     /**
      * Non-Default constructor that has a name, quantity and metric units
@@ -75,9 +77,47 @@ public class Ingredient {
     /**
      * set the quantity
      *
+     * @param newQuantity How many of this ingredient by metric
      */
     public void setQuantity(int newQuantity) {
         if (newQuantity > 0)
             quantity = newQuantity;
+    }
+    /**
+     * Get the id
+     *
+     * @return id
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * set the
+     *
+     * @param newId the id of this ingredient
+     */
+    public void setId(int newId) {
+        if (newId >= 0)
+            id = newId;
+    }
+
+    /**
+     * Get the number required
+     *
+     * @return required
+     */
+    public int getRequired() {
+        return required;
+    }
+
+    /**
+     * set the
+     *
+     * @param num the number required by all recipes planned
+     */
+    public void setRequired(int num) {
+        if (num >= 0)
+            required = num;
     }
 }

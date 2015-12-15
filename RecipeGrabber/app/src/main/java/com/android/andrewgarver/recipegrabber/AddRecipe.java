@@ -1,7 +1,6 @@
 package com.android.andrewgarver.recipegrabber;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -214,7 +213,7 @@ public class AddRecipe extends AppCompatActivity {
                     }
 
                     for (Ingredient ingred : ingredientsForRecipe)
-                        dbHelper.addRecipeIngredients(ingred.getName(), ingred.getQuantityString(),
+                        dbHelper.addRecipeIngredient(ingred.getName(), ingred.getQuantityString(),
                                 ingred.getMetric(), id);
 
                     Cookbook.refreshCookbook();

@@ -102,7 +102,6 @@ public class Event {
     public String getStartDate(String dateFormat){
         DateFormat df = new SimpleDateFormat(dateFormat,Locale.getDefault());
         String date = df.format(start);
-        Log.i(TAG, "The day of the month is " + date);
         return date;
     }
 

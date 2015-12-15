@@ -4,13 +4,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.TimeZone;
-import java.util.concurrent.TimeUnit;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
-import android.text.format.Time;
 import android.widget.BaseAdapter;
 
 public class Day{
@@ -32,9 +28,7 @@ public class Day{
         Calendar cal = Calendar.getInstance();
         cal.set(year, month-1, day);
         int end = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-        cal.set(year, month, end);
-        TimeZone tz = TimeZone.getDefault();
-        monthEndDay = Time.getJulianDay(cal.getTimeInMillis(), TimeUnit.MILLISECONDS.toSeconds(tz.getOffset(cal.getTimeInMillis())));
+        monthEndDay = CalendarAdapter.julianDay(year, month, end);
     }
 
 //	public long getStartTime(){

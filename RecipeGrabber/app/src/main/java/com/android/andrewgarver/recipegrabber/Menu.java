@@ -15,11 +15,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
+import com.android.andrewgarver.recipegrabber.extendCalView.CalendarAdapter;
 import com.android.andrewgarver.recipegrabber.extendCalView.CalendarProvider;
 import com.android.andrewgarver.recipegrabber.extendCalView.Day;
 import com.android.andrewgarver.recipegrabber.extendCalView.Event;
 import com.android.andrewgarver.recipegrabber.extendCalView.ExtendedCalendarView;
 import java.util.ArrayList;
+import java.util.Calendar;
+
 
 /**
  * Displays a calendar with the recipes that are planned
@@ -49,6 +52,7 @@ public class Menu extends Fragment {
      * Setup variables
      */
     private ListView list;
+    private DatabaseAdapter dbHelper;
     private static ExtendedCalendarView extCalendar;
     private Day selDay;
     private static ArrayAdapter<String> adapter;
@@ -73,6 +77,7 @@ public class Menu extends Fragment {
         ArrayList<String> items = new ArrayList();
         adapter = new ArrayAdapter<>(getContext(), R.layout.row_layout, items);
         list.setAdapter(adapter);
+        dbHelper = new DatabaseAdapter(getContext());
 
         extCalendar = (ExtendedCalendarView) view.findViewById(R.id.calendarMenu);
         extCalendar.setMonthTextBackgroundColor(R.color.black);
@@ -183,8 +188,8 @@ public class Menu extends Fragment {
                         getActivity().getContentResolver().delete(CalendarProvider.CONTENT_URI,
                                 CalendarProvider.EVENT + "='" + toDel + "' and " +
                                         CalendarProvider.START_DAY + "='" + selDay.getStartDay() + "'", null);
-                        extCalendar.refreshCalendar();
-                        adapter.clear();
+                        dbHelper.removePlannedRecipe(toDel);
+                        refreshMenu();
                         Toast.makeText(getContext(), "Deleting from menu", Toast.LENGTH_LONG).show();
                     }
                 });
@@ -266,14 +271,97 @@ public class Menu extends Fragment {
 
                 Log.i(TAG, "RESULT OKAY");
                 String recipe = data.getStringExtra("recipeName");
+                int eventJulDay = selDay.getStartDay();
+                Calendar now = Calendar.getInstance();
+                if (eventJulDay >= CalendarAdapter.julianDay(now.get(Calendar.YEAR),
+                        now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH))) {
+                    Log.i(TAG, "Event added after today");
+                    int recipeId = dbHelper.getRecipeId(recipe);
+                    ArrayList<Ingredient> recIngredients = dbHelper.getRecipeIngredientsVerbose(recipeId);
+                    ArrayList<Ingredient> alreadyPlanned = dbHelper.getPlannedIngredients();
+                    ArrayList<Ingredient> inCupboard = dbHelper.getAllIngredientsVerbose();
+                    boolean inPlanned = false;
+                    boolean addToShopping = true;
+
+                    for (Ingredient i : recIngredients) {
+                        //set the ingredient id
+                        i.setId(dbHelper.getRecipeIngredientID(i.getName(), recipeId));
+                        Log.i(TAG, "Checking Ingredient: " + i.getName());
+                        //check if each ingredient is already planned.
+                        for (Ingredient planned : alreadyPlanned) {
+                            Log.i(TAG, "Checking against planned " + planned.getName());
+                            if (planned.getName().equalsIgnoreCase(i.getName()) // the same ingredient
+                                    && planned.getMetric().equals(i.getMetric())) {
+                                Log.i(TAG,"Ingredient is planned.");
+                                inPlanned = true;
+                                //set required
+                                i.setRequired(i.getQuantity() + planned.getRequired());
+                                Log.i(TAG, "Planned Quanity is: " + planned.getQuantity());
+                                if (planned.getQuantity() == 0)
+                                    for (Ingredient cupboard : inCupboard) {
+                                        Log.i(TAG, "Checking planned required against " + cupboard.getName() + " in cupboard");
+                                        if (cupboard.getName().equalsIgnoreCase(i.getName()) // the same ingredient
+                                                && cupboard.getMetric().equals(i.getMetric())) {
+                                            Log.i(TAG, "Planned item is in cupboard");
+                                            int diff = i.getRequired() - cupboard.getQuantity();
+                                            Log.i(TAG, "The difference between required and in cupboard is " + diff);
+                                            if (diff > 0)
+                                                i.setQuantity(diff);
+                                            else {
+                                                Log.i(TAG, "More in cupboard.");
+                                                i.setQuantity(0);
+                                                addToShopping = false;
+                                            }
+                                            break;
+                                        }
+                                    }
+                                Log.i(TAG, "Add to shopping? " + addToShopping);
+                                //add the new amount to the shoppingList if more is needed.
+                                if (addToShopping)
+                                    dbHelper.addToShoppingList(i.getName(), i.getQuantityString(), i.getMetric(), true);
+                                Log.i(TAG, "Delete old and make new planned entry.");
+                                i.setQuantity(i.getQuantity() + planned.getQuantity()); //set new quantity
+                                dbHelper.deletePlannedIngredient(planned); //delete old planned
+                                dbHelper.addPlannedIngredient(i); //insert the new planned ingredient
+                                break;
+                            }
+                    }
+
+                        if (!inPlanned) {
+                            i.setRequired(i.getQuantity());
+                            Log.i(TAG, "Not Planned. Set required to Quanity " + i.getRequired());
+                            for (Ingredient cupboard : inCupboard)
+                                if (cupboard.getName().equalsIgnoreCase(i.getName()) // the same ingredient
+                                        && cupboard.getMetric().equals(i.getMetric())) {
+                                    int diff = i.getRequired() - cupboard.getQuantity();
+                                    Log.i(TAG, "NewPlanned Item contained in Cupboard, the difference " + diff);
+                                    if (diff > 0)
+                                        i.setQuantity(diff);
+                                    else {
+                                        i.setQuantity(0);
+                                        addToShopping = false;
+                                        Log.i(TAG, "More in cupboard.");
+                                    }
+                                    break;
+                                }
+                            Log.i(TAG, "Add to shopping? " + addToShopping);
+                            if (addToShopping)
+                                dbHelper.addToShoppingList(i.getName(), i.getQuantityString(), i.getMetric(), true);
+                            dbHelper.addPlannedIngredient(i); //insert the new planned ingredient
+                        }
+                    }
+                }
+
+                if(ShoppingList.isActive)
+                    ShoppingList.refreshShoppingList();
+                /**
+                 * getStartDay was modified from ExtendedCalendarView because Time was deprecated
+                 */
                 ContentValues values = new ContentValues();
                 values.put(CalendarProvider.COLOR, Event.COLOR_RED);
                 values.put(CalendarProvider.EVENT, recipe);
 
-                /**
-                 * getStartDay was modified from ExtendedCalendarView because Time was deprecated
-                 */
-                int eventJulDay = selDay.getStartDay();
+
 
                 Log.i(TAG, "Event Date (day/month/year): " + selDay.getDay() + '/' +
                         (selDay.getMonth() + 1) + '/' + selDay.getYear());
